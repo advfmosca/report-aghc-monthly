@@ -355,7 +355,7 @@ table.flat td.sparkline-cell svg { display: block; }
 .rational {
   background: var(--bg-soft);
   border: 1px solid var(--line);
-  padding: 18px 22px;
+  padding: 20px 24px;
   margin-top: 18px;
   font-size: 14px;
   line-height: 1.65;
@@ -363,6 +363,9 @@ table.flat td.sparkline-cell svg { display: block; }
   max-width: 720px;
   color: var(--ink-soft);
 }
+.rational p { margin: 0 0 14px; }
+.rational p:last-child { margin-bottom: 0; }
+.rational p:first-child { color: var(--ink); }
 
 /* Budget Plan */
 .budget-plan-intro { font-size: 13px; color: var(--ink-mute); margin: 0 0 28px; max-width: 720px; line-height: 1.55; }
@@ -547,30 +550,142 @@ function buildClientData(client){
   return { client, periodA, periodBMeta, hasTk, tkPeriodB, metaCur, metaPrev, tkCur, tkPrev, reachEstimated, tkLaunched, ytdMonths, ytdSpend: cYtd };
 }
 
+// Articolo italiano corretto prima di un numero in % ("il 81%" → "l'81%")
+function artPct(n){
+  const v = Math.abs(Math.round(n));
+  if(v===1 || v===8 || v===11 || (v>=80 && v<=89)) return `l'${v}%`;
+  return `il ${v}%`;
+}
+function delPct(n){
+  const v = Math.abs(Math.round(n));
+  if(v===1 || v===8 || v===11 || (v>=80 && v<=89)) return `dell'${v}%`;
+  return `del ${v}%`;
+}
+
 function buildRational(cd){
-  const { client, periodA, metaCur, metaPrev, tkCur, hasTk } = cd;
+  const { client, metaCur, metaPrev, tkCur, hasTk, tkLaunched } = cd;
   const m = REPORT_MONTH;
-  const spendCur = (metaCur.facebook.spend||0)+(metaCur.instagram.spend||0);
-  const spendPrev = (metaPrev.facebook.spend||0)+(metaPrev.instagram.spend||0);
+  const monthLow = monthName(m);
+  const monthCap = capitalize(monthLow);
+  const nextM = (m % 12) + 1;
+  const nextMonthLow = monthName(nextM);
+  const nextMonthCap = capitalize(nextMonthLow);
+  const nextWeight = BUDGET_WEIGHTS[nextM];
+
+  // === Segnali aggregati ===
+  const fbReachCur = metaCur.facebook.reach || 0;
+  const fbReachPrev = metaPrev.facebook.reach || 0;
+  const fbReachDelta = pct(fbReachCur, fbReachPrev);
+  const igReachCur = metaCur.instagram.reach || 0;
+  const igReachPrev = metaPrev.instagram.reach || 0;
+  const igReachDelta = pct(igReachCur, igReachPrev);
+  const reachCurMeta = fbReachCur + igReachCur;
+  const reachPrevMeta = fbReachPrev + igReachPrev;
+  const reachMetaDelta = pct(reachCurMeta, reachPrevMeta);
+
+  const fbEngCur = metaCur.facebook.actions_page_engagement || 0;
+  const fbEngPrev = metaPrev.facebook.actions_page_engagement || 0;
+  const fbEngDelta = pct(fbEngCur, fbEngPrev);
+  const igEngCur = metaCur.instagram.actions_page_engagement || 0;
+  const igEngPrev = metaPrev.instagram.actions_page_engagement || 0;
+  const igEngDelta = pct(igEngCur, igEngPrev);
+  const totEng = fbEngCur + igEngCur;
+
+  const spendCur = (metaCur.facebook.spend || 0) + (metaCur.instagram.spend || 0);
+  const spendPrev = (metaPrev.facebook.spend || 0) + (metaPrev.instagram.spend || 0);
   const spendDelta = pct(spendCur, spendPrev);
-  const ig = pct(metaCur.instagram.impressions, metaPrev.instagram.impressions);
-  const fb = pct(metaCur.facebook.reach, metaPrev.facebook.reach);
-  const imp = pct((metaCur.facebook.impressions||0)+(metaCur.instagram.impressions||0), (metaPrev.facebook.impressions||0)+(metaPrev.instagram.impressions||0));
-  let open;
-  if(spendDelta!==null && spendDelta>5) open = `${periodA} si apre con un incremento strategico del budget pubblicitario Meta (${fmtPct(spendDelta)}), scelta coerente con il posizionamento del mese all'interno del piano annuo (peso ${BUDGET_WEIGHTS[m]}%).`;
-  else if(spendDelta!==null && spendDelta<-5) open = `In ${periodA} l'allocazione Meta è stata consapevolmente contenuta (${fmtPct(spendDelta)}) per concentrare pressione sulle finestre strategiche successive, coerentemente con il piano AGHC.`;
-  else open = `${periodA} vede una continuità di investimento Meta in linea con il periodo di confronto (peso mensile ${BUDGET_WEIGHTS[m]}% sul piano annuo), a presidio costante del brand.`;
-  const wins = [];
-  if(ig!==null && ig>0) wins.push(`Instagram consolida la share of voice con visualizzazioni in crescita (${fmtPct(ig)})`);
-  if(fb!==null && fb>0) wins.push(`Facebook amplia la copertura (${fmtPct(fb)})`);
-  if(hasTk && (tkCur?.impressions||0)>0) wins.push(`TikTok genera ${fmtInt(tkCur.impressions)} impression a presidio efficiente`);
-  if(wins.length===0){ const t=(metaCur.facebook.reach||0)+(metaCur.instagram.reach||0); if(t>0) wins.push(`il presidio del brand resta solido con oltre ${fmtInt(t)} utenti unici raggiunti`); }
-  const winsLine = wins.length ? " " + wins.slice(0,2).join("; ").replace(/^./, c=>c.toUpperCase()) + ", a conferma di un mix canali ben bilanciato sugli obiettivi di awareness." : "";
-  const anyDecline = (imp!==null && imp<-5) || (fb!==null && fb<-5);
-  const ctx = anyDecline ? ` Eventuali flessioni su reach e interazioni riflettono il consueto rialzo dei CPM Meta nel comparto ricettivo e una competizione d'asta più densa.` : ` Il costo per risultato si mantiene efficiente in un contesto d'asta più selettivo.`;
-  const nextM = (m%12)+1;
-  const close = ` La base costruita in ${periodA} prepara ${capitalize(monthName(nextM))} (peso ${BUDGET_WEIGHTS[nextM]}% del piano annuo).`;
-  return open + winsLine + ctx + close;
+
+  // === Caso speciale: account a zero per scelta strategica ===
+  if (spendCur === 0 && reachCurMeta === 0) {
+    const p1 = `${monthCap} rappresenta una pausa strategica per ${client.nome}, coerente con il calendario annuo del piano media.`;
+    const p2 = `Il budget residuo resta integro e pronto a concentrarsi sulle finestre stagionali a più alto ritorno previste nei mesi successivi.`;
+    const p3 = `Da ${nextMonthLow} (peso ${nextWeight}% del piano annuo) il presidio riprende ${nextWeight >= 12 ? "nel cuore della stagione, con la pressione necessaria a intercettare la domanda attiva di prenotazione" : "in modo progressivo, pronto a salire sulle finestre più strategiche"}.`;
+    return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
+  }
+
+  // === Paragrafo 1: cos'è successo (lead con la storia più forte) ===
+  let p1, p1Kind;
+  if (tkLaunched && tkCur && (tkCur.impressions || 0) > 0) {
+    p1 = `${monthCap} inaugura una nuova fase per ${client.nome}: la prima campagna TikTok va live e debutta con ${fmtInt(tkCur.impressions)} visualizzazioni e ${fmtInt(tkCur.reach)} utenti unici raggiunti, aprendo un canale fino a ieri inesplorato dal brand.`;
+    p1Kind = "tk_launch";
+  } else if (fbReachDelta !== null && fbReachDelta > 100 && (reachMetaDelta === null || reachMetaDelta > 0)) {
+    const mul = (1 + fbReachDelta / 100).toFixed(1).replace('.', ',');
+    p1 = `${monthCap} segna un cambio di passo per ${client.nome}: Facebook diventa il canale di traino e amplia la copertura di ${mul} volte rispetto al periodo di confronto, raggiungendo ${fmtInt(fbReachCur)} utenti unici.`;
+    p1Kind = "fb_explode";
+  } else if (igReachDelta !== null && igReachDelta > 80 && igReachCur > 50000) {
+    const mul = (1 + igReachDelta / 100).toFixed(1).replace('.', ',');
+    p1 = `${monthCap} è il mese di Instagram per ${client.nome}: la copertura cresce di ${mul} volte, portando il messaggio del brand davanti a ${fmtInt(igReachCur)} utenti unici sul canale.`;
+    p1Kind = "ig_explode";
+  } else if (reachMetaDelta !== null && reachMetaDelta > 30) {
+    p1 = `${monthCap} è il mese in cui la copertura Meta cresce in modo netto: il brand entra nello sguardo di ${fmtInt(reachCurMeta)} persone (+${reachMetaDelta.toFixed(0)}% rispetto al periodo di confronto).`;
+    p1Kind = "reach_big";
+  } else if (spendDelta !== null && spendDelta < -8 && reachMetaDelta !== null && reachMetaDelta > -8) {
+    p1 = `${monthCap} è il mese dell'efficienza per ${client.nome}: la copertura Meta resta solida con ${fmtInt(reachCurMeta)} utenti unici raggiunti, con un investimento ridotto ${delPct(spendDelta)}. Ogni euro speso ha lavorato meglio.`;
+    p1Kind = "efficiency";
+  } else if (fbReachDelta !== null && fbReachDelta > 30) {
+    p1 = `${monthCap} consolida la presenza di ${client.nome} su Facebook: ${fmtInt(fbReachCur)} utenti unici raggiunti, +${fbReachDelta.toFixed(0)}% rispetto al periodo di confronto.`;
+    p1Kind = "fb_modest";
+  } else if (igReachDelta !== null && igReachDelta > 30) {
+    p1 = `${monthCap} rafforza la presenza di ${client.nome} su Instagram: ${fmtInt(igReachCur)} utenti unici raggiunti, +${igReachDelta.toFixed(0)}% rispetto al periodo di confronto.`;
+    p1Kind = "ig_modest";
+  } else if (hasTk && tkCur && (tkCur.impressions || 0) > 100000) {
+    p1 = `${monthCap} vede ${client.nome} attivo su entrambi i canali: Meta porta il brand davanti a ${fmtInt(reachCurMeta)} utenti unici, TikTok aggiunge ${fmtInt(tkCur.impressions)} visualizzazioni a presidio del pubblico più giovane.`;
+    p1Kind = "tk_present";
+  } else {
+    p1 = `${monthCap} mantiene il presidio di ${client.nome} su base solida: ${fmtInt(reachCurMeta)} utenti unici raggiunti su Meta, in linea con il posizionamento strategico del mese all'interno del piano annuo.`;
+    p1Kind = "neutral";
+  }
+
+  // === Paragrafo 2: perché conta (evita di ripetere lo spend delta se p1 lo ha già menzionato) ===
+  const spendMentionedInP1 = (p1Kind === "efficiency");
+  let p2;
+  const p2Lines = [];
+  if (fbEngDelta !== null && fbEngDelta > 100 && fbEngCur > 5000) {
+    p2Lines.push(`le interazioni sui contenuti Facebook salgono a ${fmtInt(fbEngCur)}, una scala completamente diversa rispetto al periodo di confronto`);
+  } else if (igEngDelta !== null && igEngDelta > 40 && igEngCur > 2000) {
+    p2Lines.push(`le interazioni Instagram crescono ${delPct(igEngDelta)} e portano il coinvolgimento totale a ${fmtInt(igEngCur)} azioni nel mese`);
+  } else if (totEng > 50000) {
+    p2Lines.push(`il pubblico interagisce attivamente con i contenuti del brand, con ${fmtInt(totEng)} interazioni totali generate nel mese`);
+  }
+  if (hasTk && !tkLaunched && tkCur && (tkCur.impressions || 0) > 100000) {
+    p2Lines.push(`TikTok continua a presidiare con efficienza il pubblico più giovane (${fmtInt(tkCur.impressions)} visualizzazioni)`);
+  }
+
+  if (p2Lines.length > 0) {
+    const sent = p2Lines.slice(0, 2).join("; ");
+    p2 = sent.charAt(0).toUpperCase() + sent.slice(1) + ".";
+    if (!spendMentionedInP1) {
+      if (spendDelta !== null && spendDelta < -8) {
+        p2 += ` Risultati ottenuti con ${artPct(spendDelta)} di investimento in meno rispetto al periodo di confronto.`;
+      } else if (spendDelta !== null && spendDelta > 12) {
+        p2 += ` Per sostenere questa traiettoria, l'investimento del mese cresce ${delPct(spendDelta)}.`;
+      }
+    }
+  } else if (spendDelta !== null && spendDelta < -8 && !spendMentionedInP1) {
+    p2 = `Il dato chiave del mese è l'efficienza: la copertura resta in linea con il periodo di confronto, ma con ${artPct(spendDelta)} di budget in meno. È il segnale di una strategia di targeting che continua a lavorare bene.`;
+  } else if (spendDelta !== null && spendDelta > 12) {
+    p2 = `L'investimento del mese sale ${delPct(spendDelta)} per consolidare il momentum, coerente con il peso di ${BUDGET_WEIGHTS[m]}% che il piano annuo riserva a ${monthLow}.`;
+  } else if (totEng > 0) {
+    p2 = `Il presidio del marchio si mantiene attivo con ${fmtInt(totEng)} interazioni totali su Meta: i contenuti pubblicati continuano a generare conversazioni qualificate intorno a ${client.nome}.`;
+  } else {
+    p2 = `Il piano del mese resta coerente con la stagionalità: presidio costante a tutela della brand awareness, in attesa delle finestre più strategiche dei mesi successivi.`;
+  }
+
+  // === Paragrafo 3: cosa stiamo facendo dopo ===
+  let p3;
+  if (tkLaunched) {
+    p3 = `Da ${nextMonthLow} ${client.nome} opera su due leve complementari — Meta per la conversione, TikTok per la scoperta. ${nextMonthCap} pesa il ${nextWeight}% del piano annuo, una finestra ${nextWeight >= 12 ? "centrale per costruire la pressione stagionale" : "utile a consolidare il sistema appena avviato"}.`;
+  } else if (hasTk) {
+    p3 = `A ${nextMonthLow} (peso ${nextWeight}% del piano annuo) confermiamo il sistema a due velocità: Meta presidia la fase di considerazione e prenotazione, TikTok amplia la scoperta del brand sul pubblico più giovane.`;
+  } else if (nextWeight >= 12) {
+    p3 = `${nextMonthCap} entra nel cuore della stagione (${nextWeight}% del budget annuo): saliamo sulla pressione per intercettare la domanda attiva nella finestra prenotativa più calda dell'anno.`;
+  } else if (nextWeight >= 10) {
+    p3 = `A ${nextMonthLow} (${nextWeight}% del piano annuo) la pressione cresce in modo strutturato: prepariamo il pubblico alle finestre di alta stagione che arrivano subito dopo.`;
+  } else {
+    p3 = `A ${nextMonthLow} (peso ${nextWeight}% del piano annuo) il presidio prosegue strategico, mantenendo il pubblico caldo in vista delle finestre più rilevanti del piano.`;
+  }
+
+  return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
 }
 
 function kpiBlock(title, periodA, periodB, rows, fmt, withInfoIcon){

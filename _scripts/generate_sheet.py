@@ -84,77 +84,175 @@ def write_kpi_table(ws, start_row, title, rows, period_a_label, period_b_label, 
     return header_row + 1 + len(rows) + 1
 
 
+def _art_pct(n):
+    """'il X%' o 'l'X%' a seconda della pronuncia italiana del numero."""
+    v = int(round(abs(n)))
+    if v in (1, 8, 11) or (80 <= v <= 89):
+        return f"l'{v}%"
+    return f"il {v}%"
+
+
+def _del_pct(n):
+    """'del X%' o 'dell'X%'."""
+    v = int(round(abs(n)))
+    if v in (1, 8, 11) or (80 <= v <= 89):
+        return f"dell'{v}%"
+    return f"del {v}%"
+
+
 def build_rational(client_name, data_meta_cur, data_meta_prev, data_tk_cur, data_tk_prev,
                    period_a_label, period_b_label, confronto_meta, spent_total, expected_total, month_num, has_tiktok):
-    """Genera un testo rational ~150-180 parole, tono consulenziale positivo."""
-    # Analisi principali
-    spend_cur = (data_meta_cur["facebook"]["spend"] + data_meta_cur["instagram"]["spend"])
-    spend_prev = (data_meta_prev["facebook"]["spend"] + data_meta_prev["instagram"]["spend"])
-    spend_delta = pct(spend_cur, spend_prev)
-    if has_tiktok:
-        tk_cur = data_tk_cur["spend"] if data_tk_cur else 0
-        tk_prev = data_tk_prev["spend"] if data_tk_prev else 0
-        spend_delta_tk = pct(tk_cur, tk_prev) if tk_prev else None
-    else:
-        tk_cur = tk_prev = 0
-        spend_delta_tk = None
-
-    impr_cur = data_meta_cur["facebook"]["impressions"] + data_meta_cur["instagram"]["impressions"]
-    impr_prev = (data_meta_prev["facebook"]["impressions"] or 0) + (data_meta_prev["instagram"]["impressions"] or 0)
-    impr_delta = pct(impr_cur, impr_prev)
-
-    ig_impr_delta = pct(data_meta_cur["instagram"]["impressions"], data_meta_prev["instagram"]["impressions"])
-
-    # Frase apertura — sempre strategica
-    if spend_delta is not None and spend_delta > 5:
-        open_sentence = (f"{period_a_label} si apre con un incremento strategico del budget pubblicitario Meta "
-                         f"({spend_delta:+.1f}%), scelta coerente con il posizionamento del mese all'interno del piano annuo "
-                         f"(peso {BUDGET_WEIGHTS[month_num]}%).")
-    elif spend_delta is not None and spend_delta < -5:
-        open_sentence = (f"In {period_a_label} l'allocazione Meta è stata consapevolmente contenuta "
-                         f"({spend_delta:+.1f}%) per concentrare pressione sulle finestre strategiche successive, "
-                         f"coerentemente con il piano AGHC che prevede peso crescente nei mesi primaverili.")
-    else:
-        open_sentence = (f"{period_a_label} vede una continuità di investimento Meta in linea con il mese precedente "
-                         f"(peso mensile {BUDGET_WEIGHTS[month_num]}% sul piano annuo), a presidio costante del brand.")
-
-    # Frase punto forte
-    wins = []
-    if ig_impr_delta is not None and ig_impr_delta > 0:
-        wins.append(f"Instagram consolida la share of voice con visualizzazioni in crescita ({ig_impr_delta:+.1f}%)")
-    fb_reach_delta = pct(data_meta_cur["facebook"]["reach"], data_meta_prev["facebook"]["reach"])
-    if fb_reach_delta is not None and fb_reach_delta > 0:
-        wins.append(f"Facebook amplia la copertura ({fb_reach_delta:+.1f}%)")
-    if has_tiktok and tk_cur > 0:
-        wins.append(f"TikTok mantiene un presidio efficiente con {fmt_int(data_tk_cur['impressions'])} impression generate")
-    if not wins:
-        # Fallback: efficienza / brand presence
-        total_reach = (data_meta_cur["facebook"]["reach"] or 0) + (data_meta_cur["instagram"]["reach"] or 0)
-        if total_reach > 0:
-            wins.append(f"il presidio del brand resta solido con oltre {fmt_int(total_reach)} utenti unici raggiunti")
-    wins_sentence = ""
-    if wins:
-        wins_sentence = (" " + "; ".join(wins[:2]).capitalize() + ", a conferma di un mix canali ben bilanciato "
-                         "sugli obiettivi di awareness.")
-
-    # Frase contestualizzazione cali
-    any_decline = (impr_delta is not None and impr_delta < -5) or (fb_reach_delta is not None and fb_reach_delta < -5)
-    if any_decline:
-        context_sentence = (f" Eventuali flessioni su reach e interazioni riflettono il consueto rialzo dei CPM Meta "
-                            f"nel comparto ricettivo — pattern atteso nelle settimane pre-alta stagione — "
-                            f"e una competizione d'asta più densa sul segmento hotel.")
-    else:
-        context_sentence = (f" Il costo per risultato si mantiene efficiente in un contesto d'asta più selettivo, "
-                            f"segno di una strategia di targeting che continua a funzionare.")
-
-    # Frase chiusura prospettica
+    """Rational 3-paragrafi, TOV professionale e polarizzante.
+    Struttura: cos'è successo · perché conta · cosa stiamo facendo dopo."""
+    month_low = MONTH_IT[month_num].lower()
+    month_cap = MONTH_IT[month_num]
     next_month = (month_num % 12) + 1
+    next_month_low = MONTH_IT[next_month].lower()
+    next_month_cap = MONTH_IT[next_month]
     next_weight = BUDGET_WEIGHTS[next_month]
-    close_sentence = (f" La base costruita in {period_a_label} prepara {MONTH_IT[next_month]} "
-                      f"(peso {next_weight}% del piano annuo), dove concentreremo la pressione sulle finestre "
-                      f"a più alta intenzione di prenotazione.")
 
-    return (open_sentence + wins_sentence + context_sentence + close_sentence).strip()
+    # Segnali
+    fb_reach_cur = data_meta_cur["facebook"]["reach"] or 0
+    fb_reach_prev = data_meta_prev["facebook"]["reach"] or 0
+    fb_reach_delta = pct(fb_reach_cur, fb_reach_prev)
+    ig_reach_cur = data_meta_cur["instagram"]["reach"] or 0
+    ig_reach_prev = data_meta_prev["instagram"]["reach"] or 0
+    ig_reach_delta = pct(ig_reach_cur, ig_reach_prev)
+    reach_cur_meta = fb_reach_cur + ig_reach_cur
+    reach_prev_meta = fb_reach_prev + ig_reach_prev
+    reach_meta_delta = pct(reach_cur_meta, reach_prev_meta)
+
+    fb_eng_cur = data_meta_cur["facebook"].get("actions_page_engagement") or 0
+    fb_eng_prev = data_meta_prev["facebook"].get("actions_page_engagement") or 0
+    fb_eng_delta = pct(fb_eng_cur, fb_eng_prev)
+    ig_eng_cur = data_meta_cur["instagram"].get("actions_page_engagement") or 0
+    ig_eng_prev = data_meta_prev["instagram"].get("actions_page_engagement") or 0
+    ig_eng_delta = pct(ig_eng_cur, ig_eng_prev)
+    tot_eng = fb_eng_cur + ig_eng_cur
+
+    spend_cur = (data_meta_cur["facebook"]["spend"] or 0) + (data_meta_cur["instagram"]["spend"] or 0)
+    spend_prev = (data_meta_prev["facebook"]["spend"] or 0) + (data_meta_prev["instagram"]["spend"] or 0)
+    spend_delta = pct(spend_cur, spend_prev)
+
+    tk_launched = (
+        has_tiktok and data_tk_cur and (data_tk_cur.get("spend") or 0) > 0
+        and (not data_tk_prev or ((data_tk_prev.get("spend") or 0) == 0 and (data_tk_prev.get("impressions") or 0) == 0))
+    )
+    tk_impr_cur = (data_tk_cur.get("impressions") if has_tiktok and data_tk_cur else 0) or 0
+    tk_reach_cur = (data_tk_cur.get("reach") if has_tiktok and data_tk_cur else 0) or 0
+
+    # Caso speciale: account a zero per scelta strategica
+    if spend_cur == 0 and reach_cur_meta == 0:
+        p1 = f"{month_cap} rappresenta una pausa strategica per {client_name}, coerente con il calendario annuo del piano media."
+        p2 = "Il budget residuo resta integro e pronto a concentrarsi sulle finestre stagionali a più alto ritorno previste nei mesi successivi."
+        if next_weight >= 12:
+            p3 = f"Da {next_month_low} (peso {next_weight}% del piano annuo) il presidio riprende nel cuore della stagione, con la pressione necessaria a intercettare la domanda attiva di prenotazione."
+        else:
+            p3 = f"Da {next_month_low} (peso {next_weight}% del piano annuo) il presidio riprende in modo progressivo, pronto a salire sulle finestre più strategiche."
+        return f"{p1}\n\n{p2}\n\n{p3}"
+
+    # Paragrafo 1
+    p1_kind = None  # tag: tk_launch | fb_explode | ig_explode | reach_big | efficiency | fb_modest | ig_modest | tk_present | neutral
+    if tk_launched and tk_impr_cur > 0:
+        p1 = (f"{month_cap} inaugura una nuova fase per {client_name}: la prima campagna TikTok va live e debutta con "
+              f"{fmt_int(tk_impr_cur)} visualizzazioni e {fmt_int(tk_reach_cur)} utenti unici raggiunti, aprendo un canale "
+              f"fino a ieri inesplorato dal brand.")
+        p1_kind = "tk_launch"
+    elif fb_reach_delta is not None and fb_reach_delta > 100 and (reach_meta_delta is None or reach_meta_delta > 0):
+        mul = f"{(1 + fb_reach_delta/100):.1f}".replace('.', ',')
+        p1 = (f"{month_cap} segna un cambio di passo per {client_name}: Facebook diventa il canale di traino e amplia la "
+              f"copertura di {mul} volte rispetto al periodo di confronto, raggiungendo {fmt_int(fb_reach_cur)} utenti unici.")
+        p1_kind = "fb_explode"
+    elif ig_reach_delta is not None and ig_reach_delta > 80 and ig_reach_cur > 50000:
+        mul = f"{(1 + ig_reach_delta/100):.1f}".replace('.', ',')
+        p1 = (f"{month_cap} è il mese di Instagram per {client_name}: la copertura cresce di {mul} volte, portando il "
+              f"messaggio del brand davanti a {fmt_int(ig_reach_cur)} utenti unici sul canale.")
+        p1_kind = "ig_explode"
+    elif reach_meta_delta is not None and reach_meta_delta > 30:
+        p1 = (f"{month_cap} è il mese in cui la copertura Meta cresce in modo netto: il brand entra nello sguardo di "
+              f"{fmt_int(reach_cur_meta)} persone (+{reach_meta_delta:.0f}% rispetto al periodo di confronto).")
+        p1_kind = "reach_big"
+    elif spend_delta is not None and spend_delta < -8 and reach_meta_delta is not None and reach_meta_delta > -8:
+        p1 = (f"{month_cap} è il mese dell'efficienza per {client_name}: la copertura Meta resta solida con "
+              f"{fmt_int(reach_cur_meta)} utenti unici raggiunti, con un investimento ridotto {_del_pct(spend_delta)}. "
+              f"Ogni euro speso ha lavorato meglio.")
+        p1_kind = "efficiency"
+    elif fb_reach_delta is not None and fb_reach_delta > 30:
+        p1 = (f"{month_cap} consolida la presenza di {client_name} su Facebook: {fmt_int(fb_reach_cur)} utenti unici "
+              f"raggiunti, +{fb_reach_delta:.0f}% rispetto al periodo di confronto.")
+        p1_kind = "fb_modest"
+    elif ig_reach_delta is not None and ig_reach_delta > 30:
+        p1 = (f"{month_cap} rafforza la presenza di {client_name} su Instagram: {fmt_int(ig_reach_cur)} utenti unici "
+              f"raggiunti, +{ig_reach_delta:.0f}% rispetto al periodo di confronto.")
+        p1_kind = "ig_modest"
+    elif has_tiktok and tk_impr_cur > 100000:
+        p1 = (f"{month_cap} vede {client_name} attivo su entrambi i canali: Meta porta il brand davanti a "
+              f"{fmt_int(reach_cur_meta)} utenti unici, TikTok aggiunge {fmt_int(tk_impr_cur)} visualizzazioni a "
+              f"presidio del pubblico più giovane.")
+        p1_kind = "tk_present"
+    else:
+        p1 = (f"{month_cap} mantiene il presidio di {client_name} su base solida: {fmt_int(reach_cur_meta)} utenti unici "
+              f"raggiunti su Meta, in linea con il posizionamento strategico del mese all'interno del piano annuo.")
+        p1_kind = "neutral"
+
+    # Paragrafo 2 — evita di ripetere lo spend delta se p1 lo ha già menzionato
+    spend_mentioned_in_p1 = (p1_kind == "efficiency")
+
+    p2_parts = []
+    if fb_eng_delta is not None and fb_eng_delta > 100 and fb_eng_cur > 5000:
+        p2_parts.append(f"le interazioni sui contenuti Facebook salgono a {fmt_int(fb_eng_cur)}, una scala completamente "
+                        f"diversa rispetto al periodo di confronto")
+    elif ig_eng_delta is not None and ig_eng_delta > 40 and ig_eng_cur > 2000:
+        p2_parts.append(f"le interazioni Instagram crescono {_del_pct(ig_eng_delta)} e portano il coinvolgimento totale "
+                        f"a {fmt_int(ig_eng_cur)} azioni nel mese")
+    elif tot_eng > 50000:
+        p2_parts.append(f"il pubblico interagisce attivamente con i contenuti del brand, con {fmt_int(tot_eng)} interazioni "
+                        f"totali generate nel mese")
+    if has_tiktok and not tk_launched and tk_impr_cur > 100000:
+        p2_parts.append(f"TikTok continua a presidiare con efficienza il pubblico più giovane "
+                        f"({fmt_int(tk_impr_cur)} visualizzazioni)")
+
+    if p2_parts:
+        sent = "; ".join(p2_parts[:2])
+        p2 = sent[0].upper() + sent[1:] + "."
+        if not spend_mentioned_in_p1:
+            if spend_delta is not None and spend_delta < -8:
+                p2 += f" Risultati ottenuti con {_art_pct(spend_delta)} di investimento in meno rispetto al periodo di confronto."
+            elif spend_delta is not None and spend_delta > 12:
+                p2 += f" Per sostenere questa traiettoria, l'investimento del mese cresce {_del_pct(spend_delta)}."
+    elif spend_delta is not None and spend_delta < -8 and not spend_mentioned_in_p1:
+        p2 = (f"Il dato chiave del mese è l'efficienza: la copertura resta in linea con il periodo di confronto, ma "
+              f"con {_art_pct(spend_delta)} di budget in meno. È il segnale di una strategia di targeting che continua "
+              f"a lavorare bene.")
+    elif spend_delta is not None and spend_delta > 12:
+        p2 = (f"L'investimento del mese sale {_del_pct(spend_delta)} per consolidare il momentum, coerente con il peso "
+              f"di {BUDGET_WEIGHTS[month_num]}% che il piano annuo riserva a {month_low}.")
+    elif tot_eng > 0:
+        p2 = (f"Il presidio del marchio si mantiene attivo con {fmt_int(tot_eng)} interazioni totali su Meta: i contenuti "
+              f"pubblicati continuano a generare conversazioni qualificate intorno a {client_name}.")
+    else:
+        p2 = ("Il piano del mese resta coerente con la stagionalità: presidio costante a tutela della brand awareness, "
+              "in attesa delle finestre più strategiche dei mesi successivi.")
+
+    # Paragrafo 3
+    if tk_launched:
+        nxt_phrase = "centrale per costruire la pressione stagionale" if next_weight >= 12 else "utile a consolidare il sistema appena avviato"
+        p3 = (f"Da {next_month_low} {client_name} opera su due leve complementari — Meta per la conversione, TikTok per la "
+              f"scoperta. {next_month_cap} pesa il {next_weight}% del piano annuo, una finestra {nxt_phrase}.")
+    elif has_tiktok:
+        p3 = (f"A {next_month_low} (peso {next_weight}% del piano annuo) confermiamo il sistema a due velocità: Meta "
+              f"presidia la fase di considerazione e prenotazione, TikTok amplia la scoperta del brand sul pubblico più giovane.")
+    elif next_weight >= 12:
+        p3 = (f"{next_month_cap} entra nel cuore della stagione ({next_weight}% del budget annuo): saliamo sulla pressione "
+              f"per intercettare la domanda attiva nella finestra prenotativa più calda dell'anno.")
+    elif next_weight >= 10:
+        p3 = (f"A {next_month_low} ({next_weight}% del piano annuo) la pressione cresce in modo strutturato: prepariamo "
+              f"il pubblico alle finestre di alta stagione che arrivano subito dopo.")
+    else:
+        p3 = (f"A {next_month_low} (peso {next_weight}% del piano annuo) il presidio prosegue strategico, mantenendo il "
+              f"pubblico caldo in vista delle finestre più rilevanti del piano.")
+
+    return f"{p1}\n\n{p2}\n\n{p3}"
 
 
 def build_client_sheet(wb, client, data, year, month):
