@@ -456,11 +456,11 @@ li.report-item a:hover { background:#f0f3f7; color:#1F4E78; }
 <div class="container">
   <h1>Report AGHC</h1>
   <p class="subtitle">Archivio storico mensile · 18 hotel clienti · Meta + TikTok Advertising</p>
-  <div class="tagline">Report KPI mensili gestiti da <strong>FMM Consulting</strong> per <strong>AG Hotel Consulting</strong>. Ogni snapshot è una fotografia statica dei dati Windsor.ai al momento della pubblicazione, con confronti YoY/MoM, budget tracking annuo e proposte investimento mese successivo.</div>
+  <div class="tagline">Report KPI mensili realizzati da <strong>Francesco Maria Mosca</strong> per <strong>AG Hotel Consulting</strong>. Ogni snapshot è una fotografia statica dei dati Windsor.ai al momento della pubblicazione, con confronti YoY/MoM, budget tracking annuo e proposte investimento mese successivo.</div>
   <div class="section-label">Report disponibili</div>
   <ul class="report-list">
 __ROWS__  </ul>
-  <div class="footer">Aggiornato il __UPDATED__ · <a href="https://fmmconsulting.it">FMM Consulting</a></div>
+  <div class="footer">Aggiornato il __UPDATED__ · Realizzato da Francesco Maria Mosca</div>
 </div>
 </body>
 </html>

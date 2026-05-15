@@ -1,6 +1,6 @@
 # Report AGHC — Archivio mensile
 
-Snapshot statici dei report KPI mensili di AG Hotel Consulting (Meta + TikTok Advertising), generati e pubblicati automaticamente da [FMM Consulting](https://fmmconsulting.it).
+Snapshot statici dei report KPI mensili di AG Hotel Consulting (Meta + TikTok Advertising), realizzati da Francesco Maria Mosca.
 
 🌐 **Online:** https://advfmosca.github.io/report-aghc-monthly/
 

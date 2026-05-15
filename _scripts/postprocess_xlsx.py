@@ -46,7 +46,7 @@ def add_reach_estimated_note(ws):
                 "calcolata applicando il rapporto reach/impressions del periodo corrente "
                 "(fallback su MoM quando il corrente non è utilizzabile). Motivo: la Meta "
                 "Marketing API non restituisce più il dato reach per periodi oltre 24 mesi.",
-                "FMM"
+                "Francesco Maria Mosca"
             )
             cell.comment.width = 320
             cell.comment.height = 130
