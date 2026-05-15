@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """build_static.py — Genera la pagina HTML statica self-contained del report mensile AGHC.
 
+Style: Executive Minimal — typography pulita, palette mono nero/grigio, numeri grandi,
+sparkline inline sui trend YTD. Niente colori corporate, niente gradient pesanti.
+
 Input:
   --year 2026 --month 4 --data _data/data-2026-04.json
 
 Output:
   - <slug>.html (es. aprile-2026.html) nella root del repo
   - index.html ricostruito con la lista di tutti i mesi disponibili
-
-Uso da scheduled task mensile:
-  python3 _scripts/build_static.py --year 2026 --month 4 --data _data/data-2026-04.json
 """
 import argparse, json, sys, re, os
 from pathlib import Path
@@ -20,7 +20,6 @@ MONTH_IT = {1:"gennaio",2:"febbraio",3:"marzo",4:"aprile",5:"maggio",6:"giugno",
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# Anagrafica (replica fonte di verità _generator/anagrafica.py — riscritta in JSON-friendly format)
 CLIENTS = [
     {"nome":"Accentodì","meta_id":"1312718426033158","filter":["Accentodì"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":2400,"note":"Cadenza TRIMESTRALE (incluso per consultazione)"},
     {"nome":"Adèsso","meta_id":"1312718426033158","filter":["Adèsso","MICE"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":2400,"note":"Cadenza TRIMESTRALE (incluso per consultazione)"},
@@ -48,16 +47,12 @@ def slug_for(year, month):
 
 
 def render_page(year, month, data):
-    """Build a self-contained HTML report for the given month."""
     slug = slug_for(year, month)
     period_label = f"{MONTH_IT[month].capitalize()} {year}"
     generated_at = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
-
-    # Embed data + anagrafica + month name into the HTML as JS consts
     data_json = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     clients_json = json.dumps(CLIENTS, ensure_ascii=False, separators=(",", ":"))
     month_json = json.dumps(MONTH_IT, ensure_ascii=False)
-
     html = HTML_TEMPLATE.replace("__YEAR__", str(year)) \
                        .replace("__MONTH__", str(month)) \
                        .replace("__PERIOD_LABEL__", period_label) \
@@ -69,22 +64,18 @@ def render_page(year, month, data):
 
 
 def update_index(repo_root: Path):
-    """Rebuild index.html scanning available <slug>.html files in root."""
     files = []
     for f in repo_root.glob("*.html"):
         if f.name == "index.html":
             continue
-        # filename: mese-anno.html → estrai
         m = re.match(r"([a-zà-ÿ]+)-(\d{4})\.html$", f.name, re.IGNORECASE)
         if not m:
             continue
         mese, anno = m.group(1).lower(), int(m.group(2))
-        # rev MONTH_IT
         rev = {v:k for k,v in MONTH_IT.items()}
         if mese not in rev:
             continue
         files.append({"slug": f.stem, "year": anno, "month": rev[mese], "filename": f.name})
-    # sort newest first
     files.sort(key=lambda x: (x["year"], x["month"]), reverse=True)
 
     rows_html = ""
@@ -101,7 +92,7 @@ def update_index(repo_root: Path):
 
 
 # ============================================================================
-# HTML TEMPLATES
+# HTML TEMPLATE — Executive Minimal
 # ============================================================================
 HTML_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="it">
@@ -110,73 +101,356 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Report AGHC — __PERIOD_LABEL__</title>
 <style>
-:root { color-scheme: light; }
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --bg-muted: #f4f4f5;
+  --ink: #09090b;
+  --ink-soft: #3f3f46;
+  --ink-mute: #71717a;
+  --ink-faint: #a1a1aa;
+  --line: #e4e4e7;
+  --line-soft: #f1f1f3;
+  --pos: #15803d;
+  --neg: #b91c1c;
+  --warn: #b45309;
+  --info: #1d4ed8;
+}
 * { box-sizing: border-box; }
-body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:#fff; color:#1c2024; font-size:13px; line-height:1.45; }
-.app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
-.sidebar { border-right:1px solid #e3e6ea; background:#f7f8fa; padding:12px 0; position:sticky; top:0; height:100vh; overflow-y:auto; }
-.sidebar h1 { font-size:13px; font-weight:700; color:#1F4E78; margin:6px 14px 4px; text-transform:uppercase; letter-spacing:0.5px; }
-.sidebar .period { margin:0 14px 14px; font-size:12px; color:#6c757d; font-weight:600; }
-.nav-item { display:flex; align-items:center; justify-content:space-between; padding:7px 14px; cursor:pointer; font-size:13px; border-left:3px solid transparent; transition:background .12s ease; }
-.nav-item:hover { background:#ebeef2; }
-.nav-item.active { background:#e1ecf7; border-left-color:#1F4E78; font-weight:600; color:#1F4E78; }
-.nav-item .badge { font-size:10px; color:#6c757d; }
-.nav-section { margin-top:14px; padding:4px 14px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#6c757d; }
-.archive-link { display:block; margin:14px; padding:7px 10px; background:#fff; border:1px solid #d6dce3; border-radius:6px; text-align:center; text-decoration:none; color:#1F4E78; font-size:12px; font-weight:600; }
-.archive-link:hover { background:#e1ecf7; }
-.main { padding:18px 28px 60px; min-width:0; }
-.client-header { background:linear-gradient(135deg,#1F4E78 0%,#2A6CA8 100%); color:#fff; padding:16px 20px; border-radius:8px; margin-bottom:12px; }
-.client-header h2 { margin:0; font-size:18px; font-weight:700; }
-.client-header .meta { margin-top:6px; font-size:12px; opacity:0.85; }
-.note-banner { background:#FFF2CC; border-left:3px solid #BF8F00; padding:8px 12px; margin:8px 0 14px; font-size:12px; color:#5d4d00; font-style:italic; border-radius:0 4px 4px 0; }
-.note-banner.tiktok-launch { background:#DDEBF7; border-left-color:#2F5496; color:#1a3a5c; }
-.section-title { font-size:12px; font-weight:700; color:#1F4E78; text-transform:uppercase; letter-spacing:0.5px; margin:22px 0 6px; padding-bottom:6px; border-bottom:2px solid #1F4E78; }
-.kpi-title { font-size:12px; font-weight:700; color:#1F4E78; margin:14px 0 4px; text-transform:uppercase; letter-spacing:0.3px; }
-.kpi-title .info { color:#BF8F00; margin-left:4px; cursor:help; font-size:11px; }
-table.kpi,table.ytd,table.tracking,table.proposta { width:100%; max-width:720px; border-collapse:collapse; background:#fff; margin-bottom:4px; font-size:12.5px; }
-table.kpi th,table.kpi td,table.ytd th,table.ytd td,table.tracking th,table.tracking td,table.proposta th,table.proposta td { border:1px solid #d6dce3; padding:6px 10px; text-align:center; }
-table.kpi th,table.ytd th,table.tracking th,table.proposta th { background:#D9E1F2; font-weight:700; font-size:11px; color:#1c2024; text-transform:uppercase; letter-spacing:0.3px; }
-table.kpi td:first-child,table.kpi th:first-child,table.ytd td:first-child,table.tracking td:first-child,table.proposta td:first-child { text-align:left; font-weight:600; }
-.delta-pos { color:#548235; font-weight:700; }
-.delta-neg { color:#C00000; font-weight:700; }
-.delta-neutral { color:#595959; }
-.delta-na { color:#595959; font-style:italic; font-size:11px; }
-.delta-tk-launch { color:#2F5496; font-style:italic; font-weight:700; font-size:11px; }
-tr.total td { font-weight:700; background:#f0f3f7; }
-.status-line { font-weight:700; font-size:13px; padding:6px 10px; border-radius:4px; margin:6px 0; }
-.status-in-linea { background:#e2efda; color:#548235; }
-.status-under { background:#fff4ce; color:#BF8F00; }
-.status-over { background:#f8d7da; color:#C00000; }
-.status-neutral { background:#f0f0f0; color:#595959; }
-.rational { background:#f7f8fa; border-left:4px solid #1F4E78; padding:12px 16px; margin-top:14px; font-size:13px; line-height:1.55; border-radius:0 4px 4px 0; max-width:720px; }
-.budget-plan { padding:6px 0 30px; }
-.budget-plan-client { margin-bottom:24px; }
-.budget-plan-client-header { background:#2F5496; color:#fff; padding:8px 14px; font-weight:700; font-size:14px; border-radius:6px 6px 0 0; }
-.budget-plan-client-info { background:#f7f8fa; padding:6px 14px; font-size:12px; font-style:italic; color:#1F4E78; font-weight:600; border-left:1px solid #d6dce3; border-right:1px solid #d6dce3; }
-.budget-plan-warning { background:#f8d7da; padding:8px 14px; font-size:12px; color:#C00000; font-weight:700; border-left:1px solid #d6dce3; border-right:1px solid #d6dce3; }
-table.budget-plan-table { width:100%; border-collapse:collapse; font-size:12px; }
-table.budget-plan-table th,table.budget-plan-table td { border:1px solid #d6dce3; padding:5px 8px; text-align:center; }
-table.budget-plan-table th { background:#D9E1F2; font-weight:700; text-transform:uppercase; font-size:10.5px; }
-table.budget-plan-table td:first-child { text-align:left; font-weight:600; }
-table.budget-plan-table tr.total td { background:#f0f3f7; font-weight:700; }
-.header-toolbar { display:flex; align-items:center; gap:12px; margin-bottom:14px; padding:8px 14px; background:#f7f8fa; border-radius:6px; font-size:12px; }
-.header-toolbar label { font-weight:600; color:#1F4E78; }
-.header-toolbar .refreshed { margin-left:auto; color:#6c757d; font-style:italic; }
+html, body { margin:0; padding:0; }
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.55;
+  font-feature-settings: "ss01", "cv11", "tnum";
+  -webkit-font-smoothing: antialiased;
+}
+.app { display: grid; grid-template-columns: 260px minmax(0,1fr); min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  border-right: 1px solid var(--line);
+  background: var(--bg-soft);
+  padding: 28px 0 60px;
+  position: sticky; top: 0;
+  height: 100vh; overflow-y: auto;
+}
+.sidebar .brand {
+  padding: 0 24px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.sidebar .period-current {
+  padding: 6px 24px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.sidebar .archive-link {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 16px 24px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-size: 13px;
+  transition: all .15s ease;
+}
+.sidebar .archive-link:hover { border-color: var(--ink-faint); color: var(--ink); }
+.sidebar .archive-link .arrow-back { font-size: 14px; }
+.sidebar .nav-section {
+  padding: 18px 24px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.nav-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 24px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-soft);
+  position: relative;
+  transition: color .12s ease;
+}
+.nav-item:hover { color: var(--ink); }
+.nav-item:hover::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--ink-faint);
+}
+.nav-item.active { color: var(--ink); font-weight: 600; }
+.nav-item.active::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--ink);
+}
+.nav-item .badge { font-size: 10px; color: var(--ink-faint); font-weight: 400; letter-spacing: 0.04em; }
+
+/* MAIN */
+.main { padding: 36px 56px 80px; min-width: 0; max-width: 1080px; }
+
+.client-title {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.client-subtitle {
+  font-size: 14px;
+  color: var(--ink-mute);
+  margin: 0 0 24px;
+}
+.client-meta {
+  display: flex; flex-wrap: wrap; gap: 18px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 36px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.client-meta .meta-item { display: flex; flex-direction: column; gap: 2px; }
+.client-meta .meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); }
+.client-meta .meta-value { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+.note-banner {
+  border-left: 2px solid var(--warn);
+  background: #fefbf3;
+  padding: 10px 14px;
+  margin: 8px 0 22px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  border-radius: 0 4px 4px 0;
+}
+.note-banner.tiktok-launch { border-left-color: var(--info); background: #f5f8ff; }
+
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 44px 0 14px;
+  padding-bottom: 0;
+  border: none;
+}
+
+/* KPI tables — minimal, no vertical borders */
+.kpi-block { margin-bottom: 18px; }
+.kpi-block-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.kpi-block-title .info {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--bg-muted);
+  color: var(--ink-mute);
+  font-size: 10px;
+  font-style: normal;
+  cursor: help;
+}
+table.kpi {
+  width: 100%; max-width: 720px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+table.kpi th, table.kpi td {
+  padding: 10px 14px;
+  border: none;
+  border-bottom: 1px solid var(--line-soft);
+}
+table.kpi th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-bottom: 8px;
+}
+table.kpi th:nth-child(2),
+table.kpi th:nth-child(3) { text-align: right; }
+table.kpi th:nth-child(4) { text-align: right; width: 90px; }
+table.kpi td:first-child {
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 13px;
+}
+table.kpi td:nth-child(2),
+table.kpi td:nth-child(3) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+}
+table.kpi td:nth-child(2) { font-weight: 600; color: var(--ink); }
+table.kpi td:nth-child(3) { color: var(--ink-mute); }
+table.kpi td:nth-child(4) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 600;
+}
+table.kpi tr:last-child td { border-bottom: none; }
+.delta-pos { color: var(--pos); }
+.delta-neg { color: var(--neg); }
+.delta-neutral, .delta-na { color: var(--ink-faint); font-weight: 500; font-size: 12px; }
+.delta-tk-launch { color: var(--info); font-style: italic; font-weight: 500; font-size: 12px; }
+
+/* YTD / Tracking / Proposta — same minimal table */
+table.flat {
+  width: 100%; max-width: 720px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+table.flat th, table.flat td {
+  padding: 9px 14px;
+  border: none;
+  border-bottom: 1px solid var(--line-soft);
+}
+table.flat th {
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+}
+table.flat th:nth-child(n+2),
+table.flat td:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; }
+table.flat td:first-child { font-weight: 500; color: var(--ink-soft); }
+table.flat tr.total td { border-top: 1px solid var(--line); border-bottom: none; font-weight: 700; color: var(--ink); padding-top: 12px; }
+table.flat tr:last-child td { border-bottom: none; }
+table.flat td.sparkline-cell { padding-right: 0; padding-left: 8px; width: 80px; }
+table.flat td.sparkline-cell svg { display: block; }
+
+.status-line {
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin: 14px 0 4px;
+  max-width: 720px;
+}
+.status-in-linea { background: #f0fdf4; color: var(--pos); border: 1px solid #bbf7d0; }
+.status-under { background: #fffbeb; color: var(--warn); border: 1px solid #fde68a; }
+.status-over { background: #fef2f2; color: var(--neg); border: 1px solid #fecaca; }
+.status-neutral { background: var(--bg-muted); color: var(--ink-mute); }
+
+.rational {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  padding: 18px 22px;
+  margin-top: 18px;
+  font-size: 14px;
+  line-height: 1.65;
+  border-radius: 8px;
+  max-width: 720px;
+  color: var(--ink-soft);
+}
+
+/* Budget Plan */
+.budget-plan-intro { font-size: 13px; color: var(--ink-mute); margin: 0 0 28px; max-width: 720px; line-height: 1.55; }
+.budget-plan-client {
+  margin-bottom: 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.budget-plan-client-header {
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+}
+.budget-plan-client-info {
+  background: var(--bg-soft);
+  padding: 10px 18px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+}
+.budget-plan-warning {
+  background: #fef2f2;
+  padding: 10px 18px;
+  font-size: 12px;
+  color: var(--neg);
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+}
+table.budget-plan-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.budget-plan-table th, table.budget-plan-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  text-align: left;
+}
+table.budget-plan-table th {
+  background: var(--bg-soft);
+  font-weight: 500;
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+table.budget-plan-table th:nth-child(n+2),
+table.budget-plan-table td:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; }
+table.budget-plan-table td:first-child { font-weight: 500; color: var(--ink); }
+table.budget-plan-table tr.total td { background: var(--bg-soft); font-weight: 700; color: var(--ink); border-bottom: none; }
+
+/* Header toolbar */
+.header-toolbar {
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 0 22px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.header-toolbar .refreshed { margin-left: auto; font-style: normal; }
+.header-toolbar .crumb { font-weight: 600; color: var(--ink); font-size: 13px; }
+.header-toolbar .sep { color: var(--ink-faint); }
+
+/* Sparkline SVG */
+.spark { display: inline-block; vertical-align: middle; }
+.spark path { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.spark path.area { fill: var(--ink); fill-opacity: 0.06; stroke: none; }
+.spark circle.last { fill: var(--ink); }
+
+/* Mobile */
 @media (max-width: 720px) {
   .app { grid-template-columns: 1fr; }
-  .sidebar { position:relative; height:auto; max-height:none; }
-  .main { padding:14px 16px 60px; }
-  table.kpi,table.ytd,table.tracking,table.proposta { font-size:11px; }
-  table.kpi td,table.kpi th { padding:4px 6px; }
+  .sidebar { position: relative; height: auto; padding: 18px 0; }
+  .main { padding: 24px 18px 60px; }
+  .client-title { font-size: 22px; }
+  table.kpi, table.flat { font-size: 13px; }
+  table.kpi th, table.kpi td, table.flat th, table.flat td { padding: 8px 10px; }
+  .client-meta { flex-direction: column; gap: 12px; }
 }
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="sidebar">
-    <h1>Report AGHC</h1>
-    <div class="period">__PERIOD_LABEL__</div>
-    <a class="archive-link" href="index.html">← Archivio storico</a>
+    <div class="brand">Report AGHC</div>
+    <div class="period-current">__PERIOD_LABEL__</div>
+    <a class="archive-link" href="index.html"><span class="arrow-back">←</span> Archivio storico</a>
     <div class="nav-section">Overview</div>
     <div id="nav-overview"></div>
     <div class="nav-section">18 Clienti</div>
@@ -196,19 +470,47 @@ const BUDGET_WEIGHTS = {1:3,2:3,3:5,4:10,5:15,6:15,7:12,8:12,9:5,10:5,11:5,12:10
 const META_SHARE = 0.80;
 const TIKTOK_SHARE = 0.20;
 const TIKTOK_MIN_MONTHLY = 600;
-const SHARED_ACCOUNTS = new Set(["1312718426033158","1528485957725509","821188209852436"]);
 
 function monthName(m){ return MONTH_IT[String(m)] || MONTH_IT[m]; }
+function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
 function fmtInt(x){ if(x===null||x===undefined) return "n/d"; return Math.round(x).toLocaleString("it-IT"); }
 function fmtEur(x){ if(x===null||x===undefined) return "n/d"; return x.toLocaleString("it-IT",{style:"currency",currency:"EUR",minimumFractionDigits:2,maximumFractionDigits:2}); }
 function pct(c,p){ if(p===null||p===undefined||p===0||c===null||c===undefined) return null; return (c-p)/p*100; }
 function fmtPct(p){ if(p===null) return "n/d"; const s=p>0?"+":""; return `${s}${p.toFixed(2)}%`; }
 function pctClass(p){ if(p===null) return "delta-na"; return p>=0?"delta-pos":"delta-neg"; }
+function fmtDelta(p, override){
+  if(override) return `<span class="${override.cls}">${override.text}</span>`;
+  if(p===null) return `<span class="delta-na">n/d</span>`;
+  const arrow = p>=0 ? "↗" : "↘";
+  return `<span class="${pctClass(p)}">${arrow} ${fmtPct(p)}</span>`;
+}
 function comparisonPeriod(y,m,t){ if(t==="YoY") return {y:y-1,m}; if(m===1) return {y:y-1,m:12}; return {y,m:m-1}; }
-function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
 function emptyMeta(){ return {reach:0,impressions:0,actions_page_engagement:0,clicks:0,spend:0}; }
 function emptyTk(){ return {reach:0,impressions:0,engagements:0,clicks:0,spend:0}; }
+
+// SVG sparkline: input array values, returns inline <svg>
+function sparkline(values, opts){
+  opts = opts || {};
+  const w = opts.w || 80, h = opts.h || 22, pad = 2;
+  if(!values || values.length === 0 || values.every(v => !v)) return "";
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = (max - min) || 1;
+  const stepX = (w - pad*2) / Math.max(1, values.length - 1);
+  const pts = values.map((v,i) => {
+    const x = pad + i * stepX;
+    const y = h - pad - ((v - min) / range) * (h - pad*2);
+    return [x, y];
+  });
+  const linePath = pts.map((p,i) => (i===0?"M":"L")+p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+  const areaPath = linePath + ` L${pts[pts.length-1][0].toFixed(1)},${h-pad} L${pts[0][0].toFixed(1)},${h-pad} Z`;
+  const last = pts[pts.length-1];
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+    <path class="area" d="${areaPath}"/>
+    <path d="${linePath}"/>
+    <circle class="last" cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="2"/>
+  </svg>`;
+}
 
 function buildClientData(client){
   const compMeta = comparisonPeriod(REPORT_YEAR, REPORT_MONTH, client.cm);
@@ -225,8 +527,6 @@ function buildClientData(client){
       ? (DATA.meta_by_account.prev_yoy[client.meta_id] || {facebook:emptyMeta(),instagram:emptyMeta()})
       : (DATA.meta_by_account.prev_mom[client.meta_id] || {facebook:emptyMeta(),instagram:emptyMeta()});
   }
-  // Detect reach estimation: legge dalla lista esplicita "reach_estimated_clients"
-  // popolata da estimate_reach.py durante la pipeline.
   const estimatedList = DATA.reach_estimated_clients || [];
   const reachEstimated = estimatedList.includes(client.nome);
 
@@ -240,7 +540,6 @@ function buildClientData(client){
     if((tkCur.spend||0)>0 && (tkPrev.spend||0)===0 && (tkPrev.impressions||0)===0){ tkLaunched = true; }
   }
 
-  // YTD per cliente
   const ytdRoot = DATA.ytd_spend || {by_client: {}, months: []};
   const ytdMonths = ytdRoot.months && ytdRoot.months.length ? ytdRoot.months : (function(){ const a=[]; for(let m=1;m<=REPORT_MONTH;m++) a.push(m); return a; })();
   const cYtd = ytdRoot.by_client?.[client.nome] || {};
@@ -274,81 +573,96 @@ function buildRational(cd){
   return open + winsLine + ctx + close;
 }
 
-function kpiTable(title, periodA, periodB, rows, fmt, withInfoIcon){
-  const info = withInfoIcon ? `<span class="info" title="Reach periodo precedente STIMATA — la Meta Marketing API non restituisce più reach per periodi oltre 24 mesi; valore calcolato applicando il rapporto reach/impressions del periodo corrente.">ⓘ</span>` : "";
-  let h = `<div class="kpi-title">${title}${info}</div><table class="kpi"><thead><tr><th></th><th>${periodA}</th><th>${periodB}</th><th>Confronto</th></tr></thead><tbody>`;
+function kpiBlock(title, periodA, periodB, rows, fmt, withInfoIcon){
+  const info = withInfoIcon ? `<span class="info" title="Reach periodo precedente STIMATA — la Meta Marketing API non restituisce più reach per periodi oltre 24 mesi; valore calcolato applicando il rapporto reach/impressions del periodo corrente.">i</span>` : "";
+  let h = `<div class="kpi-block"><div class="kpi-block-title">${title}${info}</div><table class="kpi"><thead><tr><th></th><th>${periodA}</th><th>${periodB}</th><th>Δ</th></tr></thead><tbody>`;
   for(const [label, cur, prev, override] of rows){
     const p = pct(cur, prev);
-    const dc = override ? `<td class="${override.cls}">${override.text}</td>` : `<td class="${pctClass(p)}">${fmtPct(p)}</td>`;
-    h += `<tr><td>${label}</td><td>${fmt(cur)}</td><td>${fmt(prev)}</td>${dc}</tr>`;
+    h += `<tr><td>${label}</td><td>${fmt(cur)}</td><td>${fmt(prev)}</td><td>${fmtDelta(p, override)}</td></tr>`;
   }
-  return h + `</tbody></table>`;
+  return h + `</tbody></table></div>`;
 }
 
 function renderClient(cd){
   const { client, periodA, periodBMeta, tkPeriodB, hasTk, metaCur, metaPrev, tkCur, tkPrev, reachEstimated, tkLaunched, ytdMonths, ytdSpend } = cd;
-  let h = `<div class="client-header"><h2>${client.nome} — ${periodA} vs ${periodBMeta}</h2>
-    <div class="meta">Budget annuo: ${fmtEur(client.budget)} · Confronto Meta: ${client.cm} · TikTok: ${hasTk?"attivo":"non gestito"}${client.ct?` · Confronto TikTok: ${client.ct}`:""}</div></div>`;
-  if(client.note) h += `<div class="note-banner">📌 ${client.note}</div>`;
-  h += `<div class="section-title">Meta (Facebook + Instagram)</div>`;
+  let h = `<h1 class="client-title">${client.nome}</h1>
+    <p class="client-subtitle">${periodA} <span style="color:var(--ink-faint)">vs</span> ${periodBMeta}</p>
+    <div class="client-meta">
+      <div class="meta-item"><div class="meta-label">Budget annuo</div><div class="meta-value">${fmtEur(client.budget)}</div></div>
+      <div class="meta-item"><div class="meta-label">Confronto Meta</div><div class="meta-value">${client.cm}</div></div>
+      <div class="meta-item"><div class="meta-label">TikTok</div><div class="meta-value">${hasTk?"Attivo":"—"}</div></div>
+      ${client.ct?`<div class="meta-item"><div class="meta-label">Confronto TikTok</div><div class="meta-value">${client.ct}</div></div>`:""}
+    </div>`;
+  if(client.note) h += `<div class="note-banner">${client.note}</div>`;
+
+  h += `<div class="section-title">Meta · Facebook + Instagram</div>`;
   for(const [title, field] of [["Account Raggiunti","reach"],["Visualizzazioni","impressions"],["Interazioni","actions_page_engagement"],["Clicks","clicks"]]){
     const wi = (field==="reach") && reachEstimated;
-    h += kpiTable(title, periodA, periodBMeta, [
+    h += kpiBlock(title, periodA, periodBMeta, [
       ["Instagram", metaCur.instagram[field], metaPrev.instagram[field]],
       ["Facebook",  metaCur.facebook[field],  metaPrev.facebook[field]],
     ], fmtInt, wi);
   }
   const spCur = (metaCur.facebook.spend||0)+(metaCur.instagram.spend||0);
   const spPrev = (metaPrev.facebook.spend||0)+(metaPrev.instagram.spend||0);
-  h += kpiTable("Budget Meta", periodA, periodBMeta, [["Totale", spCur, spPrev]], fmtEur, false);
+  h += kpiBlock("Budget Meta", periodA, periodBMeta, [["Totale", spCur, spPrev]], fmtEur, false);
 
   if(hasTk){
     h += `<div class="section-title">TikTok</div>`;
-    if(tkLaunched) h += `<div class="note-banner tiktok-launch">📌 TikTok attivato ad ${capitalize(monthName(REPORT_MONTH))} ${REPORT_YEAR} — primo mese live, confronto MoM non disponibile</div>`;
+    if(tkLaunched) h += `<div class="note-banner tiktok-launch">TikTok attivato ad ${capitalize(monthName(REPORT_MONTH))} ${REPORT_YEAR} — primo mese live, confronto MoM non disponibile</div>`;
     const ovr = tkLaunched ? {text:"1° mese live", cls:"delta-tk-launch"} : null;
     for(const [t,f] of [["Account Raggiunti","reach"],["Visualizzazioni","impressions"],["Interazioni","engagements"],["Clicks","clicks"]]){
-      h += kpiTable(t, periodA, tkPeriodB, [["TikTok", tkCur[f], tkPrev[f], ovr]], fmtInt, false);
+      h += kpiBlock(t, periodA, tkPeriodB, [["TikTok", tkCur[f], tkPrev[f], ovr]], fmtInt, false);
     }
-    h += kpiTable("Budget TikTok", periodA, tkPeriodB, [["TikTok", tkCur.spend, tkPrev.spend, ovr]], fmtEur, false);
+    h += kpiBlock("Budget TikTok", periodA, tkPeriodB, [["TikTok", tkCur.spend, tkPrev.spend, ovr]], fmtEur, false);
   }
 
   const tkSpend = hasTk?(tkCur.spend||0):0;
   const totMonth = spCur + tkSpend;
-  h += `<div class="section-title">Spesa Mensile</div><table class="ytd"><thead><tr><th>Canale</th><th>Speso ${periodA}</th></tr></thead><tbody>
+  h += `<div class="section-title">Spesa Mensile</div><table class="flat"><thead><tr><th>Canale</th><th>Speso ${periodA}</th></tr></thead><tbody>
     <tr><td>Meta</td><td>${fmtEur(spCur)}</td></tr>
     ${hasTk?`<tr><td>TikTok</td><td>${fmtEur(tkSpend)}</td></tr>`:""}
-    <tr class="total"><td>TOTALE</td><td>${fmtEur(totMonth)}</td></tr></tbody></table>`;
+    <tr class="total"><td>Totale</td><td>${fmtEur(totMonth)}</td></tr></tbody></table>`;
 
+  // YTD con sparkline accanto al totale di riga
   h += `<div class="section-title">Riepilogo Spesa YTD</div>`;
   let ytdMeta=0, ytdTk=0;
-  h += `<table class="ytd"><thead><tr><th>Mese</th><th>Meta</th><th>TikTok</th><th>Totale</th></tr></thead><tbody>`;
+  const monthlyTotals = [];
+  h += `<table class="flat"><thead><tr><th>Mese</th><th>Meta</th><th>TikTok</th><th>Totale</th><th></th></tr></thead><tbody>`;
   for(const m of ytdMonths){
     const md = ytdSpend[String(m)] || {meta:0,tiktok:0};
     ytdMeta += (md.meta||0); ytdTk += (md.tiktok||0);
-    h += `<tr><td>${capitalize(monthName(m))}</td><td>${fmtEur(md.meta||0)}</td><td>${hasTk?fmtEur(md.tiktok||0):"—"}</td><td>${fmtEur((md.meta||0)+(md.tiktok||0))}</td></tr>`;
+    const rowTot = (md.meta||0)+(md.tiktok||0);
+    monthlyTotals.push(rowTot);
+    h += `<tr><td>${capitalize(monthName(m))}</td><td>${fmtEur(md.meta||0)}</td><td>${hasTk?fmtEur(md.tiktok||0):"—"}</td><td>${fmtEur(rowTot)}</td><td></td></tr>`;
   }
   const ytdTot = ytdMeta+ytdTk;
-  h += `<tr class="total"><td>TOTALE YTD</td><td>${fmtEur(ytdMeta)}</td><td>${hasTk?fmtEur(ytdTk):"—"}</td><td>${fmtEur(ytdTot)}</td></tr></tbody></table>`;
+  const sparkSvg = sparkline(monthlyTotals, {w:90, h:22});
+  h += `<tr class="total"><td>YTD</td><td>${fmtEur(ytdMeta)}</td><td>${hasTk?fmtEur(ytdTk):"—"}</td><td>${fmtEur(ytdTot)}</td><td class="sparkline-cell">${sparkSvg}</td></tr></tbody></table>`;
 
+  // Budget Tracking
   const cumW = ytdMonths.reduce((s,m)=>s+BUDGET_WEIGHTS[m],0);
   const atteso = client.budget * cumW / 100;
   const scarto = ytdTot - atteso;
   const rim = client.budget - ytdTot;
   const tol = atteso * 0.10;
   let st, sc;
-  if(atteso===0){ st="— (piano non ancora partito)"; sc="status-neutral"; }
-  else if(Math.abs(scarto)<=tol){ st="✓ IN LINEA col piano"; sc="status-in-linea"; }
-  else if(scarto<0){ st=`⚠ UNDER SPENDING di ${fmtEur(Math.abs(scarto))}`; sc="status-under"; }
-  else { st=`⚠ OVER SPENDING di ${fmtEur(Math.abs(scarto))}`; sc="status-over"; }
-  h += `<div class="section-title">Budget Tracking Annuo</div><table class="tracking"><tbody>
-    <tr><td>Budget annuo</td><td colspan="3">${fmtEur(client.budget)}</td></tr>
-    <tr><td>Peso cumulato piano (Gen–${capitalize(monthName(REPORT_MONTH))})</td><td colspan="3">${cumW}%</td></tr>
-    <tr><td>Atteso YTD</td><td colspan="3">${fmtEur(atteso)}</td></tr>
-    <tr><td>Speso YTD</td><td colspan="3">${fmtEur(ytdTot)}</td></tr>
-    <tr><td>Scarto vs piano</td><td colspan="3">${scarto>=0?"+":"−"}${fmtEur(Math.abs(scarto))}</td></tr>
-    <tr><td>Budget rimanente anno</td><td colspan="3">${fmtEur(rim)}</td></tr>
-  </tbody></table><div class="status-line ${sc}">Status pacing: ${st}</div>`;
+  if(atteso===0){ st="Piano non ancora partito"; sc="status-neutral"; }
+  else if(Math.abs(scarto)<=tol){ st="In linea col piano"; sc="status-in-linea"; }
+  else if(scarto<0){ st=`Under spending di ${fmtEur(Math.abs(scarto))}`; sc="status-under"; }
+  else { st=`Over spending di ${fmtEur(Math.abs(scarto))}`; sc="status-over"; }
+  h += `<div class="section-title">Budget Tracking Annuo</div>
+    <table class="flat"><tbody>
+      <tr><td>Budget annuo</td><td>${fmtEur(client.budget)}</td></tr>
+      <tr><td>Peso cumulato piano (Gen–${capitalize(monthName(REPORT_MONTH))})</td><td>${cumW}%</td></tr>
+      <tr><td>Atteso YTD</td><td>${fmtEur(atteso)}</td></tr>
+      <tr><td>Speso YTD</td><td>${fmtEur(ytdTot)}</td></tr>
+      <tr><td>Scarto vs piano</td><td>${scarto>=0?"+":"−"}${fmtEur(Math.abs(scarto))}</td></tr>
+      <tr><td>Budget rimanente anno</td><td>${fmtEur(rim)}</td></tr>
+    </tbody></table>
+    <div class="status-line ${sc}">${st}</div>`;
 
+  // Proposta investimento
   const nm = (REPORT_MONTH%12)+1;
   const ny = REPORT_MONTH===12 ? REPORT_YEAR+1 : REPORT_YEAR;
   const nw = BUDGET_WEIGHTS[nm];
@@ -358,43 +672,45 @@ function renderClient(cd){
   else metaN = baseNext;
   const totN = metaN + tkN;
   h += `<div class="section-title">Proposta Investimento ${capitalize(monthName(nm))} ${ny}</div>
-    <table class="proposta"><thead><tr><th>Canale</th><th>Investimento Suggerito</th><th>Note</th></tr></thead><tbody>
-      <tr><td>Meta</td><td>${fmtEur(metaN)}</td><td>${hasTk?`Split ${Math.round(META_SHARE*100)}%`:"100% budget mensile"}</td></tr>
-      ${hasTk?`<tr><td>TikTok</td><td>${fmtEur(tkN)}</td><td>${tkNote}</td></tr>`:""}
-      <tr class="total"><td>TOTALE</td><td>${fmtEur(totN)}</td><td>Peso piano ${nw}%</td></tr>
+    <table class="flat"><thead><tr><th>Canale</th><th>Investimento Suggerito</th><th>Note</th></tr></thead><tbody>
+      <tr><td>Meta</td><td>${fmtEur(metaN)}</td><td style="color:var(--ink-mute);font-size:12px">${hasTk?`Split ${Math.round(META_SHARE*100)}%`:"100% budget mensile"}</td></tr>
+      ${hasTk?`<tr><td>TikTok</td><td>${fmtEur(tkN)}</td><td style="color:var(--ink-mute);font-size:12px">${tkNote}</td></tr>`:""}
+      <tr class="total"><td>Totale</td><td>${fmtEur(totN)}</td><td style="color:var(--ink-mute);font-size:12px">Peso piano ${nw}%</td></tr>
     </tbody></table>`;
+
   h += `<div class="section-title">Rational</div><div class="rational">${buildRational(cd)}</div>`;
   return h;
 }
 
 function renderBudgetPlan(allCD){
   const rem = []; for(let m=REPORT_MONTH+1;m<=12;m++) rem.push(m);
-  if(rem.length===0) return `<h2 style="margin:0 0 12px;color:#1F4E78">Piano Budget Residuo</h2><div class="note-banner">Anno concluso — nessun mese residuo.</div>`;
+  if(rem.length===0) return `<h1 class="client-title">Piano Budget Residuo</h1><div class="note-banner">Anno concluso — nessun mese residuo.</div>`;
   const tw = rem.reduce((s,m)=>s+BUDGET_WEIGHTS[m],0);
-  let h = `<h2 style="margin:0 0 6px;color:#1F4E78">Piano Budget Residuo — da ${capitalize(monthName(rem[0]))} a Dicembre ${REPORT_YEAR}</h2>
-    <p style="font-size:12px;color:#595959;font-style:italic;margin:0 0 14px;max-width:900px">Ricalibrazione dei budget sui pesi mensili AGHC — pesi originali rinormalizzati sul totale residuo ${tw}%. Split 80% Meta / 20% TikTok con soglia minima €${TIKTOK_MIN_MONTHLY}/mese TikTok.</p><div class="budget-plan">`;
+  let h = `<h1 class="client-title">Piano Budget Residuo</h1>
+    <p class="client-subtitle">Da ${capitalize(monthName(rem[0]))} a Dicembre ${REPORT_YEAR}</p>
+    <p class="budget-plan-intro">Ricalibrazione dei budget sui pesi mensili AGHC — pesi originali rinormalizzati sul totale residuo ${tw}%. Split 80% Meta / 20% TikTok con soglia minima €${TIKTOK_MIN_MONTHLY}/mese TikTok.</p>`;
   for(const cd of allCD){
     const c = cd.client, hasTk = cd.hasTk;
     let ytdTot = 0; for(const m of cd.ytdMonths){ const md=cd.ytdSpend[String(m)]||{}; ytdTot+=(md.meta||0)+(md.tiktok||0); }
     const res = c.budget - ytdTot, num = rem.length;
     let warn=null, metaRes;
-    if(hasTk){ const tf=TIKTOK_MIN_MONTHLY*num; const mr=res-tf; if(mr<0){ warn=`⚠ Residuo ${fmtEur(res)} < min TikTok totale (${fmtEur(tf)}). TikTok manterrà €${TIKTOK_MIN_MONTHLY}/mese fissi, Meta = €0.`; metaRes=0;} else metaRes=mr; } else metaRes=res;
+    if(hasTk){ const tf=TIKTOK_MIN_MONTHLY*num; const mr=res-tf; if(mr<0){ warn=`Residuo ${fmtEur(res)} < min TikTok totale (${fmtEur(tf)}). TikTok manterrà €${TIKTOK_MIN_MONTHLY}/mese fissi, Meta = €0.`; metaRes=0;} else metaRes=mr; } else metaRes=res;
     h += `<div class="budget-plan-client"><div class="budget-plan-client-header">${c.nome}</div>
-      <div class="budget-plan-client-info">Budget annuo: ${fmtEur(c.budget)} · Speso YTD: ${fmtEur(ytdTot)} · Residuo: ${fmtEur(res)}${hasTk?` · TikTok: attivo (min €${TIKTOK_MIN_MONTHLY}/mese)`:" · TikTok: non gestito"}</div>`;
+      <div class="budget-plan-client-info">Budget annuo: <strong>${fmtEur(c.budget)}</strong> · Speso YTD: <strong>${fmtEur(ytdTot)}</strong> · Residuo: <strong>${fmtEur(res)}</strong>${hasTk?` · TikTok attivo (min €${TIKTOK_MIN_MONTHLY}/mese)`:""}</div>`;
     if(warn) h += `<div class="budget-plan-warning">${warn}</div>`;
     h += `<table class="budget-plan-table"><thead><tr><th>Mese</th><th>Peso piano</th><th>Peso rical.</th><th>Totale mese</th><th>Meta</th><th>TikTok</th><th>Note</th></tr></thead><tbody>`;
     let sT=0,sM=0,sK=0;
     for(const m of rem){
       const pw=BUDGET_WEIGHTS[m], pr=tw?pw/tw*100:0;
       let mm,kk,note;
-      if(hasTk){ mm=metaRes>0?metaRes*pw/tw:0; kk=TIKTOK_MIN_MONTHLY; note="TikTok fisso €600 · Meta pro-peso"; }
+      if(hasTk){ mm=metaRes>0?metaRes*pw/tw:0; kk=TIKTOK_MIN_MONTHLY; note="TikTok fisso · Meta pro-peso"; }
       else { mm=res>0?res*pw/tw:0; kk=0; note="100% Meta"; }
       const t=mm+kk; sT+=t; sM+=mm; sK+=kk;
-      h += `<tr><td>${capitalize(monthName(m))}</td><td>${pw}%</td><td>${pr.toFixed(1)}%</td><td>${fmtEur(t)}</td><td>${fmtEur(mm)}</td><td>${hasTk?fmtEur(kk):"—"}</td><td>${note}</td></tr>`;
+      h += `<tr><td>${capitalize(monthName(m))}</td><td>${pw}%</td><td>${pr.toFixed(1)}%</td><td>${fmtEur(t)}</td><td>${fmtEur(mm)}</td><td>${hasTk?fmtEur(kk):"—"}</td><td style="color:var(--ink-mute);font-size:11px">${note}</td></tr>`;
     }
-    h += `<tr class="total"><td>TOTALE</td><td>${tw}%</td><td>100.0%</td><td>${fmtEur(sT)}</td><td>${fmtEur(sM)}</td><td>${hasTk?fmtEur(sK):"—"}</td><td></td></tr></tbody></table></div>`;
+    h += `<tr class="total"><td>Totale</td><td>${tw}%</td><td>100.0%</td><td>${fmtEur(sT)}</td><td>${fmtEur(sM)}</td><td>${hasTk?fmtEur(sK):"—"}</td><td></td></tr></tbody></table></div>`;
   }
-  return h + `</div>`;
+  return h;
 }
 
 const STATE = { active: "_overview", allCD: CLIENTS.map(c => buildClientData(c)) };
@@ -403,10 +719,15 @@ function setActive(key){ STATE.active = key; document.querySelectorAll(".nav-ite
 
 function render(){
   const main = document.getElementById("main");
-  const refreshed = new Date(GENERATED_AT.replace(" UTC"," GMT")).toLocaleString("it-IT",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
-  let h = `<div class="header-toolbar"><label>Mese:</label><strong>__PERIOD_LABEL__</strong><span class="refreshed">Pubblicato il ${refreshed} · Fonte: Windsor.ai · Snapshot statico</span></div>`;
+  const refreshed = new Date(GENERATED_AT.replace(" UTC"," GMT")).toLocaleString("it-IT",{day:"2-digit",month:"short",year:"numeric"});
+  let h = `<div class="header-toolbar">
+    <span class="crumb">__PERIOD_LABEL__</span>
+    <span class="sep">·</span>
+    <span>Snapshot Windsor.ai</span>
+    <span class="refreshed">Pubblicato il ${refreshed}</span>
+  </div>`;
   if(STATE.active==="_overview") h += renderBudgetPlan(STATE.allCD);
-  else { const cd = STATE.allCD.find(x=>x.client.nome===STATE.active); h += cd ? renderClient(cd) : `<div class="error">Cliente non trovato.</div>`; }
+  else { const cd = STATE.allCD.find(x=>x.client.nome===STATE.active); h += cd ? renderClient(cd) : `<div class="note-banner">Cliente non trovato.</div>`; }
   main.innerHTML = h;
   window.scrollTo(0,0);
 }
@@ -415,7 +736,7 @@ function buildNav(){
   const ov = document.getElementById("nav-overview");
   ov.innerHTML = `<div class="nav-item active" data-key="_overview"><span>Piano Budget Residuo</span></div>`;
   const cn = document.getElementById("nav-clients");
-  cn.innerHTML = CLIENTS.map((c,i)=>`<div class="nav-item" data-key="${c.nome}"><span>${i+1}. ${c.nome}</span><span class="badge">${c.cm}${c.tk_id?"·TK":""}</span></div>`).join("");
+  cn.innerHTML = CLIENTS.map((c,i)=>`<div class="nav-item" data-key="${c.nome}"><span>${c.nome}</span><span class="badge">${c.cm}${c.tk_id?" · TK":""}</span></div>`).join("");
   document.querySelectorAll(".nav-item").forEach(n=>n.addEventListener("click", ()=>setActive(n.dataset.key)));
 }
 
@@ -433,34 +754,44 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Report AGHC — Archivio mensile</title>
 <style>
-:root { color-scheme: light; }
-body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:#f7f8fa; color:#1c2024; }
-.container { max-width:720px; margin:0 auto; padding:40px 24px 60px; }
-h1 { color:#1F4E78; font-size:24px; margin:0 0 6px; }
-.subtitle { color:#6c757d; font-size:14px; margin:0 0 28px; }
-.tagline { background:#fff; border-left:4px solid #1F4E78; padding:14px 18px; border-radius:0 6px 6px 0; margin-bottom:32px; font-size:13px; line-height:1.55; color:#1c2024; }
-.section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#6c757d; margin:0 0 10px; }
-ul.report-list { list-style:none; padding:0; margin:0; background:#fff; border:1px solid #e3e6ea; border-radius:8px; overflow:hidden; }
-li.report-item { border-bottom:1px solid #e3e6ea; }
+:root { color-scheme: light;
+  --bg:#fafafa; --card:#fff; --ink:#09090b; --ink-soft:#3f3f46; --ink-mute:#71717a; --ink-faint:#a1a1aa; --line:#e4e4e7;
+}
+* { box-sizing: border-box; }
+body {
+  margin:0; padding:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", "Inter", sans-serif;
+  background: var(--bg); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width:640px; margin:0 auto; padding:60px 24px 80px; }
+.brand-tag { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 10px; }
+h1 { color:var(--ink); font-size:36px; font-weight:700; letter-spacing:-0.02em; margin:0 0 8px; }
+.subtitle { color:var(--ink-mute); font-size:15px; margin:0 0 32px; line-height:1.55; }
+.tagline { background:var(--card); border:1px solid var(--line); padding:18px 22px; border-radius:10px; margin-bottom:40px; font-size:13.5px; line-height:1.6; color:var(--ink-soft); }
+.tagline strong { color:var(--ink); font-weight:600; }
+.section-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-faint); margin:0 0 14px; }
+ul.report-list { list-style:none; padding:0; margin:0; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+li.report-item { border-bottom:1px solid var(--line); }
 li.report-item:last-child { border-bottom:none; }
-li.report-item a { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; text-decoration:none; color:#1c2024; transition:background .15s ease; }
-li.report-item a:hover { background:#f0f3f7; color:#1F4E78; }
-.month-name { font-weight:600; font-size:15px; }
-.arrow { color:#1F4E78; font-size:18px; font-weight:600; }
-.empty { background:#fff; border:1px dashed #d6dce3; border-radius:8px; padding:30px; text-align:center; color:#6c757d; font-style:italic; }
-.footer { text-align:center; font-size:11px; color:#6c757d; margin-top:30px; }
-.footer a { color:#1F4E78; }
+li.report-item a { display:flex; align-items:center; justify-content:space-between; padding:16px 22px; text-decoration:none; color:var(--ink); transition: background .12s ease; }
+li.report-item a:hover { background:var(--bg); }
+.month-name { font-weight:500; font-size:15px; letter-spacing:-0.005em; }
+.arrow { color:var(--ink-mute); font-size:18px; transition: transform .15s ease, color .15s ease; }
+li.report-item a:hover .arrow { color:var(--ink); transform: translateX(2px); }
+.footer { text-align:center; font-size:12px; color:var(--ink-mute); margin-top:36px; letter-spacing:0.02em; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Report AGHC</h1>
-  <p class="subtitle">Archivio storico mensile · 18 hotel clienti · Meta + TikTok Advertising</p>
+  <p class="brand-tag">Report AGHC</p>
+  <h1>Archivio mensile</h1>
+  <p class="subtitle">18 hotel clienti · Meta + TikTok Advertising</p>
   <div class="tagline">Report KPI mensili realizzati da <strong>Francesco Maria Mosca</strong> per <strong>AG Hotel Consulting</strong>. Ogni snapshot è una fotografia statica dei dati Windsor.ai al momento della pubblicazione, con confronti YoY/MoM, budget tracking annuo e proposte investimento mese successivo.</div>
   <div class="section-label">Report disponibili</div>
   <ul class="report-list">
 __ROWS__  </ul>
-  <div class="footer">Aggiornato il __UPDATED__ · Realizzato da Francesco Maria Mosca</div>
+  <p class="footer">Aggiornato il __UPDATED__ · Realizzato da Francesco Maria Mosca</p>
 </div>
 </body>
 </html>
@@ -471,7 +802,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--year", type=int, required=True)
     p.add_argument("--month", type=int, required=True)
-    p.add_argument("--data", required=True, help="path al JSON dei dati elaborati")
+    p.add_argument("--data", required=True)
     args = p.parse_args()
     data = json.loads(Path(args.data).read_text(encoding="utf-8"))
     slug, html = render_page(args.year, args.month, data)
