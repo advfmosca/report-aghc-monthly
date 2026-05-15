@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report AGHC — Aprile 2026</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:#fff; color:#1c2024; font-size:13px; line-height:1.45; }
+.app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
+.sidebar { border-right:1px solid #e3e6ea; background:#f7f8fa; padding:12px 0; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.sidebar h1 { font-size:13px; font-weight:700; color:#1F4E78; margin:6px 14px 4px; text-transform:uppercase; letter-spacing:0.5px; }
+.sidebar .period { margin:0 14px 14px; font-size:12px; color:#6c757d; font-weight:600; }
+.nav-item { display:flex; align-items:center; justify-content:space-between; padding:7px 14px; cursor:pointer; font-size:13px; border-left:3px solid transparent; transition:background .12s ease; }
+.nav-item:hover { background:#ebeef2; }
+.nav-item.active { background:#e1ecf7; border-left-color:#1F4E78; font-weight:600; color:#1F4E78; }
+.nav-item .badge { font-size:10px; color:#6c757d; }
+.nav-section { margin-top:14px; padding:4px 14px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#6c757d; }
+.archive-link { display:block; margin:14px; padding:7px 10px; background:#fff; border:1px solid #d6dce3; border-radius:6px; text-align:center; text-decoration:none; color:#1F4E78; font-size:12px; font-weight:600; }
+.archive-link:hover { background:#e1ecf7; }
+.main { padding:18px 28px 60px; min-width:0; }
+.client-header { background:linear-gradient(135deg,#1F4E78 0%,#2A6CA8 100%); color:#fff; padding:16px 20px; border-radius:8px; margin-bottom:12px; }
+.client-header h2 { margin:0; font-size:18px; font-weight:700; }
+.client-header .meta { margin-top:6px; font-size:12px; opacity:0.85; }
+.note-banner { background:#FFF2CC; border-left:3px solid #BF8F00; padding:8px 12px; margin:8px 0 14px; font-size:12px; color:#5d4d00; font-style:italic; border-radius:0 4px 4px 0; }
+.note-banner.tiktok-launch { background:#DDEBF7; border-left-color:#2F5496; color:#1a3a5c; }
+.section-title { font-size:12px; font-weight:700; color:#1F4E78; text-transform:uppercase; letter-spacing:0.5px; margin:22px 0 6px; padding-bottom:6px; border-bottom:2px solid #1F4E78; }
+.kpi-title { font-size:12px; font-weight:700; color:#1F4E78; margin:14px 0 4px; text-transform:uppercase; letter-spacing:0.3px; }
+.kpi-title .info { color:#BF8F00; margin-left:4px; cursor:help; font-size:11px; }
+table.kpi,table.ytd,table.tracking,table.proposta { width:100%; max-width:720px; border-collapse:collapse; background:#fff; margin-bottom:4px; font-size:12.5px; }
+table.kpi th,table.kpi td,table.ytd th,table.ytd td,table.tracking th,table.tracking td,table.proposta th,table.proposta td { border:1px solid #d6dce3; padding:6px 10px; text-align:center; }
+table.kpi th,table.ytd th,table.tracking th,table.proposta th { background:#D9E1F2; font-weight:700; font-size:11px; color:#1c2024; text-transform:uppercase; letter-spacing:0.3px; }
+table.kpi td:first-child,table.kpi th:first-child,table.ytd td:first-child,table.tracking td:first-child,table.proposta td:first-child { text-align:left; font-weight:600; }
+.delta-pos { color:#548235; font-weight:700; }
+.delta-neg { color:#C00000; font-weight:700; }
+.delta-neutral { color:#595959; }
+.delta-na { color:#595959; font-style:italic; font-size:11px; }
+.delta-tk-launch { color:#2F5496; font-style:italic; font-weight:700; font-size:11px; }
+tr.total td { font-weight:700; background:#f0f3f7; }
+.status-line { font-weight:700; font-size:13px; padding:6px 10px; border-radius:4px; margin:6px 0; }
+.status-in-linea { background:#e2efda; color:#548235; }
+.status-under { background:#fff4ce; color:#BF8F00; }
+.status-over { background:#f8d7da; color:#C00000; }
+.status-neutral { background:#f0f0f0; color:#595959; }
+.rational { background:#f7f8fa; border-left:4px solid #1F4E78; padding:12px 16px; margin-top:14px; font-size:13px; line-height:1.55; border-radius:0 4px 4px 0; max-width:720px; }
+.budget-plan { padding:6px 0 30px; }
+.budget-plan-client { margin-bottom:24px; }
+.budget-plan-client-header { background:#2F5496; color:#fff; padding:8px 14px; font-weight:700; font-size:14px; border-radius:6px 6px 0 0; }
+.budget-plan-client-info { background:#f7f8fa; padding:6px 14px; font-size:12px; font-style:italic; color:#1F4E78; font-weight:600; border-left:1px solid #d6dce3; border-right:1px solid #d6dce3; }
+.budget-plan-warning { background:#f8d7da; padding:8px 14px; font-size:12px; color:#C00000; font-weight:700; border-left:1px solid #d6dce3; border-right:1px solid #d6dce3; }
+table.budget-plan-table { width:100%; border-collapse:collapse; font-size:12px; }
+table.budget-plan-table th,table.budget-plan-table td { border:1px solid #d6dce3; padding:5px 8px; text-align:center; }
+table.budget-plan-table th { background:#D9E1F2; font-weight:700; text-transform:uppercase; font-size:10.5px; }
+table.budget-plan-table td:first-child { text-align:left; font-weight:600; }
+table.budget-plan-table tr.total td { background:#f0f3f7; font-weight:700; }
+.header-toolbar { display:flex; align-items:center; gap:12px; margin-bottom:14px; padding:8px 14px; background:#f7f8fa; border-radius:6px; font-size:12px; }
+.header-toolbar label { font-weight:600; color:#1F4E78; }
+.header-toolbar .refreshed { margin-left:auto; color:#6c757d; font-style:italic; }
+@media (max-width: 720px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { position:relative; height:auto; max-height:none; }
+  .main { padding:14px 16px 60px; }
+  table.kpi,table.ytd,table.tracking,table.proposta { font-size:11px; }
+  table.kpi td,table.kpi th { padding:4px 6px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <h1>Report AGHC</h1>
+    <div class="period">Aprile 2026</div>
+    <a class="archive-link" href="index.html">← Archivio storico</a>
+    <div class="nav-section">Overview</div>
+    <div id="nav-overview"></div>
+    <div class="nav-section">18 Clienti</div>
+    <div id="nav-clients"></div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+<script>
+const REPORT_YEAR = 2026;
+const REPORT_MONTH = 4;
+const GENERATED_AT = "2026-05-15 12:44 UTC";
+const DATA = {"target_period":"2026-04","meta_by_account":{"current":{"1432341844596179":{"facebook":{"reach":377804,"impressions":587969,"actions_page_engagement":295321,"clicks":4418,"spend":515.8568},"instagram":{"reach":66924,"impressions":92151,"actions_page_engagement":33033,"clicks":22,"spend":97.0232}},"1372615496521110":{"facebook":{"reach":466577,"impressions":903231,"actions_page_engagement":561919,"clicks":11887,"spend":463.1681},"instagram":{"reach":109270,"impressions":156843,"actions_page_engagement":82458,"clicks":281,"spend":111.3619}},"1312718426033158":{"facebook":{"reach":251379,"impressions":397179,"actions_page_engagement":162864,"clicks":7482,"spend":350.5198},"instagram":{"reach":3935,"impressions":4395,"actions_page_engagement":2418,"clicks":13,"spend":6.5502}},"1489903155429629":{"facebook":{"reach":667909,"impressions":915261,"actions_page_engagement":21197,"clicks":5123,"spend":533.32},"instagram":{"reach":20706,"impressions":35517,"actions_page_engagement":3584,"clicks":28,"spend":153.46}},"1353024533007038":{"facebook":{"reach":432706,"impressions":756611,"actions_page_engagement":297028,"clicks":20281,"spend":792.2759},"instagram":{"reach":18708,"impressions":24407,"actions_page_engagement":4391,"clicks":348,"spend":91.6041}},"821188209852436":{"facebook":{"reach":162403,"impressions":273052,"actions_page_engagement":50924,"clicks":7555,"spend":280.7274},"instagram":{"reach":265049,"impressions":545395,"actions_page_engagement":187739,"clicks":1192,"spend":818.0126}},"911357333863123":{"facebook":{"reach":26843,"impressions":43890,"actions_page_engagement":29699,"clicks":310,"spend":33.6},"instagram":{"reach":33496,"impressions":41489,"actions_page_engagement":22784,"clicks":81,"spend":63.83}},"1201395876543423":{"facebook":{"reach":784746,"impressions":1155778,"actions_page_engagement":721241,"clicks":10757,"spend":813.1596},"instagram":{"reach":15929,"impressions":18598,"actions_page_engagement":12458,"clicks":30,"spend":16.3704}},"1528485957725509":{"facebook":{"reach":426568,"impressions":882968,"actions_page_engagement":435949,"clicks":11077,"spend":1155.802},"instagram":{"reach":47709,"impressions":61243,"actions_page_engagement":30648,"clicks":77,"spend":80.458}},"687349689221880":{"facebook":{"reach":286769,"impressions":549726,"actions_page_engagement":43960,"clicks":41432,"spend":707.2321},"instagram":{"reach":11068,"impressions":13601,"actions_page_engagement":1213,"clicks":204,"spend":53.9479}},"217115315497718":{"facebook":{"reach":465409,"impressions":658517,"actions_page_engagement":24094,"clicks":15732,"spend":1328.7616},"instagram":{"reach":115790,"impressions":187692,"actions_page_engagement":12179,"clicks":5733,"spend":707.1568}},"1849759899186169":{"facebook":{"reach":251756,"impressions":476134,"actions_page_engagement":57455,"clicks":9526,"spend":783.2093},"instagram":{"reach":84701,"impressions":162455,"actions_page_engagement":17339,"clicks":97,"spend":492.5707}},"752450855779035":{"facebook":{"reach":15985,"impressions":25455,"actions_page_engagement":3064,"clicks":2076,"spend":113.5432},"instagram":{"reach":4978,"impressions":6973,"actions_page_engagement":1561,"clicks":207,"spend":52.9168}},"30233607946222961":{"facebook":{"reach":960839,"impressions":1078417,"actions_page_engagement":70296,"clicks":1420,"spend":359.7225},"instagram":{"reach":941957,"impressions":1757944,"actions_page_engagement":76711,"clicks":573,"spend":293.3975}}},"prev_yoy":{"911357333863123":{"facebook":{"reach":124738,"impressions":203955,"actions_page_engagement":14356,"clicks":16768,"spend":209.98},"instagram":{"reach":195786,"impressions":242506,"actions_page_engagement":53439,"clicks":501,"spend":249.64}},"1432341844596179":{"facebook":{"reach":0,"impressions":6373,"actions_page_engagement":705,"clicks":678,"spend":18.02},"instagram":{"reach":0,"impressions":1481,"actions_page_engagement":166,"clicks":7,"spend":5.08}},"1312718426033158":{"facebook":{"reach":0,"impressions":780804,"actions_page_engagement":245983,"clicks":6400,"spend":1102.3101},"instagram":{"reach":0,"impressions":552525,"actions_page_engagement":121239,"clicks":718,"spend":879.1399}},"1201395876543423":{"facebook":{"reach":0,"impressions":330467,"actions_page_engagement":6954,"clicks":6996,"spend":345.0022},"instagram":{"reach":0,"impressions":32002,"actions_page_engagement":2420,"clicks":580,"spend":96.5878}},"1372615496521110":{"facebook":{"reach":0,"impressions":475077,"actions_page_engagement":50147,"clicks":505,"spend":75.73},"instagram":{"reach":0,"impressions":496196,"actions_page_engagement":22700,"clicks":465,"spend":92.62}},"1528485957725509":{"facebook":{"reach":0,"impressions":155070,"actions_page_engagement":7449,"clicks":11211,"spend":258.8513},"instagram":{"reach":0,"impressions":376756,"actions_page_engagement":82979,"clicks":289,"spend":339.4487}},"821188209852436":{"facebook":{"reach":0,"impressions":280231,"actions_page_engagement":11824,"clicks":17516,"spend":440.7022},"instagram":{"reach":0,"impressions":743379,"actions_page_engagement":224886,"clicks":666,"spend":665.3578}},"687349689221880":{"facebook":{"reach":1052939,"impressions":2018446,"actions_page_engagement":574616,"clicks":85227,"spend":690.57},"instagram":{"reach":730776,"impressions":898020,"actions_page_engagement":384461,"clicks":867,"spend":226.28}},"752450855779035":{"facebook":{"reach":0,"impressions":0,"actions_page_engagement":0,"clicks":0,"spend":0},"instagram":{"reach":0,"impressions":33089,"actions_page_engagement":10170,"clicks":121,"spend":89.94}}},"prev_mom":{"1432341844596179":{"facebook":{"reach":110483,"impressions":196607,"actions_page_engagement":61579,"clicks":2946,"spend":372.3854},"instagram":{"reach":114223,"impressions":258857,"actions_page_engagement":83766,"clicks":84,"spend":310.9045}},"1201395876543423":{"facebook":{"reach":215817,"impressions":314606,"actions_page_engagement":134661,"clicks":5179,"spend":258.9248},"instagram":{"reach":38975,"impressions":54458,"actions_page_engagement":9149,"clicks":61,"spend":92.0152}},"1372615496521110":{"facebook":{"reach":167790,"impressions":416302,"actions_page_engagement":263964,"clicks":2655,"spend":149.5067},"instagram":{"reach":192051,"impressions":754158,"actions_page_engagement":380351,"clicks":364,"spend":299.9233}},"911357333863123":{"facebook":{"reach":86092,"impressions":182472,"actions_page_engagement":120367,"clicks":1559,"spend":155.485},"instagram":{"reach":60511,"impressions":106223,"actions_page_engagement":61750,"clicks":144,"spend":154.745}},"30233607946222961":{"facebook":{"reach":1986956,"impressions":2927780,"actions_page_engagement":180604,"clicks":3616,"spend":874.2591},"instagram":{"reach":750832,"impressions":1692646,"actions_page_engagement":85547,"clicks":769,"spend":274.0209}},"1489903155429629":{"facebook":{"reach":597935,"impressions":957269,"actions_page_engagement":50105,"clicks":6112,"spend":707.8924},"instagram":{"reach":44386,"impressions":82793,"actions_page_engagement":7140,"clicks":57,"spend":223.2276}},"1353024533007038":{"facebook":{"reach":195085,"impressions":478984,"actions_page_engagement":50546,"clicks":30728,"spend":563.5063},"instagram":{"reach":62433,"impressions":116528,"actions_page_engagement":16107,"clicks":1218,"spend":328.4237}},"752450855779035":{"facebook":{"reach":6196,"impressions":9030,"actions_page_engagement":1163,"clicks":309,"spend":32.67},"instagram":{"reach":32890,"impressions":53840,"actions_page_engagement":7572,"clicks":1969,"spend":197.34}},"217115315497718":{"facebook":{"reach":114369,"impressions":178406,"actions_page_engagement":14390,"clicks":11618,"spend":460.7886},"instagram":{"reach":9831,"impressions":9831,"actions_page_engagement":208,"clicks":107,"spend":23.1814}},"687349689221880":{"facebook":{"reach":223145,"impressions":423792,"actions_page_engagement":104744,"clicks":24375,"spend":738.5187},"instagram":{"reach":79810,"impressions":128395,"actions_page_engagement":18435,"clicks":3065,"spend":304.0313}},"1849759899186169":{"facebook":{"reach":135602,"impressions":375584,"actions_page_engagement":43296,"clicks":7782,"spend":568.84},"instagram":{"reach":0,"impressions":0,"actions_page_engagement":0,"clicks":0,"spend":0}},"1528485957725509":{"facebook":{"reach":240583,"impressions":414377,"actions_page_engagement":200907,"clicks":8022,"spend":404.1338},"instagram":{"reach":109048,"impressions":183201,"actions_page_engagement":98470,"clicks":203,"spend":248.7262}},"1312718426033158":{"facebook":{"reach":226719,"impressions":372364,"actions_page_engagement":110119,"clicks":11928,"spend":372.45},"instagram":{"reach":20314,"impressions":26693,"actions_page_engagement":11126,"clicks":14,"spend":32.46}},"821188209852436":{"facebook":{"reach":253347,"impressions":487511,"actions_page_engagement":193833,"clicks":4093,"spend":465.8272},"instagram":{"reach":179467,"impressions":299439,"actions_page_engagement":143647,"clicks":173,"spend":341.0928}}}},"meta_filtered":{"Accentodì":{"current":{"facebook":{"reach":132456,"impressions":204466,"actions_page_engagement":86686,"clicks":6639,"spend":201.7697},"instagram":{"reach":3821,"impressions":4395,"actions_page_engagement":2418,"clicks":13,"spend":6.5503}},"prev_yoy":{"facebook":{"reach":112683,"impressions":173943,"actions_page_engagement":5305,"clicks":4741,"spend":332.4019},"instagram":{"reach":392592,"impressions":451568,"actions_page_engagement":77841,"clicks":588,"spend":782.4180999999999}},"prev_mom":{"facebook":{"reach":126620,"impressions":204637,"actions_page_engagement":34691,"clicks":10581,"spend":217},"instagram":{"reach":846,"impressions":954,"actions_page_engagement":445,"clicks":0,"spend":1.49}}},"Adèsso":{"current":{"facebook":{"reach":119523,"impressions":192713,"actions_page_engagement":76178,"clicks":843,"spend":148.75},"instagram":{"reach":0,"impressions":0,"actions_page_engagement":0,"clicks":0,"spend":0}},"prev_yoy":{"facebook":{"reach":376391,"impressions":606874,"actions_page_engagement":240678,"clicks":1659,"spend":769.9392},"instagram":{"reach":76365,"impressions":100944,"actions_page_engagement":43398,"clicks":130,"spend":96.6908}},"prev_mom":{"facebook":{"reach":105955,"impressions":167728,"actions_page_engagement":75428,"clicks":1347,"spend":155.45},"instagram":{"reach":19471,"impressions":25738,"actions_page_engagement":10681,"clicks":14,"spend":30.97}}},"Hannah":{"current":{"facebook":{"reach":305803,"impressions":563443,"actions_page_engagement":267930,"clicks":7849,"spend":692.3286},"instagram":{"reach":32472,"impressions":38522,"actions_page_engagement":19882,"clicks":22,"spend":50.7414}},"prev_yoy":{"facebook":{"reach":84163,"impressions":155070,"actions_page_engagement":7449,"clicks":11211,"spend":258.86},"instagram":{"reach":317585,"impressions":376756,"actions_page_engagement":82979,"clicks":289,"spend":339.44}},"prev_mom":{"facebook":{"reach":182964,"impressions":287778,"actions_page_engagement":132713,"clicks":6786,"spend":248.42},"instagram":{"reach":71921,"impressions":117253,"actions_page_engagement":64838,"clicks":64,"spend":155.72}}},"Hannah Terraces":{"current":{"facebook":{"reach":152122,"impressions":319524,"actions_page_engagement":168019,"clicks":3228,"spend":463.473},"instagram":{"reach":17493,"impressions":22722,"actions_page_engagement":10766,"clicks":55,"spend":29.717}},"prev_yoy":{"facebook":{"reach":0,"impressions":0,"actions_page_engagement":0,"clicks":0,"spend":0},"instagram":{"reach":0,"impressions":0,"actions_page_engagement":0,"clicks":0,"spend":0}},"prev_mom":{"facebook":{"reach":64648,"impressions":126599,"actions_page_engagement":68194,"clicks":1236,"spend":155.7137},"instagram":{"reach":39710,"impressions":65948,"actions_page_engagement":33632,"clicks":139,"spend":93.0063}}},"Marcella Royal":{"current":{"facebook":{"reach":35841,"impressions":43019,"actions_page_engagement":23282,"clicks":243,"spend":33.31},"instagram":{"reach":169462,"impressions":342203,"actions_page_engagement":163201,"clicks":903,"spend":496.78}},"prev_yoy":{"facebook":{"reach":110529,"impressions":132665,"actions_page_engagement":5577,"clicks":7666,"spend":171.4055},"instagram":{"reach":147852,"impressions":298564,"actions_page_engagement":98695,"clicks":266,"spend":277.9445}},"prev_mom":{"facebook":{"reach":103839,"impressions":175398,"actions_page_engagement":100607,"clicks":1228,"spend":155.5799},"instagram":{"reach":79079,"impressions":116764,"actions_page_engagement":74917,"clicks":81,"spend":155.0601}}},"Terrazza Flavia":{"current":{"facebook":{"reach":127167,"impressions":230033,"actions_page_engagement":27642,"clicks":7312,"spend":247.4156},"instagram":{"reach":94104,"impressions":203192,"actions_page_engagement":24538,"clicks":289,"spend":321.2344}},"prev_yoy":{"facebook":{"reach":81579,"impressions":147568,"actions_page_engagement":6247,"clicks":9850,"spend":269.3291},"instagram":{"reach":206006,"impressions":444813,"actions_page_engagement":126191,"clicks":400,"spend":387.3809}},"prev_mom":{"facebook":{"reach":154489,"impressions":312113,"actions_page_engagement":93226,"clicks":2865,"spend":310.2462},"instagram":{"reach":103324,"impressions":182675,"actions_page_engagement":68730,"clicks":92,"spend":186.0338}}}},"tiktok":{"current":{"7498679494010667009":{"reach":544681,"impressions":1988067,"engagements":3961,"clicks":1904,"spend":599.96},"7504967007843319824":{"reach":461643,"impressions":1594597,"engagements":3215,"clicks":1645,"spend":480.08},"7612666695502118929":{"reach":1779421,"impressions":4546000,"engagements":9967,"clicks":0,"spend":410.47},"7498330316248203280":{"reach":1298319,"impressions":2861367,"engagements":5564,"clicks":2734,"spend":690.19},"7499093699838607377":{"reach":49045,"impressions":175179,"engagements":1194,"clicks":441,"spend":161.37}},"prev_mom":{"7498679494010667009":{"reach":466108,"impressions":1945331,"engagements":2992,"clicks":1224,"spend":620.12}},"prev_yoy":{}},"ytd_spend":{"months":[1,2,3,4],"by_client":{"Accentodì":{"1":{"meta":216.46,"tiktok":0},"2":{"meta":195.9,"tiktok":0},"3":{"meta":218.49,"tiktok":0},"4":{"meta":208.32,"tiktok":0}},"Adèsso":{"1":{"meta":240.53,"tiktok":0},"2":{"meta":279.9,"tiktok":0},"3":{"meta":186.42,"tiktok":0},"4":{"meta":148.75,"tiktok":0}},"Altafiumara":{"1":{"meta":426.24,"tiktok":0},"2":{"meta":192.84,"tiktok":0},"3":{"meta":350.94,"tiktok":0},"4":{"meta":829.53,"tiktok":0}},"Castello":{"1":{"meta":0,"tiktok":0},"2":{"meta":0,"tiktok":0},"3":{"meta":931.12,"tiktok":0},"4":{"meta":686.78,"tiktok":0}},"Della Piana":{"1":{"meta":181.68,"tiktok":0},"2":{"meta":279.92,"tiktok":0},"3":{"meta":310.23,"tiktok":0},"4":{"meta":97.43,"tiktok":480.08}},"Hannah":{"1":{"meta":309.93,"tiktok":0},"2":{"meta":361.67,"tiktok":0},"3":{"meta":404.14,"tiktok":0},"4":{"meta":743.07,"tiktok":0}},"Hannah Terraces":{"1":{"meta":207.19,"tiktok":0},"2":{"meta":223.76,"tiktok":0},"3":{"meta":248.72,"tiktok":0},"4":{"meta":493.19,"tiktok":0}},"Hemanaire":{"1":{"meta":0,"tiktok":0},"2":{"meta":0,"tiktok":0},"3":{"meta":483.97,"tiktok":0},"4":{"meta":2100.6,"tiktok":0}},"Livata":{"1":{"meta":0,"tiktok":0},"2":{"meta":0,"tiktok":0},"3":{"meta":0,"tiktok":0},"4":{"meta":0,"tiktok":0}},"Lunetta":{"1":{"meta":278.92,"tiktok":0},"2":{"meta":250.64,"tiktok":0},"3":{"meta":1042.55,"tiktok":0},"4":{"meta":761.18,"tiktok":690.19}},"Magari Estates":{"1":{"meta":470.44,"tiktok":0},"2":{"meta":362.75,"tiktok":0},"3":{"meta":449.43,"tiktok":0},"4":{"meta":574.53,"tiktok":0}},"Marcella Royal":{"1":{"meta":208.24,"tiktok":0},"2":{"meta":0,"tiktok":0},"3":{"meta":310.64,"tiktok":0},"4":{"meta":530.09,"tiktok":161.37}},"Mare":{"1":{"meta":680.58,"tiktok":619.89},"2":{"meta":615.71,"tiktok":560},"3":{"meta":683.29,"tiktok":620.12},"4":{"meta":612.88,"tiktok":599.96}},"Montemagno":{"1":{"meta":121.5,"tiktok":0},"2":{"meta":114.96,"tiktok":0},"3":{"meta":230.01,"tiktok":0},"4":{"meta":166.5,"tiktok":0}},"Terrazza Flavia":{"1":{"meta":212.79,"tiktok":0},"2":{"meta":0,"tiktok":0},"3":{"meta":496.28,"tiktok":0},"4":{"meta":568.65,"tiktok":0}},"Villa Ermellina":{"1":{"meta":708.67,"tiktok":0},"2":{"meta":825.46,"tiktok":0},"3":{"meta":1148.28,"tiktok":0},"4":{"meta":653.12,"tiktok":410.47}},"Villa Giada":{"1":{"meta":0,"tiktok":0},"2":{"meta":0,"tiktok":0},"3":{"meta":568.84,"tiktok":0},"4":{"meta":1275.78,"tiktok":0}},"Villa Miliani":{"1":{"meta":860.18,"tiktok":0},"2":{"meta":699.83,"tiktok":0},"3":{"meta":891.93,"tiktok":0},"4":{"meta":883.89,"tiktok":0}}}}};
+const CLIENTS = [{"nome":"Accentodì","meta_id":"1312718426033158","filter":["Accentodì"],"excl":[],"tk_id":null,"cm":"YoY","ct":null,"budget":2400,"note":"Cadenza TRIMESTRALE (incluso per consultazione)"},{"nome":"Adèsso","meta_id":"1312718426033158","filter":["Adèsso","MICE"],"excl":[],"tk_id":null,"cm":"YoY","ct":null,"budget":2400,"note":"Cadenza TRIMESTRALE (incluso per consultazione)"},{"nome":"Altafiumara","meta_id":"1201395876543423","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":23000,"note":""},{"nome":"Castello","meta_id":"1489903155429629","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":14400,"note":""},{"nome":"Della Piana","meta_id":"911357333863123","filter":null,"excl":[],"tk_id":"7504967007843319824","cm":"YoY","ct":"MoM","budget":14000,"note":"Split confronto: Meta YoY, TikTok MoM"},{"nome":"Hannah","meta_id":"1528485957725509","filter":["Hannah"],"excl":["Terraces"],"tk_id":null,"cm":"YoY","ct":null,"budget":9000,"note":""},{"nome":"Hannah Terraces","meta_id":"1528485957725509","filter":["Terraces"],"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":7200,"note":""},{"nome":"Hemanaire","meta_id":"217115315497718","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":15000,"note":"TikTok verrà attivato più avanti"},{"nome":"Livata","meta_id":"4666471140299701","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":15000,"note":""},{"nome":"Lunetta","meta_id":"687349689221880","filter":null,"excl":[],"tk_id":"7498330316248203280","cm":"YoY","ct":"MoM","budget":18000,"note":"Split confronto: Meta YoY, TikTok MoM"},{"nome":"Magari Estates","meta_id":"1372615496521110","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":24600,"note":""},{"nome":"Marcella Royal","meta_id":"821188209852436","filter":["Marcella"],"excl":[],"tk_id":"7499093699838607377","cm":"YoY","ct":"MoM","budget":14400,"note":"Split confronto: Meta YoY, TikTok MoM"},{"nome":"Mare","meta_id":"1432341844596179","filter":null,"excl":[],"tk_id":"7498679494010667009","cm":"MoM","ct":"MoM","budget":15000,"note":""},{"nome":"Montemagno","meta_id":"752450855779035","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":0,"note":"Aggiunto 25/04/2026 — budget annuo da definire"},{"nome":"Terrazza Flavia","meta_id":"821188209852436","filter":["Terrazza"],"excl":[],"tk_id":null,"cm":"YoY","ct":null,"budget":7500,"note":""},{"nome":"Villa Ermellina","meta_id":"30233607946222961","filter":null,"excl":[],"tk_id":"7612666695502118929","cm":"MoM","ct":"MoM","budget":16400,"note":""},{"nome":"Villa Giada","meta_id":"1849759899186169","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":21600,"note":"TikTok presente ma non attivo"},{"nome":"Villa Miliani","meta_id":"1353024533007038","filter":null,"excl":[],"tk_id":null,"cm":"MoM","ct":null,"budget":6600,"note":""}];
+const MONTH_IT = {"1": "gennaio", "2": "febbraio", "3": "marzo", "4": "aprile", "5": "maggio", "6": "giugno", "7": "luglio", "8": "agosto", "9": "settembre", "10": "ottobre", "11": "novembre", "12": "dicembre"};
+
+const BUDGET_WEIGHTS = {1:3,2:3,3:5,4:10,5:15,6:15,7:12,8:12,9:5,10:5,11:5,12:10};
+const META_SHARE = 0.80;
+const TIKTOK_SHARE = 0.20;
+const TIKTOK_MIN_MONTHLY = 600;
+const SHARED_ACCOUNTS = new Set(["1312718426033158","1528485957725509","821188209852436"]);
+
+function monthName(m){ return MONTH_IT[String(m)] || MONTH_IT[m]; }
+function fmtInt(x){ if(x===null||x===undefined) return "n/d"; return Math.round(x).toLocaleString("it-IT"); }
+function fmtEur(x){ if(x===null||x===undefined) return "n/d"; return x.toLocaleString("it-IT",{style:"currency",currency:"EUR",minimumFractionDigits:2,maximumFractionDigits:2}); }
+function pct(c,p){ if(p===null||p===undefined||p===0||c===null||c===undefined) return null; return (c-p)/p*100; }
+function fmtPct(p){ if(p===null) return "n/d"; const s=p>0?"+":""; return `${s}${p.toFixed(2)}%`; }
+function pctClass(p){ if(p===null) return "delta-na"; return p>=0?"delta-pos":"delta-neg"; }
+function comparisonPeriod(y,m,t){ if(t==="YoY") return {y:y-1,m}; if(m===1) return {y:y-1,m:12}; return {y,m:m-1}; }
+function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function emptyMeta(){ return {reach:0,impressions:0,actions_page_engagement:0,clicks:0,spend:0}; }
+function emptyTk(){ return {reach:0,impressions:0,engagements:0,clicks:0,spend:0}; }
+
+function buildClientData(client){
+  const compMeta = comparisonPeriod(REPORT_YEAR, REPORT_MONTH, client.cm);
+  const periodA = `${capitalize(monthName(REPORT_MONTH))} ${REPORT_YEAR}`;
+  const periodBMeta = `${capitalize(monthName(compMeta.m))} ${compMeta.y}`;
+  let metaCur, metaPrev;
+  if(client.filter){
+    const f = DATA.meta_filtered?.[client.nome] || {};
+    metaCur = f.current || {facebook:emptyMeta(),instagram:emptyMeta()};
+    metaPrev = (client.cm==="YoY") ? (f.prev_yoy || {facebook:emptyMeta(),instagram:emptyMeta()}) : (f.prev_mom || {facebook:emptyMeta(),instagram:emptyMeta()});
+  } else {
+    metaCur = DATA.meta_by_account.current[client.meta_id] || {facebook:emptyMeta(),instagram:emptyMeta()};
+    metaPrev = (client.cm==="YoY")
+      ? (DATA.meta_by_account.prev_yoy[client.meta_id] || {facebook:emptyMeta(),instagram:emptyMeta()})
+      : (DATA.meta_by_account.prev_mom[client.meta_id] || {facebook:emptyMeta(),instagram:emptyMeta()});
+  }
+  // Detect reach estimation: i dati pre-elaborati hanno già reach popolata.
+  // Riconosciamo "stimata" se confronto è YoY e originariamente Meta avrebbe null per >24m.
+  const reachEstimated = (client.cm==="YoY") && (REPORT_YEAR - compMeta.y >= 1) && ((metaPrev.facebook?.reach||0)+(metaPrev.instagram?.reach||0)>0);
+
+  let tkCur=null, tkPrev=null, tkPeriodB=null, tkLaunched=false;
+  const hasTk = !!client.tk_id;
+  if(hasTk){
+    tkCur = DATA.tiktok.current[client.tk_id] || emptyTk();
+    const compTk = comparisonPeriod(REPORT_YEAR, REPORT_MONTH, client.ct);
+    tkPeriodB = `${capitalize(monthName(compTk.m))} ${compTk.y}`;
+    tkPrev = (client.ct==="YoY") ? (DATA.tiktok.prev_yoy?.[client.tk_id] || emptyTk()) : (DATA.tiktok.prev_mom?.[client.tk_id] || emptyTk());
+    if((tkCur.spend||0)>0 && (tkPrev.spend||0)===0 && (tkPrev.impressions||0)===0){ tkLaunched = true; }
+  }
+
+  // YTD per cliente
+  const ytdRoot = DATA.ytd_spend || {by_client: {}, months: []};
+  const ytdMonths = ytdRoot.months && ytdRoot.months.length ? ytdRoot.months : (function(){ const a=[]; for(let m=1;m<=REPORT_MONTH;m++) a.push(m); return a; })();
+  const cYtd = ytdRoot.by_client?.[client.nome] || {};
+
+  return { client, periodA, periodBMeta, hasTk, tkPeriodB, metaCur, metaPrev, tkCur, tkPrev, reachEstimated, tkLaunched, ytdMonths, ytdSpend: cYtd };
+}
+
+function buildRational(cd){
+  const { client, periodA, metaCur, metaPrev, tkCur, hasTk } = cd;
+  const m = REPORT_MONTH;
+  const spendCur = (metaCur.facebook.spend||0)+(metaCur.instagram.spend||0);
+  const spendPrev = (metaPrev.facebook.spend||0)+(metaPrev.instagram.spend||0);
+  const spendDelta = pct(spendCur, spendPrev);
+  const ig = pct(metaCur.instagram.impressions, metaPrev.instagram.impressions);
+  const fb = pct(metaCur.facebook.reach, metaPrev.facebook.reach);
+  const imp = pct((metaCur.facebook.impressions||0)+(metaCur.instagram.impressions||0), (metaPrev.facebook.impressions||0)+(metaPrev.instagram.impressions||0));
+  let open;
+  if(spendDelta!==null && spendDelta>5) open = `${periodA} si apre con un incremento strategico del budget pubblicitario Meta (${fmtPct(spendDelta)}), scelta coerente con il posizionamento del mese all'interno del piano annuo (peso ${BUDGET_WEIGHTS[m]}%).`;
+  else if(spendDelta!==null && spendDelta<-5) open = `In ${periodA} l'allocazione Meta è stata consapevolmente contenuta (${fmtPct(spendDelta)}) per concentrare pressione sulle finestre strategiche successive, coerentemente con il piano AGHC.`;
+  else open = `${periodA} vede una continuità di investimento Meta in linea con il periodo di confronto (peso mensile ${BUDGET_WEIGHTS[m]}% sul piano annuo), a presidio costante del brand.`;
+  const wins = [];
+  if(ig!==null && ig>0) wins.push(`Instagram consolida la share of voice con visualizzazioni in crescita (${fmtPct(ig)})`);
+  if(fb!==null && fb>0) wins.push(`Facebook amplia la copertura (${fmtPct(fb)})`);
+  if(hasTk && (tkCur?.impressions||0)>0) wins.push(`TikTok genera ${fmtInt(tkCur.impressions)} impression a presidio efficiente`);
+  if(wins.length===0){ const t=(metaCur.facebook.reach||0)+(metaCur.instagram.reach||0); if(t>0) wins.push(`il presidio del brand resta solido con oltre ${fmtInt(t)} utenti unici raggiunti`); }
+  const winsLine = wins.length ? " " + wins.slice(0,2).join("; ").replace(/^./, c=>c.toUpperCase()) + ", a conferma di un mix canali ben bilanciato sugli obiettivi di awareness." : "";
+  const anyDecline = (imp!==null && imp<-5) || (fb!==null && fb<-5);
+  const ctx = anyDecline ? ` Eventuali flessioni su reach e interazioni riflettono il consueto rialzo dei CPM Meta nel comparto ricettivo e una competizione d'asta più densa.` : ` Il costo per risultato si mantiene efficiente in un contesto d'asta più selettivo.`;
+  const nextM = (m%12)+1;
+  const close = ` La base costruita in ${periodA} prepara ${capitalize(monthName(nextM))} (peso ${BUDGET_WEIGHTS[nextM]}% del piano annuo).`;
+  return open + winsLine + ctx + close;
+}
+
+function kpiTable(title, periodA, periodB, rows, fmt, withInfoIcon){
+  const info = withInfoIcon ? `<span class="info" title="Reach periodo precedente STIMATA — la Meta Marketing API non restituisce più reach per periodi oltre 24 mesi; valore calcolato applicando il rapporto reach/impressions del periodo corrente.">ⓘ</span>` : "";
+  let h = `<div class="kpi-title">${title}${info}</div><table class="kpi"><thead><tr><th></th><th>${periodA}</th><th>${periodB}</th><th>Confronto</th></tr></thead><tbody>`;
+  for(const [label, cur, prev, override] of rows){
+    const p = pct(cur, prev);
+    const dc = override ? `<td class="${override.cls}">${override.text}</td>` : `<td class="${pctClass(p)}">${fmtPct(p)}</td>`;
+    h += `<tr><td>${label}</td><td>${fmt(cur)}</td><td>${fmt(prev)}</td>${dc}</tr>`;
+  }
+  return h + `</tbody></table>`;
+}
+
+function renderClient(cd){
+  const { client, periodA, periodBMeta, tkPeriodB, hasTk, metaCur, metaPrev, tkCur, tkPrev, reachEstimated, tkLaunched, ytdMonths, ytdSpend } = cd;
+  let h = `<div class="client-header"><h2>${client.nome} — ${periodA} vs ${periodBMeta}</h2>
+    <div class="meta">Budget annuo: ${fmtEur(client.budget)} · Confronto Meta: ${client.cm} · TikTok: ${hasTk?"attivo":"non gestito"}${client.ct?` · Confronto TikTok: ${client.ct}`:""}</div></div>`;
+  if(client.note) h += `<div class="note-banner">📌 ${client.note}</div>`;
+  h += `<div class="section-title">Meta (Facebook + Instagram)</div>`;
+  for(const [title, field] of [["Account Raggiunti","reach"],["Visualizzazioni","impressions"],["Interazioni","actions_page_engagement"],["Clicks","clicks"]]){
+    const wi = (field==="reach") && reachEstimated;
+    h += kpiTable(title, periodA, periodBMeta, [
+      ["Instagram", metaCur.instagram[field], metaPrev.instagram[field]],
+      ["Facebook",  metaCur.facebook[field],  metaPrev.facebook[field]],
+    ], fmtInt, wi);
+  }
+  const spCur = (metaCur.facebook.spend||0)+(metaCur.instagram.spend||0);
+  const spPrev = (metaPrev.facebook.spend||0)+(metaPrev.instagram.spend||0);
+  h += kpiTable("Budget Meta", periodA, periodBMeta, [["Totale", spCur, spPrev]], fmtEur, false);
+
+  if(hasTk){
+    h += `<div class="section-title">TikTok</div>`;
+    if(tkLaunched) h += `<div class="note-banner tiktok-launch">📌 TikTok attivato ad ${capitalize(monthName(REPORT_MONTH))} ${REPORT_YEAR} — primo mese live, confronto MoM non disponibile</div>`;
+    const ovr = tkLaunched ? {text:"1° mese live", cls:"delta-tk-launch"} : null;
+    for(const [t,f] of [["Account Raggiunti","reach"],["Visualizzazioni","impressions"],["Interazioni","engagements"],["Clicks","clicks"]]){
+      h += kpiTable(t, periodA, tkPeriodB, [["TikTok", tkCur[f], tkPrev[f], ovr]], fmtInt, false);
+    }
+    h += kpiTable("Budget TikTok", periodA, tkPeriodB, [["TikTok", tkCur.spend, tkPrev.spend, ovr]], fmtEur, false);
+  }
+
+  const tkSpend = hasTk?(tkCur.spend||0):0;
+  const totMonth = spCur + tkSpend;
+  h += `<div class="section-title">Spesa Mensile</div><table class="ytd"><thead><tr><th>Canale</th><th>Speso ${periodA}</th></tr></thead><tbody>
+    <tr><td>Meta</td><td>${fmtEur(spCur)}</td></tr>
+    ${hasTk?`<tr><td>TikTok</td><td>${fmtEur(tkSpend)}</td></tr>`:""}
+    <tr class="total"><td>TOTALE</td><td>${fmtEur(totMonth)}</td></tr></tbody></table>`;
+
+  h += `<div class="section-title">Riepilogo Spesa YTD</div>`;
+  let ytdMeta=0, ytdTk=0;
+  h += `<table class="ytd"><thead><tr><th>Mese</th><th>Meta</th><th>TikTok</th><th>Totale</th></tr></thead><tbody>`;
+  for(const m of ytdMonths){
+    const md = ytdSpend[String(m)] || {meta:0,tiktok:0};
+    ytdMeta += (md.meta||0); ytdTk += (md.tiktok||0);
+    h += `<tr><td>${capitalize(monthName(m))}</td><td>${fmtEur(md.meta||0)}</td><td>${hasTk?fmtEur(md.tiktok||0):"—"}</td><td>${fmtEur((md.meta||0)+(md.tiktok||0))}</td></tr>`;
+  }
+  const ytdTot = ytdMeta+ytdTk;
+  h += `<tr class="total"><td>TOTALE YTD</td><td>${fmtEur(ytdMeta)}</td><td>${hasTk?fmtEur(ytdTk):"—"}</td><td>${fmtEur(ytdTot)}</td></tr></tbody></table>`;
+
+  const cumW = ytdMonths.reduce((s,m)=>s+BUDGET_WEIGHTS[m],0);
+  const atteso = client.budget * cumW / 100;
+  const scarto = ytdTot - atteso;
+  const rim = client.budget - ytdTot;
+  const tol = atteso * 0.10;
+  let st, sc;
+  if(atteso===0){ st="— (piano non ancora partito)"; sc="status-neutral"; }
+  else if(Math.abs(scarto)<=tol){ st="✓ IN LINEA col piano"; sc="status-in-linea"; }
+  else if(scarto<0){ st=`⚠ UNDER SPENDING di ${fmtEur(Math.abs(scarto))}`; sc="status-under"; }
+  else { st=`⚠ OVER SPENDING di ${fmtEur(Math.abs(scarto))}`; sc="status-over"; }
+  h += `<div class="section-title">Budget Tracking Annuo</div><table class="tracking"><tbody>
+    <tr><td>Budget annuo</td><td colspan="3">${fmtEur(client.budget)}</td></tr>
+    <tr><td>Peso cumulato piano (Gen–${capitalize(monthName(REPORT_MONTH))})</td><td colspan="3">${cumW}%</td></tr>
+    <tr><td>Atteso YTD</td><td colspan="3">${fmtEur(atteso)}</td></tr>
+    <tr><td>Speso YTD</td><td colspan="3">${fmtEur(ytdTot)}</td></tr>
+    <tr><td>Scarto vs piano</td><td colspan="3">${scarto>=0?"+":"−"}${fmtEur(Math.abs(scarto))}</td></tr>
+    <tr><td>Budget rimanente anno</td><td colspan="3">${fmtEur(rim)}</td></tr>
+  </tbody></table><div class="status-line ${sc}">Status pacing: ${st}</div>`;
+
+  const nm = (REPORT_MONTH%12)+1;
+  const ny = REPORT_MONTH===12 ? REPORT_YEAR+1 : REPORT_YEAR;
+  const nw = BUDGET_WEIGHTS[nm];
+  const baseNext = client.budget * nw / 100;
+  let metaN, tkN=0, tkNote=null;
+  if(hasTk){ metaN = baseNext * META_SHARE; const tkB = baseNext * TIKTOK_SHARE; tkN = Math.max(TIKTOK_MIN_MONTHLY, tkB); tkNote = (tkN===TIKTOK_MIN_MONTHLY && tkB<TIKTOK_MIN_MONTHLY) ? "Min €600/mese" : `Split ${Math.round(TIKTOK_SHARE*100)}%`; }
+  else metaN = baseNext;
+  const totN = metaN + tkN;
+  h += `<div class="section-title">Proposta Investimento ${capitalize(monthName(nm))} ${ny}</div>
+    <table class="proposta"><thead><tr><th>Canale</th><th>Investimento Suggerito</th><th>Note</th></tr></thead><tbody>
+      <tr><td>Meta</td><td>${fmtEur(metaN)}</td><td>${hasTk?`Split ${Math.round(META_SHARE*100)}%`:"100% budget mensile"}</td></tr>
+      ${hasTk?`<tr><td>TikTok</td><td>${fmtEur(tkN)}</td><td>${tkNote}</td></tr>`:""}
+      <tr class="total"><td>TOTALE</td><td>${fmtEur(totN)}</td><td>Peso piano ${nw}%</td></tr>
+    </tbody></table>`;
+  h += `<div class="section-title">Rational</div><div class="rational">${buildRational(cd)}</div>`;
+  return h;
+}
+
+function renderBudgetPlan(allCD){
+  const rem = []; for(let m=REPORT_MONTH+1;m<=12;m++) rem.push(m);
+  if(rem.length===0) return `<h2 style="margin:0 0 12px;color:#1F4E78">Piano Budget Residuo</h2><div class="note-banner">Anno concluso — nessun mese residuo.</div>`;
+  const tw = rem.reduce((s,m)=>s+BUDGET_WEIGHTS[m],0);
+  let h = `<h2 style="margin:0 0 6px;color:#1F4E78">Piano Budget Residuo — da ${capitalize(monthName(rem[0]))} a Dicembre ${REPORT_YEAR}</h2>
+    <p style="font-size:12px;color:#595959;font-style:italic;margin:0 0 14px;max-width:900px">Ricalibrazione dei budget sui pesi mensili AGHC — pesi originali rinormalizzati sul totale residuo ${tw}%. Split 80% Meta / 20% TikTok con soglia minima €${TIKTOK_MIN_MONTHLY}/mese TikTok.</p><div class="budget-plan">`;
+  for(const cd of allCD){
+    const c = cd.client, hasTk = cd.hasTk;
+    let ytdTot = 0; for(const m of cd.ytdMonths){ const md=cd.ytdSpend[String(m)]||{}; ytdTot+=(md.meta||0)+(md.tiktok||0); }
+    const res = c.budget - ytdTot, num = rem.length;
+    let warn=null, metaRes;
+    if(hasTk){ const tf=TIKTOK_MIN_MONTHLY*num; const mr=res-tf; if(mr<0){ warn=`⚠ Residuo ${fmtEur(res)} < min TikTok totale (${fmtEur(tf)}). TikTok manterrà €${TIKTOK_MIN_MONTHLY}/mese fissi, Meta = €0.`; metaRes=0;} else metaRes=mr; } else metaRes=res;
+    h += `<div class="budget-plan-client"><div class="budget-plan-client-header">${c.nome}</div>
+      <div class="budget-plan-client-info">Budget annuo: ${fmtEur(c.budget)} · Speso YTD: ${fmtEur(ytdTot)} · Residuo: ${fmtEur(res)}${hasTk?` · TikTok: attivo (min €${TIKTOK_MIN_MONTHLY}/mese)`:" · TikTok: non gestito"}</div>`;
+    if(warn) h += `<div class="budget-plan-warning">${warn}</div>`;
+    h += `<table class="budget-plan-table"><thead><tr><th>Mese</th><th>Peso piano</th><th>Peso rical.</th><th>Totale mese</th><th>Meta</th><th>TikTok</th><th>Note</th></tr></thead><tbody>`;
+    let sT=0,sM=0,sK=0;
+    for(const m of rem){
+      const pw=BUDGET_WEIGHTS[m], pr=tw?pw/tw*100:0;
+      let mm,kk,note;
+      if(hasTk){ mm=metaRes>0?metaRes*pw/tw:0; kk=TIKTOK_MIN_MONTHLY; note="TikTok fisso €600 · Meta pro-peso"; }
+      else { mm=res>0?res*pw/tw:0; kk=0; note="100% Meta"; }
+      const t=mm+kk; sT+=t; sM+=mm; sK+=kk;
+      h += `<tr><td>${capitalize(monthName(m))}</td><td>${pw}%</td><td>${pr.toFixed(1)}%</td><td>${fmtEur(t)}</td><td>${fmtEur(mm)}</td><td>${hasTk?fmtEur(kk):"—"}</td><td>${note}</td></tr>`;
+    }
+    h += `<tr class="total"><td>TOTALE</td><td>${tw}%</td><td>100.0%</td><td>${fmtEur(sT)}</td><td>${fmtEur(sM)}</td><td>${hasTk?fmtEur(sK):"—"}</td><td></td></tr></tbody></table></div>`;
+  }
+  return h + `</div>`;
+}
+
+const STATE = { active: "_overview", allCD: CLIENTS.map(c => buildClientData(c)) };
+
+function setActive(key){ STATE.active = key; document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active", n.dataset.key===key)); render(); }
+
+function render(){
+  const main = document.getElementById("main");
+  const refreshed = new Date(GENERATED_AT.replace(" UTC"," GMT")).toLocaleString("it-IT",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  let h = `<div class="header-toolbar"><label>Mese:</label><strong>Aprile 2026</strong><span class="refreshed">Pubblicato il ${refreshed} · Fonte: Windsor.ai · Snapshot statico</span></div>`;
+  if(STATE.active==="_overview") h += renderBudgetPlan(STATE.allCD);
+  else { const cd = STATE.allCD.find(x=>x.client.nome===STATE.active); h += cd ? renderClient(cd) : `<div class="error">Cliente non trovato.</div>`; }
+  main.innerHTML = h;
+  window.scrollTo(0,0);
+}
+
+function buildNav(){
+  const ov = document.getElementById("nav-overview");
+  ov.innerHTML = `<div class="nav-item active" data-key="_overview"><span>Piano Budget Residuo</span></div>`;
+  const cn = document.getElementById("nav-clients");
+  cn.innerHTML = CLIENTS.map((c,i)=>`<div class="nav-item" data-key="${c.nome}"><span>${i+1}. ${c.nome}</span><span class="badge">${c.cm}${c.tk_id?"·TK":""}</span></div>`).join("");
+  document.querySelectorAll(".nav-item").forEach(n=>n.addEventListener("click", ()=>setActive(n.dataset.key)));
+}
+
+buildNav();
+render();
+</script>
+</body>
+</html>
