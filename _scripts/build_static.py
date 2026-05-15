@@ -225,9 +225,10 @@ function buildClientData(client){
       ? (DATA.meta_by_account.prev_yoy[client.meta_id] || {facebook:emptyMeta(),instagram:emptyMeta()})
       : (DATA.meta_by_account.prev_mom[client.meta_id] || {facebook:emptyMeta(),instagram:emptyMeta()});
   }
-  // Detect reach estimation: i dati pre-elaborati hanno già reach popolata.
-  // Riconosciamo "stimata" se confronto è YoY e originariamente Meta avrebbe null per >24m.
-  const reachEstimated = (client.cm==="YoY") && (REPORT_YEAR - compMeta.y >= 1) && ((metaPrev.facebook?.reach||0)+(metaPrev.instagram?.reach||0)>0);
+  // Detect reach estimation: legge dalla lista esplicita "reach_estimated_clients"
+  // popolata da estimate_reach.py durante la pipeline.
+  const estimatedList = DATA.reach_estimated_clients || [];
+  const reachEstimated = estimatedList.includes(client.nome);
 
   let tkCur=null, tkPrev=null, tkPeriodB=null, tkLaunched=false;
   const hasTk = !!client.tk_id;
