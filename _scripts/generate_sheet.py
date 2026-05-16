@@ -100,6 +100,32 @@ def _del_pct(n):
     return f"del {v}%"
 
 
+def _cross_channel_insight(p1_kind, fb_reach, fb_reach_delta, ig_reach, ig_reach_delta):
+    """Se p1 ha raccontato un canale, restituisce una frase sintetica sull'altro.
+    Tono sempre strategico — i cali sono inquadrati come allocazione di budget."""
+    is_fb_lead = p1_kind in ("fb_explode", "fb_modest")
+    is_ig_lead = p1_kind in ("ig_explode", "ig_modest")
+    if is_fb_lead and ig_reach >= 5000:
+        if ig_reach_delta is not None and ig_reach_delta < -25:
+            return (f" Instagram resta presidiato in modo mirato ({fmt_int(ig_reach)} utenti unici raggiunti), "
+                    f"con il budget concentrato su Facebook dove sta rendendo di più nel mese.")
+        if ig_reach_delta is not None and ig_reach_delta > 20:
+            return (f" Instagram aggiunge in parallelo {fmt_int(ig_reach)} utenti unici raggiunti "
+                    f"(+{ig_reach_delta:.0f}%), confermando una presenza qualificata sul pubblico mobile-first.")
+        return (f" Instagram mantiene un presidio complementare di {fmt_int(ig_reach)} utenti unici, "
+                f"a copertura di un pubblico differenziato per età e abitudini di consumo.")
+    if is_ig_lead and fb_reach >= 5000:
+        if fb_reach_delta is not None and fb_reach_delta < -25:
+            return (f" Facebook resta presidiato in modo mirato ({fmt_int(fb_reach)} utenti unici raggiunti), "
+                    f"con il budget concentrato su Instagram dove sta rendendo di più nel mese.")
+        if fb_reach_delta is not None and fb_reach_delta > 20:
+            return (f" Facebook aggiunge in parallelo {fmt_int(fb_reach)} utenti unici raggiunti "
+                    f"(+{fb_reach_delta:.0f}%), a conferma di una presenza multicanale coerente.")
+        return (f" Facebook mantiene un presidio complementare di {fmt_int(fb_reach)} utenti unici, "
+                f"garantendo copertura sul pubblico più ampio della piattaforma.")
+    return ""
+
+
 def build_rational(client_name, data_meta_cur, data_meta_prev, data_tk_cur, data_tk_prev,
                    period_a_label, period_b_label, confronto_meta, spent_total, expected_total, month_num, has_tiktok):
     """Rational 3-paragrafi, TOV professionale e polarizzante.
@@ -233,6 +259,9 @@ def build_rational(client_name, data_meta_cur, data_meta_prev, data_tk_cur, data
     else:
         p2 = ("Il piano del mese resta coerente con la stagionalità: presidio costante a tutela della brand awareness, "
               "in attesa delle finestre più strategiche dei mesi successivi.")
+
+    # Cross-channel insight: aggiunge una frase sull'altro canale se p1 era mono-canale
+    p2 += _cross_channel_insight(p1_kind, fb_reach_cur, fb_reach_delta, ig_reach_cur, ig_reach_delta)
 
     # Paragrafo 3
     if tk_launched:

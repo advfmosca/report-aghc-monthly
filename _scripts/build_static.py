@@ -562,6 +562,31 @@ function delPct(n){
   return `del ${v}%`;
 }
 
+// Cross-channel insight: se p1 ha raccontato un canale, restituisce una frase sull'altro
+function crossChannelInsight(kind, fbReach, fbReachDelta, igReach, igReachDelta){
+  const isFbLead = kind === "fb_explode" || kind === "fb_modest";
+  const isIgLead = kind === "ig_explode" || kind === "ig_modest";
+  if(isFbLead && igReach >= 5000){
+    if(igReachDelta !== null && igReachDelta < -25){
+      return ` Instagram resta presidiato in modo mirato (${fmtInt(igReach)} utenti unici raggiunti), con il budget concentrato su Facebook dove sta rendendo di più nel mese.`;
+    }
+    if(igReachDelta !== null && igReachDelta > 20){
+      return ` Instagram aggiunge in parallelo ${fmtInt(igReach)} utenti unici raggiunti (+${igReachDelta.toFixed(0)}%), confermando una presenza qualificata sul pubblico mobile-first.`;
+    }
+    return ` Instagram mantiene un presidio complementare di ${fmtInt(igReach)} utenti unici, a copertura di un pubblico differenziato per età e abitudini di consumo.`;
+  }
+  if(isIgLead && fbReach >= 5000){
+    if(fbReachDelta !== null && fbReachDelta < -25){
+      return ` Facebook resta presidiato in modo mirato (${fmtInt(fbReach)} utenti unici raggiunti), con il budget concentrato su Instagram dove sta rendendo di più nel mese.`;
+    }
+    if(fbReachDelta !== null && fbReachDelta > 20){
+      return ` Facebook aggiunge in parallelo ${fmtInt(fbReach)} utenti unici raggiunti (+${fbReachDelta.toFixed(0)}%), a conferma di una presenza multicanale coerente.`;
+    }
+    return ` Facebook mantiene un presidio complementare di ${fmtInt(fbReach)} utenti unici, garantendo copertura sul pubblico più ampio della piattaforma.`;
+  }
+  return "";
+}
+
 function buildRational(cd){
   const { client, metaCur, metaPrev, tkCur, hasTk, tkLaunched } = cd;
   const m = REPORT_MONTH;
@@ -670,6 +695,9 @@ function buildRational(cd){
   } else {
     p2 = `Il piano del mese resta coerente con la stagionalità: presidio costante a tutela della brand awareness, in attesa delle finestre più strategiche dei mesi successivi.`;
   }
+
+  // Cross-channel insight: aggiunge una frase sull'altro canale se p1 era mono-canale
+  p2 += crossChannelInsight(p1Kind, fbReachCur, fbReachDelta, igReachCur, igReachDelta);
 
   // === Paragrafo 3: cosa stiamo facendo dopo ===
   let p3;
