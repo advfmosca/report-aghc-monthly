@@ -436,6 +436,16 @@ table.budget-plan-table tr.total td { background: var(--bg-soft); font-weight: 7
 .spark path.area { fill: var(--ink); fill-opacity: 0.06; stroke: none; }
 .spark circle.last { fill: var(--ink); }
 
+/* Brand logos (inline SVG) */
+.brand-logo {
+  display: inline-block;
+  vertical-align: -3px;
+  margin-right: 7px;
+  flex-shrink: 0;
+}
+.platform-cell { display: inline-flex; align-items: center; }
+.section-title .brand-logo { margin-right: 4px; vertical-align: -2px; }
+
 /* Mobile */
 @media (max-width: 720px) {
   .app { grid-template-columns: 1fr; }
@@ -473,6 +483,12 @@ const BUDGET_WEIGHTS = {1:3,2:3,3:5,4:10,5:15,6:15,7:12,8:12,9:5,10:5,11:5,12:10
 const META_SHARE = 0.80;
 const TIKTOK_SHARE = 0.20;
 const TIKTOK_MIN_MONTHLY = 600;
+
+// === LOGHI UFFICIALI delle piattaforme (SVG inline, self-contained) ===
+const LOGO_IG = `<svg class="brand-logo" viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg" aria-label="Instagram"><defs><linearGradient id="igG" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FED576"/><stop offset="26%" stop-color="#F47133"/><stop offset="61%" stop-color="#BC3081"/><stop offset="100%" stop-color="#4C63D2"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="url(#igG)"/><path d="M12 7.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zm0 7.6a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm5.8-7.85a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0z" fill="#fff"/></svg>`;
+const LOGO_FB = `<svg class="brand-logo" viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg" aria-label="Facebook"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.927-1.956 1.876v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" fill="#1877F2"/></svg>`;
+const LOGO_TK = `<svg class="brand-logo" viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg" aria-label="TikTok"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.6 20.1a6.34 6.34 0 0 0 10.86-4.43V8.61a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.64-.04Z" fill="#010101"/></svg>`;
+const LOGO_META = `<svg class="brand-logo" viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg" aria-label="Meta"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.45 0 12.32 0 14.292c0 2.587 1.135 3.886 2.726 3.886 1.93 0 3.317-.927 5.812-5.227l1.183-2.083c.484-.847.992-1.798 1.535-2.811-.85-1.31-1.668-2.305-2.494-2.957-.873-.69-1.747-1.07-2.847-1.07zm10.328 1.215c-1.122 0-2.084.45-3.057 1.43-.967.974-1.916 2.358-2.926 4.045L9.85 13.42c-2.117 3.532-2.733 4.31-3.66 4.31-.85 0-1.342-.687-1.342-1.892 0-2.297.793-4.93 1.96-6.823.94-1.53 2.165-2.288 3.387-2.288 1.024 0 1.873.452 2.834 1.292.875.764 1.668 1.825 2.461 2.96.853-1.184 1.665-2.27 2.518-3.011.847-.737 1.65-1.06 2.467-1.06 1.272 0 2.244.79 2.84 1.964.611 1.207.95 2.84.95 4.466 0 1.42-.265 2.418-.694 3.117-.405.658-.998 1.014-1.673 1.014-.65 0-1.05-.176-1.516-.616-.488-.46-.94-1.16-1.488-2.198l-.847-1.602c-.43-.812-.79-1.504-1.115-2.122-1.18.943-2.122 1.78-2.881 2.413-.83.692-1.466 1.144-2.06 1.144-1.245 0-2.222-.97-2.222-3.205 0-2.073.764-4.516 2.013-6.535.964-1.557 2.18-2.39 3.367-2.39z" fill="#0866FF"/></svg>`;
 
 function monthName(m){ return MONTH_IT[String(m)] || MONTH_IT[m]; }
 function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
@@ -738,12 +754,12 @@ function renderClient(cd){
     </div>`;
   if(client.note) h += `<div class="note-banner">${client.note}</div>`;
 
-  h += `<div class="section-title">Meta · Facebook + Instagram</div>`;
+  h += `<div class="section-title">${LOGO_META}Meta</div>`;
   for(const [title, field] of [["Account Raggiunti","reach"],["Visualizzazioni","impressions"],["Interazioni","actions_page_engagement"],["Clicks","clicks"]]){
     const wi = (field==="reach") && reachEstimated;
     h += kpiBlock(title, periodA, periodBMeta, [
-      ["Instagram", metaCur.instagram[field], metaPrev.instagram[field]],
-      ["Facebook",  metaCur.facebook[field],  metaPrev.facebook[field]],
+      [`${LOGO_IG}<span>Instagram</span>`, metaCur.instagram[field], metaPrev.instagram[field]],
+      [`${LOGO_FB}<span>Facebook</span>`,  metaCur.facebook[field],  metaPrev.facebook[field]],
     ], fmtInt, wi);
   }
   const spCur = (metaCur.facebook.spend||0)+(metaCur.instagram.spend||0);
@@ -751,27 +767,27 @@ function renderClient(cd){
   h += kpiBlock("Budget Meta", periodA, periodBMeta, [["Totale", spCur, spPrev]], fmtEur, false);
 
   if(hasTk){
-    h += `<div class="section-title">TikTok</div>`;
+    h += `<div class="section-title">${LOGO_TK}TikTok</div>`;
     if(tkLaunched) h += `<div class="note-banner tiktok-launch">TikTok attivato ad ${capitalize(monthName(REPORT_MONTH))} ${REPORT_YEAR} — primo mese live, confronto MoM non disponibile</div>`;
     const ovr = tkLaunched ? {text:"1° mese live", cls:"delta-tk-launch"} : null;
     for(const [t,f] of [["Account Raggiunti","reach"],["Visualizzazioni","impressions"],["Interazioni","engagements"],["Clicks","clicks"]]){
-      h += kpiBlock(t, periodA, tkPeriodB, [["TikTok", tkCur[f], tkPrev[f], ovr]], fmtInt, false);
+      h += kpiBlock(t, periodA, tkPeriodB, [[`${LOGO_TK}<span>TikTok</span>`, tkCur[f], tkPrev[f], ovr]], fmtInt, false);
     }
-    h += kpiBlock("Budget TikTok", periodA, tkPeriodB, [["TikTok", tkCur.spend, tkPrev.spend, ovr]], fmtEur, false);
+    h += kpiBlock("Budget TikTok", periodA, tkPeriodB, [[`${LOGO_TK}<span>TikTok</span>`, tkCur.spend, tkPrev.spend, ovr]], fmtEur, false);
   }
 
   const tkSpend = hasTk?(tkCur.spend||0):0;
   const totMonth = spCur + tkSpend;
   h += `<div class="section-title">Spesa Mensile</div><table class="flat"><thead><tr><th>Canale</th><th>Speso ${periodA}</th></tr></thead><tbody>
-    <tr><td>Meta</td><td>${fmtEur(spCur)}</td></tr>
-    ${hasTk?`<tr><td>TikTok</td><td>${fmtEur(tkSpend)}</td></tr>`:""}
+    <tr><td>${LOGO_META}<span>Meta</span></td><td>${fmtEur(spCur)}</td></tr>
+    ${hasTk?`<tr><td>${LOGO_TK}<span>TikTok</span></td><td>${fmtEur(tkSpend)}</td></tr>`:""}
     <tr class="total"><td>Totale</td><td>${fmtEur(totMonth)}</td></tr></tbody></table>`;
 
   // YTD con sparkline accanto al totale di riga
   h += `<div class="section-title">Riepilogo Spesa YTD</div>`;
   let ytdMeta=0, ytdTk=0;
   const monthlyTotals = [];
-  h += `<table class="flat"><thead><tr><th>Mese</th><th>Meta</th><th>TikTok</th><th>Totale</th><th></th></tr></thead><tbody>`;
+  h += `<table class="flat"><thead><tr><th>Mese</th><th>${LOGO_META}Meta</th><th>${LOGO_TK}TikTok</th><th>Totale</th><th></th></tr></thead><tbody>`;
   for(const m of ytdMonths){
     const md = ytdSpend[String(m)] || {meta:0,tiktok:0};
     ytdMeta += (md.meta||0); ytdTk += (md.tiktok||0);
@@ -816,8 +832,8 @@ function renderClient(cd){
   const totN = metaN + tkN;
   h += `<div class="section-title">Proposta Investimento ${capitalize(monthName(nm))} ${ny}</div>
     <table class="flat"><thead><tr><th>Canale</th><th>Investimento Suggerito</th><th>Note</th></tr></thead><tbody>
-      <tr><td>Meta</td><td>${fmtEur(metaN)}</td><td style="color:var(--ink-mute);font-size:12px">${hasTk?`Split ${Math.round(META_SHARE*100)}%`:"100% budget mensile"}</td></tr>
-      ${hasTk?`<tr><td>TikTok</td><td>${fmtEur(tkN)}</td><td style="color:var(--ink-mute);font-size:12px">${tkNote}</td></tr>`:""}
+      <tr><td>${LOGO_META}<span>Meta</span></td><td>${fmtEur(metaN)}</td><td style="color:var(--ink-mute);font-size:12px">${hasTk?`Split ${Math.round(META_SHARE*100)}%`:"100% budget mensile"}</td></tr>
+      ${hasTk?`<tr><td>${LOGO_TK}<span>TikTok</span></td><td>${fmtEur(tkN)}</td><td style="color:var(--ink-mute);font-size:12px">${tkNote}</td></tr>`:""}
       <tr class="total"><td>Totale</td><td>${fmtEur(totN)}</td><td style="color:var(--ink-mute);font-size:12px">Peso piano ${nw}%</td></tr>
     </tbody></table>`;
 
@@ -841,7 +857,7 @@ function renderBudgetPlan(allCD){
     h += `<div class="budget-plan-client"><div class="budget-plan-client-header">${c.nome}</div>
       <div class="budget-plan-client-info">Budget annuo: <strong>${fmtEur(c.budget)}</strong> · Speso YTD: <strong>${fmtEur(ytdTot)}</strong> · Residuo: <strong>${fmtEur(res)}</strong>${hasTk?` · TikTok attivo (min €${TIKTOK_MIN_MONTHLY}/mese)`:""}</div>`;
     if(warn) h += `<div class="budget-plan-warning">${warn}</div>`;
-    h += `<table class="budget-plan-table"><thead><tr><th>Mese</th><th>Peso piano</th><th>Peso rical.</th><th>Totale mese</th><th>Meta</th><th>TikTok</th><th>Note</th></tr></thead><tbody>`;
+    h += `<table class="budget-plan-table"><thead><tr><th>Mese</th><th>Peso piano</th><th>Peso rical.</th><th>Totale mese</th><th>${LOGO_META}Meta</th><th>${LOGO_TK}TikTok</th><th>Note</th></tr></thead><tbody>`;
     let sT=0,sM=0,sK=0;
     for(const m of rem){
       const pw=BUDGET_WEIGHTS[m], pr=tw?pw/tw*100:0;
