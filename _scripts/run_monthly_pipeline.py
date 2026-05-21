@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """run_monthly_pipeline.py — Pipeline mensile AGHC.
 
-DEFAULT (online-only, dal 16/05/2026):
+DEFAULT (dal 21/05/2026 — multi-output):
   1. Stima reach YoY mancante (idempotente, in-place sul JSON dati)
   2. Copia JSON in <repo>/_data/data-YYYY-MM.json
   3. Genera HTML statico in <repo>/<mese>-<anno>.html + aggiorna index.html
-  4. git add + commit + push (GitHub Pages aggiorna in ~30-60s)
-  5. Stampa su stdout i link finali per Slack
+  4. Genera PNG tabelle (3 per cliente) in <reports-root>/<Mese Anno>/Tables/<Cliente>/
+  5. Genera data dump MD in <reports-root>/<Mese Anno>/Dynamic Data/<Cliente>.md
+  6. git add + commit + push (GitHub Pages aggiorna in ~30-60s)
+  7. Stampa su stdout i link finali per Slack
 
 LEGACY OPZIONALE (--with-xlsx):
-  Aggiunge la generazione del file xlsx in <senape-root>/<Mese Anno>/ con post-processing
+  Aggiunge la generazione del file xlsx in <reports-root>/<Mese Anno>/ con post-processing
   (ⓘ stimata + 1° mese live). Utile per export ad-hoc, NON usato dallo scheduled task.
 
 NB: NON fa fetch Windsor.ai — quello deve farlo Claude prima e passare il JSON via --raw-data.
@@ -54,15 +56,21 @@ def main():
     p.add_argument("--raw-data", required=True, help="JSON dati Windsor pre-aggregati")
     p.add_argument("--repo-root", required=True, help="checkout locale del repo report-aghc-monthly")
     p.add_argument("--token-file", required=True, help="path al file con il PAT GitHub")
+    p.add_argument("--reports-root", required=True,
+                   help="Root cartella outputs locali (PNG + MD); es. ~/Desktop/COWORK\\ FMM/Report\\ AGHC")
     p.add_argument("--with-xlsx", action="store_true",
-                   help="LEGACY: genera anche l'xlsx in --senape-root (default off)")
+                   help="LEGACY: genera anche l'xlsx in --reports-root (default off)")
     p.add_argument("--senape-root", default=None,
-                   help="Richiesto solo con --with-xlsx; es. ~/Desktop/SENAPE/Report\\ AGHC")
+                   help="DEPRECATED alias di --reports-root; usato solo per compatibilità storica")
+    p.add_argument("--skip-png-md", action="store_true",
+                   help="Salta generazione PNG + MD (per debug rapido)")
     p.add_argument("--skip-push", action="store_true")
     args = p.parse_args()
 
-    if args.with_xlsx and not args.senape_root:
-        sys.stderr.write("ERRORE: --with-xlsx richiede --senape-root\n")
+    # Compatibility alias: se l'utente passa --senape-root invece di --reports-root
+    reports_root_arg = args.reports_root or args.senape_root
+    if not reports_root_arg:
+        sys.stderr.write("ERRORE: --reports-root richiesto\n")
         sys.exit(2)
 
     year, month = args.year, args.month
@@ -73,10 +81,16 @@ def main():
     raw_path = Path(args.raw_data).resolve()
     repo_root = Path(args.repo_root).resolve()
     scripts = repo_root / "_scripts"
+    reports_root = Path(reports_root_arg).resolve()
+    reports_root.mkdir(parents=True, exist_ok=True)
+    period_dir = reports_root / period_label
+    period_dir.mkdir(parents=True, exist_ok=True)
     xlsx_path = None
-    total_steps = 4 + (2 if args.with_xlsx else 0)
-    step = 0
 
+    # Step count dinamico
+    has_png_md = not args.skip_png_md
+    total_steps = 4 + (2 if args.with_xlsx else 0) + (2 if has_png_md else 0)
+    step = 0
     def label(n, t): return f"\n[{n}/{total_steps}] {t}"
 
     # 1. Stima reach (idempotente)
@@ -86,10 +100,7 @@ def main():
 
     # 2. (Opzionale) xlsx
     if args.with_xlsx:
-        senape_root = Path(args.senape_root).resolve()
-        senape_dest_dir = senape_root / period_label
-        senape_dest_dir.mkdir(parents=True, exist_ok=True)
-        xlsx_path = senape_dest_dir / f"Report AGHC - KPI {period_label}.xlsx"
+        xlsx_path = period_dir / f"Report AGHC - KPI {period_label}.xlsx"
         step += 1
         print(label(step, f"[LEGACY] Genero xlsx → {xlsx_path}"))
         run(["python3", str(scripts / "generate_sheet.py"), str(raw_path), str(year), str(month), str(xlsx_path)])
@@ -111,11 +122,28 @@ def main():
 
     # 4. Genera HTML statico
     step += 1
-    print(label(step, "Genero HTML statico…"))
+    print(label(step, "Genero HTML statico (dashboard online)…"))
     run(["python3", str(scripts / "build_static.py"),
          "--year", str(year), "--month", str(month),
          "--data", str(repo_data_path.relative_to(repo_root))],
         cwd=str(repo_root))
+
+    # 4.5. Genera PNG tabelle + data dump MD per i 18 clienti
+    if has_png_md:
+        step += 1
+        tables_dir = period_dir / "Tables"
+        print(label(step, f"Genero PNG tabelle → {tables_dir} (18 clienti × 3 PNG)…"))
+        run(["python3", str(scripts / "build_tables.py"),
+             "--year", str(year), "--month", str(month),
+             "--data", str(repo_data_path),
+             "--output-dir", str(tables_dir)])
+        step += 1
+        md_dir = period_dir / "Dynamic Data"
+        print(label(step, f"Genero data dump MD → {md_dir} (18 clienti)…"))
+        run(["python3", str(scripts / "build_data_dump.py"),
+             "--year", str(year), "--month", str(month),
+             "--data", str(repo_data_path),
+             "--output-dir", str(md_dir)])
 
     # 5. Push (o skip)
     step += 1
@@ -144,6 +172,9 @@ def main():
     print(f"PERIOD={period_label}")
     print(f"PUBLIC_URL={public_url}")
     print(f"ARCHIVE_URL={archive_url}")
+    if has_png_md:
+        print(f"TABLES_DIR={period_dir / 'Tables'}")
+        print(f"MD_DIR={period_dir / 'Dynamic Data'}")
     if xlsx_path:
         print(f"XLSX_PATH={xlsx_path}")
         print(f"XLSX_LINK=computer://{xlsx_path}")
