@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """run_monthly_pipeline.py — Pipeline mensile AGHC.
 
-DEFAULT (dal 21/05/2026 — multi-output):
+DEFAULT (dal 22/05/2026 — multi-output + manifest Canva):
   1. Stima reach YoY mancante (idempotente, in-place sul JSON dati)
   2. Copia JSON in <repo>/_data/data-YYYY-MM.json
   3. Genera HTML statico in <repo>/<mese>-<anno>.html + aggiorna index.html
   4. Genera PNG tabelle (3 per cliente) in <reports-root>/<Mese Anno>/Tables/<Cliente>/
   5. Genera data dump MD in <reports-root>/<Mese Anno>/Dynamic Data/<Cliente>.md
-  6. git add + commit + push (GitHub Pages aggiorna in ~30-60s)
-  7. Stampa su stdout i link finali per Slack
+  6. Mirror PNG → <repo>/assets/<slug>/<cliente>/ + genera manifest-YYYY-MM.json per Canva
+  7. git add + commit + push (GitHub Pages aggiorna in ~30-60s)
+  8. Stampa su stdout i link finali per Slack + MANIFEST_URL per Canva orchestration
 
 LEGACY OPZIONALE (--with-xlsx):
   Aggiunge la generazione del file xlsx in <reports-root>/<Mese Anno>/ con post-processing
@@ -89,8 +90,12 @@ def main():
 
     # Step count dinamico
     has_png_md = not args.skip_png_md
-    total_steps = 4 + (2 if args.with_xlsx else 0) + (2 if has_png_md else 0)
+    # +1 step in più se has_png_md (mirror PNG + manifest Canva)
+    total_steps = 4 + (2 if args.with_xlsx else 0) + (3 if has_png_md else 0)
     step = 0
+    manifest_path = None
+    manifest_url = None
+    design_title = None
     def label(n, t): return f"\n[{n}/{total_steps}] {t}"
 
     # 1. Stima reach (idempotente)
@@ -145,6 +150,17 @@ def main():
              "--data", str(repo_data_path),
              "--output-dir", str(md_dir)])
 
+        # 4.6. Mirror PNG nel repo + genera manifest Canva
+        step += 1
+        print(label(step, f"Mirror PNG in <repo>/assets/ + genero manifest Canva…"))
+        run(["python3", str(scripts / "build_canva_manifest.py"),
+             "--year", str(year), "--month", str(month),
+             "--tables-root", str(tables_dir),
+             "--repo-root", str(repo_root)])
+        manifest_path = repo_root / "_data" / f"manifest-{year}-{month:02d}.json"
+        manifest_url = f"{REPO_URL}/_data/manifest-{year}-{month:02d}.json"
+        design_title = f"Report AGHC – {period_label}"
+
     # 5. Push (o skip)
     step += 1
     if args.skip_push:
@@ -175,6 +191,10 @@ def main():
     if has_png_md:
         print(f"TABLES_DIR={period_dir / 'Tables'}")
         print(f"MD_DIR={period_dir / 'Dynamic Data'}")
+        if manifest_url:
+            print(f"MANIFEST_URL={manifest_url}")
+            print(f"MANIFEST_PATH={manifest_path}")
+            print(f"CANVA_DESIGN_TITLE={design_title}")
     if xlsx_path:
         print(f"XLSX_PATH={xlsx_path}")
         print(f"XLSX_LINK=computer://{xlsx_path}")
