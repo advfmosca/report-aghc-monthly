@@ -90,6 +90,28 @@ def update_index(repo_root: Path):
     index_html = INDEX_TEMPLATE.replace("__ROWS__", rows_html).replace("__UPDATED__", datetime.utcnow().strftime("%Y-%m-%d"))
     (repo_root / "index.html").write_text(index_html, encoding="utf-8")
 
+    # JSON archivio per consumo esterno (es. dashboard-di-controllo)
+    base_url = "https://advfmosca.github.io/report-aghc-monthly"
+    archive_payload = {
+        "updated_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "base_url": base_url,
+        "count": len(files),
+        "reports": [
+            {
+                "year": f["year"],
+                "month": f["month"],
+                "slug": f["slug"],
+                "label": f"{MONTH_IT[f['month']].capitalize()} {f['year']}",
+                "filename": f["filename"],
+                "url": f"{base_url}/{f['slug']}",
+            }
+            for f in files
+        ],
+    }
+    data_dir = repo_root / "_data"
+    data_dir.mkdir(exist_ok=True)
+    (data_dir / "archive.json").write_text(json.dumps(archive_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
 
 # ============================================================================
 # HTML TEMPLATE — Executive Minimal

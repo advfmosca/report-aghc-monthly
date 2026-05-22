@@ -1,0 +1,15 @@
+{
+  "updated_at": "2026-05-22T11:00:00Z",
+  "base_url": "https://advfmosca.github.io/report-aghc-monthly",
+  "count": 1,
+  "reports": [
+    {
+      "year": 2026,
+      "month": 4,
+      "slug": "aprile-2026",
+      "label": "Aprile 2026",
+      "filename": "aprile-2026.html",
+      "url": "https://advfmosca.github.io/report-aghc-monthly/aprile-2026"
+    }
+  ]
+}
