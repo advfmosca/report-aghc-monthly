@@ -398,12 +398,13 @@ table.flat td.sparkline-cell svg { display: block; }
   overflow: hidden;
 }
 .budget-plan-client-header {
-  background: var(--text);
-  color: #fff;
-  padding: 12px 18px;
-  font-weight: 600;
-  font-size: 15px;
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 14px;
   letter-spacing: -0.005em;
+  border-bottom: 1px solid var(--border);
 }
 .budget-plan-client-info {
   background: var(--bg-soft);
