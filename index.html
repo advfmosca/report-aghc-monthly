@@ -6,31 +6,31 @@
 <title>Report AGHC — Archivio mensile</title>
 <style>
 :root { color-scheme: light;
-  --bg:#fafafa; --card:#fff; --ink:#09090b; --ink-soft:#3f3f46; --ink-mute:#71717a; --ink-faint:#a1a1aa; --line:#e4e4e7;
+  --bg:#fafafa; --bg-card:#fff; --text:#1c1c1e; --text-soft:#3f3f44; --text-muted:#6b6b70; --text-dim:#8a8a90; --border:#ececef;
 }
 * { box-sizing: border-box; }
 body {
   margin:0; padding:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", "Inter", sans-serif;
-  background: var(--bg); color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--text);
   -webkit-font-smoothing: antialiased;
 }
 .container { max-width:640px; margin:0 auto; padding:60px 24px 80px; }
-.brand-tag { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 10px; }
-h1 { color:var(--ink); font-size:36px; font-weight:700; letter-spacing:-0.02em; margin:0 0 8px; }
-.subtitle { color:var(--ink-mute); font-size:15px; margin:0 0 32px; line-height:1.55; }
-.tagline { background:var(--card); border:1px solid var(--line); padding:18px 22px; border-radius:10px; margin-bottom:40px; font-size:13.5px; line-height:1.6; color:var(--ink-soft); }
-.tagline strong { color:var(--ink); font-weight:600; }
-.section-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-faint); margin:0 0 14px; }
-ul.report-list { list-style:none; padding:0; margin:0; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
-li.report-item { border-bottom:1px solid var(--line); }
+.brand-tag { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin:0 0 10px; }
+h1 { color:var(--text); font-size:28px; font-weight:700; letter-spacing:-0.015em; margin:0 0 8px; }
+.subtitle { color:var(--text-muted); font-size:15px; margin:0 0 32px; line-height:1.55; }
+.tagline { background:var(--bg-card); border:1px solid var(--border); padding:18px 22px; border-radius:10px; margin-bottom:40px; font-size:13.5px; line-height:1.6; color:var(--text-soft); }
+.tagline strong { color:var(--text); font-weight:600; }
+.section-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-dim); margin:0 0 14px; }
+ul.report-list { list-style:none; padding:0; margin:0; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+li.report-item { border-bottom:1px solid var(--border); }
 li.report-item:last-child { border-bottom:none; }
-li.report-item a { display:flex; align-items:center; justify-content:space-between; padding:16px 22px; text-decoration:none; color:var(--ink); transition: background .12s ease; }
+li.report-item a { display:flex; align-items:center; justify-content:space-between; padding:16px 22px; text-decoration:none; color:var(--text); transition: background .12s ease; }
 li.report-item a:hover { background:var(--bg); }
 .month-name { font-weight:500; font-size:15px; letter-spacing:-0.005em; }
-.arrow { color:var(--ink-mute); font-size:18px; transition: transform .15s ease, color .15s ease; }
-li.report-item a:hover .arrow { color:var(--ink); transform: translateX(2px); }
-.footer { text-align:center; font-size:12px; color:var(--ink-mute); margin-top:36px; letter-spacing:0.02em; }
+.arrow { color:var(--text-muted); font-size:18px; transition: transform .15s ease, color .15s ease; }
+li.report-item a:hover .arrow { color:var(--text); transform: translateX(2px); }
+.footer { text-align:center; font-size:12px; color:var(--text-muted); margin-top:36px; letter-spacing:0.02em; }
 </style>
 </head>
 <body>
@@ -48,7 +48,7 @@ li.report-item a:hover .arrow { color:var(--ink); transform: translateX(2px); }
         </a>
       </li>
   </ul>
-  <p class="footer">Aggiornato il 2026-05-16 · Realizzato da Francesco Maria Mosca</p>
+  <p class="footer">Aggiornato il 2026-05-22 · Realizzato da Francesco Maria Mosca</p>
 </div>
 </body>
 </html>
