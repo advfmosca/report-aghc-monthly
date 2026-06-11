@@ -205,9 +205,9 @@ CLIENTS = [
         "meta_account_id": "1849759899186169",
         "meta_filter": None,
         "meta_filter_extra": [],
-        "tiktok_account_id": None,  # presente ma non attivo
+        "tiktok_account_id": "7626418949391351815",  # attivo da Maggio 2026 (1° mese live)
         "confronto_meta": "MoM",
-        "confronto_tiktok": None,
+        "confronto_tiktok": "MoM",
         "budget_annuo": 21600,
         "note": "",
     },

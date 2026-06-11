@@ -20,8 +20,8 @@
   "base_url": "https://advfmosca.github.io/report-aghc-monthly",
   "assets_root": "https://advfmosca.github.io/report-aghc-monthly/assets/maggio-2026",
   "total_clients": 18,
-  "total_pages": 77,
-  "mirrored_pngs": 41,
+  "total_pages": 78,
+  "mirrored_pngs": 42,
   "missing_pngs": [],
   "clients": [
     {
@@ -489,7 +489,7 @@
     {
       "nome": "Villa Giada",
       "slug": "villa-giada",
-      "tiktok_active": false,
+      "tiktok_active": true,
       "pages": [
         {
           "type": "divider",
@@ -500,6 +500,12 @@
           "url": "https://advfmosca.github.io/report-aghc-monthly/assets/maggio-2026/villa-giada/01_meta.png",
           "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/maggio-2026/villa-giada/01_meta.png",
           "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/maggio-2026/villa-giada/02_tiktok.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/maggio-2026/villa-giada/02_tiktok.png",
+          "kind": "tiktok"
         },
         {
           "type": "image",

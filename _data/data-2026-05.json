@@ -938,6 +938,13 @@
         "impressions": 3238251,
         "reach": 1194060,
         "spend": 929.86
+      },
+      "7626418949391351815": {
+        "clicks": 0,
+        "engagements": 2677,
+        "impressions": 968327,
+        "reach": 255441,
+        "spend": 260.02
       }
     },
     "prev_mom": {
@@ -1388,7 +1395,7 @@
         },
         "5": {
           "meta": 1540.96,
-          "tiktok": 0
+          "tiktok": 260.02
         }
       },
       "Villa Miliani": {

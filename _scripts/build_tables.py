@@ -48,7 +48,7 @@ CLIENTS = {
     "Montemagno":     {"meta_id":"752450855779035","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":0},
     "Terrazza Flavia":{"meta_id":"821188209852436","filter":["Terrazza"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":7500},
     "Villa Ermellina":{"meta_id":"30233607946222961","filter":None,"excl":[],"tk_id":"7612666695502118929","cm":"MoM","ct":"MoM","budget":16400},
-    "Villa Giada":    {"meta_id":"1849759899186169","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":21600},
+    "Villa Giada":    {"meta_id":"1849759899186169","filter":None,"excl":[],"tk_id":"7626418949391351815","cm":"MoM","ct":"MoM","budget":21600},
     "Villa Miliani":  {"meta_id":"1353024533007038","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":6600},
 }
 
