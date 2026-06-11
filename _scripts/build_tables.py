@@ -173,16 +173,16 @@ body { font-family: "Lato", "Open Sans", "DejaVu Sans", sans-serif; color: #1F5C
 .page-subtitle .vs { font-size: 15px; font-weight: 400; color: #1F5C6E; text-transform: lowercase; display: block; margin: 4px 0; }
 
 /* Colonna KPI (centro): icona metrica (PNG, nome incorporato) a sinistra di ogni tabella */
-.tables-col { position: absolute; top: 58px; left: 438px; width: 952px; display: flex; flex-direction: column; gap: 12px; }
+.tables-col { position: absolute; top: 44px; left: 438px; width: 952px; display: flex; flex-direction: column; gap: 9px; }
 .kpi-block { display: flex; align-items: center; gap: 10px; }
-.kpi-side { width: 196px; flex: 0 0 196px; display: flex; align-items: center; justify-content: center; }
+.kpi-side { width: 174px; flex: 0 0 174px; display: flex; align-items: center; justify-content: center; }
 .kpi-side img { display: block; }
 .kpi-main { flex: 1 1 auto; min-width: 0; }
 
 table.kpi { border-collapse: collapse; width: 100%; }
-table.kpi thead th { background: #1F5C6E; color: #fff; padding: 8px 12px; font-weight: 600; font-size: 13px; text-align: center; letter-spacing: 0.3px; border: 1px solid #1F5C6E; }
+table.kpi thead th { background: #1F5C6E; color: #fff; padding: 6px 12px; font-weight: 600; font-size: 12.5px; text-align: center; letter-spacing: 0.3px; border: 1px solid #1F5C6E; }
 table.kpi thead th:first-child { background: #fff; border: none; width: 60px; }
-table.kpi tbody td { padding: 9px 12px; text-align: center; font-size: 21px; font-weight: 700; border: 1px solid #E5E7EB; }
+table.kpi tbody td { padding: 7px 12px; text-align: center; font-size: 20px; font-weight: 700; border: 1px solid #E5E7EB; }
 td.plat-cell { background: #fff; border: none; width: 60px; padding: 3px; }
 td.plat-cell img { display: block; margin: 0 auto; }
 td.cur-cell  { background: #E07B47; color: #fff; }      /* Periodo Attuale = arancione */
@@ -191,7 +191,7 @@ td.prev-cell { background: #fff;    color: #1F5C6E; }   /* Periodo Precedente = 
 .delta-neg { color: #C0392B; }
 .delta-launch { color: #2F5496; font-style: italic; font-size: 17px; }
 .delta-na { color: #9CA3AF; font-style: italic; }
-.kpi-caption { font-size: 12.5px; font-weight: 400; line-height: 1.32; color: #1F5C6E; margin-top: 5px; padding-right: 8px; }
+.kpi-caption { font-size: 12px; font-weight: 400; line-height: 1.26; color: #1F5C6E; margin-top: 3px; padding-right: 8px; }
 
 /* Box RATIONAL (destra) — separato dalle tabelle, nessuna sovrapposizione */
 .rational-box { position: absolute; top: 150px; right: 55px; width: 415px; min-height: 600px; background: #1F5C6E; color: #fff; padding: 36px 36px; display: flex; flex-direction: column; justify-content: center; }
@@ -235,7 +235,7 @@ def delta_cell(cur, prev, override=None):
 
 def kpi_block(icon_fn, table_html, caption=None):
     cap = f'<div class="kpi-caption">{caption}</div>' if caption else ""
-    side = f'<div class="kpi-side">{icon_img(icon_fn, "width:178px")}</div>'
+    side = f'<div class="kpi-side">{icon_img(icon_fn, "width:160px")}</div>'
     return f'<div class="kpi-block">{side}<div class="kpi-main">{table_html}{cap}</div></div>'
 
 
@@ -424,7 +424,6 @@ def meta_page_html(v):
         <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p></div>
       <div class="tables-col">{blocks}</div>
       <div class="rational-box">{build_rational(v, "meta")}</div>
-      <div class="footer-r">Confidential&amp;proprietary | &reg; {v['year']-1} AG Hotel Consulting</div>
     </div>"""
 
 
@@ -442,7 +441,6 @@ def tiktok_page_html(v):
         <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p></div>
       <div class="tables-col">{blocks}</div>
       <div class="rational-box">{build_rational(v, "tiktok")}</div>
-      <div class="footer-r">Confidential&amp;proprietary | &reg; {v['year']-1} AG Hotel Consulting</div>
     </div>"""
 
 
