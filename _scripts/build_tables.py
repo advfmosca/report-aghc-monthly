@@ -159,27 +159,23 @@ body { font-family: "Lato", "Open Sans", "DejaVu Sans", sans-serif; color: #1F5C
 .page { width: 1920px; height: 1080px; position: relative; }
 
 /* Colonna sinistra: titolo + disclaimer */
-.page-header { position: absolute; top: 70px; left: 70px; width: 400px; }
+.page-header { position: absolute; top: 70px; left: 70px; width: 370px; }
 .page-title { font-size: 50px; font-weight: 700; color: #1F5C6E; letter-spacing: -0.5px; line-height: 1.05; margin: 0 0 12px 0; }
 .page-subtitle { font-size: 22px; font-weight: 700; color: #1F5C6E; letter-spacing: 0.3px; margin: 0; }
 .page-subtitle .vs { font-size: 14px; font-weight: 400; color: #1F5C6E; text-transform: lowercase; display: block; margin: 3px 0; }
-.disclaimer { position: absolute; top: 470px; left: 70px; width: 390px; font-size: 11px; line-height: 1.42; color: #1F5C6E; }
+.disclaimer { position: absolute; top: 460px; left: 70px; width: 360px; font-size: 11px; line-height: 1.42; color: #1F5C6E; }
 .disclaimer p { margin-bottom: 12px; }
 
-/* Colonna KPI (centro) */
-.tables-col { position: absolute; top: 58px; left: 490px; width: 1010px; display: flex; flex-direction: column; gap: 10px; }
-.kpi-block { display: flex; align-items: flex-start; gap: 12px; }
-.kpi-side { width: 132px; flex: 0 0 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 26px; text-align: center; }
-.kpi-side .ic { line-height: 0; }
-.kpi-side .nm { margin-top: 6px; font-size: 15px; font-weight: 700; letter-spacing: 0.4px; color: #1F5C6E; line-height: 1.1; }
-.kpi-main { flex: 1 1 auto; min-width: 0; }
+/* Colonna KPI (centro) — niente colonna icone/nomi metrica a sinistra */
+.tables-col { position: absolute; top: 66px; left: 460px; width: 870px; display: flex; flex-direction: column; gap: 13px; }
+.kpi-block { }
+.kpi-main { }
 
 table.kpi { border-collapse: collapse; width: 100%; }
 table.kpi thead th { background: #1F5C6E; color: #fff; padding: 8px 12px; font-weight: 600; font-size: 13px; text-align: center; letter-spacing: 0.3px; border: 1px solid #1F5C6E; }
-table.kpi thead th:first-child { background: #fff; border: none; width: 56px; }
-table.kpi tbody td { padding: 9px 12px; text-align: center; font-size: 21px; font-weight: 700; border: 1px solid #E5E7EB; }
-td.plat-cell { background: #fff; border: none; width: 56px; padding: 2px; }
-td.plat-cell svg { display: block; margin: 0 auto; }
+table.kpi thead th:first-child { background: #fff; border: none; width: 118px; }
+table.kpi tbody td { padding: 10px 12px; text-align: center; font-size: 21px; font-weight: 700; border: 1px solid #E5E7EB; }
+td.plat-cell { background: #fff; border: none; width: 118px; padding: 2px 10px 2px 0; text-align: right; font-size: 14px; font-weight: 700; color: #1F5C6E; }
 td.cur-cell  { background: #E07B47; color: #fff; }      /* Periodo Attuale = arancione */
 td.prev-cell { background: #fff;    color: #1F5C6E; }   /* Periodo Precedente = bianco */
 .delta-pos { color: #4F8C3F; }
@@ -188,14 +184,12 @@ td.prev-cell { background: #fff;    color: #1F5C6E; }   /* Periodo Precedente = 
 .delta-na { color: #9CA3AF; font-style: italic; }
 .kpi-caption { font-size: 12.5px; font-weight: 400; line-height: 1.32; color: #1F5C6E; margin-top: 5px; padding-right: 8px; }
 
-/* Box RATIONAL (destra) — paragrafo unico, niente header */
-.rational-box { position: absolute; top: 150px; right: 48px; width: 420px; min-height: 600px; background: #1F5C6E; color: #fff; padding: 36px 36px; display: flex; flex-direction: column; justify-content: center; }
+/* Box RATIONAL (destra) — separato dalle tabelle, nessuna sovrapposizione */
+.rational-box { position: absolute; top: 150px; right: 55px; width: 415px; min-height: 600px; background: #1F5C6E; color: #fff; padding: 36px 36px; display: flex; flex-direction: column; justify-content: center; }
 .rational-box p { font-size: 17px; line-height: 1.62; }
 
-/* Footer */
-.footer { position: absolute; bottom: 26px; left: 70px; font-size: 12px; color: #9AA7AD; }
-.footer-r { position: absolute; bottom: 26px; right: 48px; font-size: 12px; font-style: italic; color: #9AA7AD; }
-.ag-logo { position: absolute; top: 60px; right: 60px; font-family: serif; font-size: 30px; letter-spacing: 2px; color: #B7C2C7; font-weight: 600; }
+/* Footer (solo confidenzialità a destra) */
+.footer-r { position: absolute; bottom: 26px; right: 55px; font-size: 12px; font-style: italic; color: #9AA7AD; }
 """
 
 CSS_BUDGET_TABLE = """
@@ -230,20 +224,17 @@ def delta_cell(cur, prev, override=None):
     return f'<td class="{cls}">{fmt_pct(p)}</td>'
 
 
-def kpi_block(icon, name, table_html, caption=None):
+def kpi_block(table_html, caption=None):
     cap = f'<div class="kpi-caption">{caption}</div>' if caption else ""
-    return f"""<div class="kpi-block">
-      <div class="kpi-side"><div class="ic">{icon}</div><div class="nm">{name}</div></div>
-      <div class="kpi-main">{table_html}{cap}</div>
-    </div>"""
+    return f'<div class="kpi-block"><div class="kpi-main">{table_html}{cap}</div></div>'
 
 
 def meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt):
     return f"""<table class="kpi">
   <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
   <tbody>
-    <tr><td class="plat-cell">{LOGO_IG}</td><td class="cur-cell">{fmt(ig_c.get(field) or 0)}</td><td class="prev-cell">{fmt(ig_p.get(field) or 0)}</td>{delta_cell(ig_c.get(field) or 0, ig_p.get(field) or 0)}</tr>
-    <tr><td class="plat-cell">{LOGO_FB}</td><td class="cur-cell">{fmt(fb_c.get(field) or 0)}</td><td class="prev-cell">{fmt(fb_p.get(field) or 0)}</td>{delta_cell(fb_c.get(field) or 0, fb_p.get(field) or 0)}</tr>
+    <tr><td class="plat-cell">Instagram</td><td class="cur-cell">{fmt(ig_c.get(field) or 0)}</td><td class="prev-cell">{fmt(ig_p.get(field) or 0)}</td>{delta_cell(ig_c.get(field) or 0, ig_p.get(field) or 0)}</tr>
+    <tr><td class="plat-cell">Facebook</td><td class="cur-cell">{fmt(fb_c.get(field) or 0)}</td><td class="prev-cell">{fmt(fb_p.get(field) or 0)}</td>{delta_cell(fb_c.get(field) or 0, fb_p.get(field) or 0)}</tr>
   </tbody>
 </table>"""
 
@@ -257,12 +248,12 @@ def meta_budget_table(sp_c, sp_p):
 </table>"""
 
 
-def tk_table(field, cur, prev, fmt, launched):
+def tk_table(field, cur, prev, fmt, launched, label="TikTok"):
     override = "1° mese live" if launched else None
     return f"""<table class="kpi">
   <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
   <tbody>
-    <tr><td class="plat-cell">{LOGO_TK}</td><td class="cur-cell">{fmt(cur)}</td><td class="prev-cell">{fmt(prev)}</td>{delta_cell(cur, prev, override)}</tr>
+    <tr><td class="plat-cell">{label}</td><td class="cur-cell">{fmt(cur)}</td><td class="prev-cell">{fmt(prev)}</td>{delta_cell(cur, prev, override)}</tr>
   </tbody>
 </table>"""
 
@@ -414,18 +405,16 @@ def meta_page_html(v):
 
     blocks = ""
     for field, name, icon, cap in META_METRICS:
-        blocks += kpi_block(icon, name, meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt_int), cap)
-    blocks += kpi_block(IC_BUDGET, "BUDGET", meta_budget_table(sp_c, sp_p), None)
+        blocks += kpi_block(meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt_int), cap)
+    blocks += kpi_block(meta_budget_table(sp_c, sp_p), None)
 
     pa, pb = _periods_meta(v)
     return f"""<div class="page">
-      {AG_LOGO}
       <div class="page-header"><h1 class="page-title">Meta Advertising</h1>
         <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p></div>
       <div class="disclaimer">{DISCLAIMER_HTML}</div>
       <div class="tables-col">{blocks}</div>
       <div class="rational-box">{build_rational(v, "meta")}</div>
-      <div class="footer">Marketing</div>
       <div class="footer-r">Confidential&amp;proprietary | &reg; {v['year']-1} AG Hotel Consulting</div>
     </div>"""
 
@@ -435,17 +424,15 @@ def tiktok_page_html(v):
     launched = v["tk_launched"]
     blocks = ""
     for field, name, icon, cap in TK_METRICS:
-        blocks += kpi_block(icon, name, tk_table(field, tk_c.get(field) or 0, tk_p.get(field) or 0, fmt_int, launched), cap)
-    blocks += kpi_block(IC_BUDGET, "BUDGET", tk_table("spend", tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched), None)
+        blocks += kpi_block(tk_table(field, tk_c.get(field) or 0, tk_p.get(field) or 0, fmt_int, launched), cap)
+    blocks += kpi_block(tk_table("spend", tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched), None)
 
     pa, pb = _periods_tk(v)
     return f"""<div class="page">
-      {AG_LOGO}
       <div class="page-header"><h1 class="page-title">Tik Tok Advertising</h1>
         <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p></div>
       <div class="tables-col">{blocks}</div>
       <div class="rational-box">{build_rational(v, "tiktok")}</div>
-      <div class="footer">Marketing</div>
       <div class="footer-r">Confidential&amp;proprietary | &reg; {v['year']-1} AG Hotel Consulting</div>
     </div>"""
 
