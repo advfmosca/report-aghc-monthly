@@ -53,10 +53,10 @@ CLIENTS = {
 }
 
 # === Loghi piattaforme (inline SVG) ===
-# Loghi piattaforma dai PNG ufficiali forniti dal cliente
-LOGO_IG = icon_img("ig.png", "height:36px")
-LOGO_FB = icon_img("fb.png", "height:36px")
-LOGO_TK = icon_img("tiktok.png", "height:44px")
+# Loghi piattaforma dai PNG ufficiali forniti dal cliente (ritagliati al contenuto)
+LOGO_IG = icon_img("ig.png", "height:52px")
+LOGO_FB = icon_img("fb.png", "height:52px")
+LOGO_TK = icon_img("tiktok.png", "height:56px")
 
 # === Icone metrica (voci insight) — palette AGHC teal/arancio ===
 IC_REACH = """<svg viewBox="0 0 64 64" width="50" height="50" xmlns="http://www.w3.org/2000/svg"><path d="M6 26v12h9l21 11V15L15 26H6z" fill="#1F5C6E"/><path d="M44 23c5 4 5 14 0 18" fill="none" stroke="#E07B47" stroke-width="4" stroke-linecap="round"/><path d="M50 17c8 7 8 23 0 30" fill="none" stroke="#E07B47" stroke-width="4" stroke-linecap="round"/></svg>"""
@@ -173,9 +173,9 @@ body { font-family: "Lato", "Open Sans", "DejaVu Sans", sans-serif; color: #1F5C
 .page-subtitle .vs { font-size: 15px; font-weight: 400; color: #1F5C6E; text-transform: lowercase; display: block; margin: 4px 0; }
 
 /* Colonna KPI (centro): icona metrica (PNG, nome incorporato) a sinistra di ogni tabella */
-.tables-col { position: absolute; top: 70px; left: 455px; width: 925px; display: flex; flex-direction: column; gap: 16px; }
-.kpi-block { display: flex; align-items: center; gap: 12px; }
-.kpi-side { width: 150px; flex: 0 0 150px; display: flex; align-items: center; justify-content: center; }
+.tables-col { position: absolute; top: 58px; left: 438px; width: 952px; display: flex; flex-direction: column; gap: 12px; }
+.kpi-block { display: flex; align-items: center; gap: 10px; }
+.kpi-side { width: 196px; flex: 0 0 196px; display: flex; align-items: center; justify-content: center; }
 .kpi-side img { display: block; }
 .kpi-main { flex: 1 1 auto; min-width: 0; }
 
@@ -235,7 +235,7 @@ def delta_cell(cur, prev, override=None):
 
 def kpi_block(icon_fn, table_html, caption=None):
     cap = f'<div class="kpi-caption">{caption}</div>' if caption else ""
-    side = f'<div class="kpi-side">{icon_img(icon_fn, "width:142px")}</div>'
+    side = f'<div class="kpi-side">{icon_img(icon_fn, "width:178px")}</div>'
     return f'<div class="kpi-block">{side}<div class="kpi-main">{table_html}{cap}</div></div>'
 
 
