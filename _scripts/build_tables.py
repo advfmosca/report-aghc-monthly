@@ -1,32 +1,21 @@
 #!/usr/bin/env python3
-"""build_tables.py — Genera PNG delle tabelle KPI per ogni cliente AGHC.
+"""build_tables.py — Genera PNG delle slide KPI per ogni cliente AGHC.
 
-Output: una cartella per cliente con i PNG delle tabelle (Meta + TikTok + Budget Annuale).
-Francesco apre il template Canva del cliente, seleziona la tabella vuota, e la sostituisce
-con il PNG corrispondente (drag&drop o Inserisci → Immagine).
+Output: una cartella per cliente con i PNG (Meta + TikTok + Budget Annuale).
 
 Estetica replicata 1:1 col TEMPLATE ORIGINALE Canva AGHC:
   - Header teal #1F5C6E con testo bianco bold
-  - Cella "Periodo Precedente" (colonna media) arancione #E07B47 testo bianco
-  - Cella "Periodo Attuale" bianca testo teal bold
+  - Colonna "Periodo Attuale" ARANCIONE #E07B47 testo bianco  (= il dato del mese)
+  - Colonna "Periodo Precedente" BIANCA testo teal
   - Confronto colorato verde positivo / rosso negativo
-  - Loghi IG/FB/TikTok nella prima colonna (fuori griglia)
-
-Tabelle generate per cliente:
-  Meta (sempre):    01_meta_account_raggiunti, 02_meta_visualizzazioni,
-                    03_meta_interazioni, 04_meta_clicks, 05_meta_budget
-  TikTok (se attivo): 06_tk_account_raggiunti, 07_tk_visualizzazioni,
-                      08_tk_click_destinazione, 09_tk_budget
-  Budget annuale:   10_budget_annuale
+  - Per ogni KPI: ICONA + NOME METRICA (voce insight) a sinistra
+  - DIDASCALIA descrittiva sotto ogni tabella
+  - Box RATIONAL teal a destra: paragrafo unico, TOV advisor (~580 caratteri)
+  - Disclaimer attribuzione in basso a sinistra
 
 Uso:
-  # Singolo cliente
-  python3 build_tables.py --year 2026 --month 4 --client Lunetta \\
-    --data _data/data-2026-04.json --output-dir /tmp/lunetta_tables/
-
-  # Tutti i 18 clienti
-  python3 build_tables.py --year 2026 --month 4 \\
-    --data _data/data-2026-04.json --output-dir /tmp/all_tables/
+  python3 build_tables.py --year 2026 --month 5 \\
+    --data _data/data-2026-05.json --output-dir /tmp/all_tables/
 """
 import argparse, json, subprocess, sys, shutil, tempfile, os
 from pathlib import Path
@@ -57,9 +46,47 @@ CLIENTS = {
 }
 
 # === Loghi piattaforme (inline SVG) ===
-LOGO_IG = """<svg viewBox="0 0 24 24" width="46" height="46" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="igG" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FED576"/><stop offset="26%" stop-color="#F47133"/><stop offset="61%" stop-color="#BC3081"/><stop offset="100%" stop-color="#4C63D2"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="url(#igG)"/><path d="M12 7.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zm0 7.6a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm5.8-7.85a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0z" fill="#fff"/></svg>"""
-LOGO_FB = """<svg viewBox="0 0 24 24" width="46" height="46" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.927-1.956 1.876v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" fill="#1877F2"/></svg>"""
-LOGO_TK = """<svg viewBox="0 0 24 24" width="46" height="46" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.6 20.1a6.34 6.34 0 0 0 10.86-4.43V8.61a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.64-.04Z" fill="#010101"/></svg>"""
+LOGO_IG = """<svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="igG" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FED576"/><stop offset="26%" stop-color="#F47133"/><stop offset="61%" stop-color="#BC3081"/><stop offset="100%" stop-color="#4C63D2"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="url(#igG)"/><path d="M12 7.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zm0 7.6a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm5.8-7.85a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0z" fill="#fff"/></svg>"""
+LOGO_FB = """<svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.927-1.956 1.876v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" fill="#1877F2"/></svg>"""
+LOGO_TK = """<svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.6 20.1a6.34 6.34 0 0 0 10.86-4.43V8.61a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.64-.04Z" fill="#010101"/></svg>"""
+
+# === Icone metrica (voci insight) — palette AGHC teal/arancio ===
+IC_REACH = """<svg viewBox="0 0 64 64" width="50" height="50" xmlns="http://www.w3.org/2000/svg"><path d="M6 26v12h9l21 11V15L15 26H6z" fill="#1F5C6E"/><path d="M44 23c5 4 5 14 0 18" fill="none" stroke="#E07B47" stroke-width="4" stroke-linecap="round"/><path d="M50 17c8 7 8 23 0 30" fill="none" stroke="#E07B47" stroke-width="4" stroke-linecap="round"/></svg>"""
+IC_VIEWS = """<svg viewBox="0 0 64 64" width="50" height="50" xmlns="http://www.w3.org/2000/svg"><path d="M4 32s12-17 28-17 28 17 28 17-12 17-28 17S4 32 4 32z" fill="none" stroke="#1F5C6E" stroke-width="4"/><circle cx="32" cy="32" r="9" fill="#E07B47"/></svg>"""
+IC_ENG = """<svg viewBox="0 0 64 64" width="50" height="50" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="12" width="34" height="25" rx="5" fill="#1F5C6E"/><path d="M14 37v8l10-8z" fill="#1F5C6E"/><rect x="28" y="27" width="30" height="22" rx="5" fill="#E07B47"/><path d="M50 49v7l-9-7z" fill="#E07B47"/></svg>"""
+IC_CLICK = """<svg viewBox="0 0 64 64" width="50" height="50" xmlns="http://www.w3.org/2000/svg"><path d="M30 30V18a4 4 0 0 1 8 0v10" fill="none" stroke="#1F5C6E" stroke-width="4" stroke-linecap="round"/><path d="M38 28a4 4 0 0 1 8 0v4" fill="none" stroke="#1F5C6E" stroke-width="4" stroke-linecap="round"/><path d="M46 30a4 4 0 0 1 8 0v10c0 9-6 16-15 16-6 0-10-3-13-8l-5-9c-2-4 3-7 6-4l5 5V22a4 4 0 0 1 8 0v8" fill="#1F5C6E"/><path d="M12 12l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#E07B47"/></svg>"""
+IC_BUDGET = """<svg viewBox="0 0 64 64" width="50" height="50" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v12c0 4 7 7 16 7s16-3 16-7V20" fill="#1F5C6E"/><ellipse cx="26" cy="20" rx="16" ry="7" fill="#E07B47"/><path d="M22 38v8c0 4 7 7 16 7s16-3 16-7v-8" fill="#1F5C6E"/><ellipse cx="38" cy="38" rx="16" ry="7" fill="#E07B47"/></svg>"""
+
+# === Didascalie fisse (uguali ogni mese) ===
+CAP_REACH = "Numero di utenti unici che hanno visto almeno una volta i contenuti sponsorizzati, indicativo del pubblico realmente raggiunto dalla campagna."
+CAP_VIEWS = "Numero complessivo di visualizzazioni degli annunci, incluse le ripetizioni per singolo utente. Indica la frequenza e l'intensità dell'esposizione pubblicitaria."
+CAP_ENG = "Include tutte le interazioni degli utenti dopo aver visto gli annunci (clic, like, commenti, condivisioni, salvataggi, ecc.)."
+CAP_CLICKS = "Include tutte le azioni di clic effettuate dagli utenti dopo aver visualizzato l'annuncio (apertura del link, clic sul pulsante call to action)."
+CAP_TK_CLICKS = "Numero di clic dagli annunci verso la destinazione specificata (es. sito o landing page), al netto delle interazioni puramente social."
+
+META_METRICS = [
+    ("reach",                    "ACCOUNT RAGGIUNTI", IC_REACH, CAP_REACH),
+    ("impressions",              "VISUALIZZAZIONI",   IC_VIEWS, CAP_VIEWS),
+    ("actions_page_engagement",  "INTERAZIONI",       IC_ENG,   CAP_ENG),
+    ("clicks",                   "CLICKS",            IC_CLICK, CAP_CLICKS),
+]
+TK_METRICS = [
+    ("reach",        "ACCOUNT RAGGIUNTI", IC_REACH, CAP_REACH),
+    ("impressions",  "VISUALIZZAZIONI",   IC_VIEWS, CAP_VIEWS),
+    ("clicks",       "CLICKS",            IC_CLICK, CAP_TK_CLICKS),
+]
+
+DISCLAIMER_HTML = (
+    "<p>Le metriche riportate nel presente report relative a Copertura, Visualizzazioni, "
+    "Interazioni e Budget potrebbero essere soggette a variazioni in quanto influenzate dalla "
+    "finestra di attribuzione, che può estendersi oltre la data di chiusura della reportistica.</p>"
+    "<p>*Nel report è stato presentato il confronto tra click nel periodo attuale e il mese "
+    "precedente. Tuttavia questa metrica risulta parzialmente non comparabile, in quanto Meta ha "
+    "aggiornato nel corso degli ultimi 12 mesi le regole e i modelli di attribuzione dei click e "
+    "delle conversioni (inclusi i criteri di attribuzione standard e le finestre di attribuzione). "
+    "Questi adeguamenti sistemici modificano il modo in cui Facebook/Instagram contabilizzano i "
+    "click rispetto ai periodi precedenti, rendendo il confronto diretto potenzialmente fuorviante.</p>"
+)
 
 # === Formattazione IT ===
 def fmt_int(x):
@@ -124,180 +151,72 @@ def build_view(client_name, data, year, month):
     }
 
 
-# === CSS ===
-CSS_KPI_TABLE = """
-@page { size: 1200px 220px; margin: 0; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: "Lato", "Open Sans", -apple-system, sans-serif; color: #1F5C6E; padding: 8px; }
-table.kpi {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 28px;
-}
-table.kpi thead th {
-  background: #1F5C6E; color: #fff;
-  padding: 13px 16px;
-  font-weight: 600; font-size: 17px;
-  text-align: center; letter-spacing: 0.3px;
-  border: 1px solid #1F5C6E;
-}
-table.kpi thead th:first-child { background: #fff; border: none; width: 70px; }
-table.kpi tbody td {
-  padding: 16px 16px;
-  text-align: center;
-  font-size: 28px; font-weight: 700;
-  border: 1px solid #E5E7EB;
-}
-td.plat-cell { background: #fff; border: none; width: 70px; padding: 4px; }
-td.plat-cell svg { display: block; margin: 0 auto; }
-td.cur-cell { background: #fff; color: #1F5C6E; }
-td.prev-cell { background: #E07B47; color: #fff; }
-.delta-pos { color: #4F8C3F; }
-.delta-neg { color: #C04A3D; }
-.delta-launch { color: #2F5496; font-style: italic; font-size: 22px; }
-.delta-na { color: #9CA3AF; font-style: italic; }
-"""
-
 # === CSS pagina intera (Meta/TikTok) — replica layout template originale ===
 CSS_FULL_PAGE = """
 @page { size: 1920px 1080px; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: "Lato", "Open Sans", -apple-system, sans-serif; color: #1F5C6E; background: #fff; }
-.page {
-  width: 1920px; height: 1080px;
-  position: relative;
-}
-/* Header slide (titolo + sottotitolo periodo) */
-.page-header {
-  position: absolute;
-  top: 60px; left: 70px;
-  width: 400px;
-}
-.page-title {
-  font-size: 52px; font-weight: 700;
-  color: #1F5C6E;
-  letter-spacing: -0.5px;
-  line-height: 1.05;
-  margin: 0 0 12px 0;
-}
-.page-subtitle {
-  font-size: 22px; font-weight: 600;
-  color: #1F5C6E;
-  letter-spacing: 0.3px;
-  margin: 0;
-}
-.page-subtitle .vs {
-  font-size: 14px; font-weight: 400;
-  color: #1F5C6E;
-  text-transform: lowercase;
-  display: block;
-  margin: 4px 0;
-}
+body { font-family: "Lato", "Open Sans", "DejaVu Sans", sans-serif; color: #1F5C6E; background: #fff; }
+.page { width: 1920px; height: 1080px; position: relative; }
 
-/* Colonna tabelle (centro pagina) */
-.tables-col {
-  position: absolute;
-  top: 90px; left: 500px;
-  width: 1000px;
-  display: flex; flex-direction: column;
-  gap: 30px;
-}
-.tables-col table.kpi {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 22px;
-}
-.tables-col table.kpi thead th {
-  background: #1F5C6E; color: #fff;
-  padding: 10px 14px;
-  font-weight: 600; font-size: 14px;
-  text-align: center; letter-spacing: 0.3px;
-  border: 1px solid #1F5C6E;
-}
-.tables-col table.kpi thead th:first-child { background: #fff; border: none; width: 60px; }
-.tables-col table.kpi tbody td {
-  padding: 12px 14px;
-  text-align: center;
-  font-size: 22px; font-weight: 700;
-  border: 1px solid #E5E7EB;
-}
-.tables-col td.plat-cell { background: #fff; border: none; width: 60px; padding: 4px; }
-.tables-col td.plat-cell svg { display: block; margin: 0 auto; }
-.tables-col td.cur-cell { background: #fff; color: #1F5C6E; }
-.tables-col td.prev-cell { background: #E07B47; color: #fff; }
-.tables-col .delta-pos { color: #4F8C3F; }
-.tables-col .delta-neg { color: #C04A3D; }
-.tables-col .delta-launch { color: #2F5496; font-style: italic; font-size: 18px; }
-.tables-col .delta-na { color: #9CA3AF; font-style: italic; }
+/* Colonna sinistra: titolo + disclaimer */
+.page-header { position: absolute; top: 70px; left: 70px; width: 400px; }
+.page-title { font-size: 50px; font-weight: 700; color: #1F5C6E; letter-spacing: -0.5px; line-height: 1.05; margin: 0 0 12px 0; }
+.page-subtitle { font-size: 22px; font-weight: 700; color: #1F5C6E; letter-spacing: 0.3px; margin: 0; }
+.page-subtitle .vs { font-size: 14px; font-weight: 400; color: #1F5C6E; text-transform: lowercase; display: block; margin: 3px 0; }
+.disclaimer { position: absolute; top: 470px; left: 70px; width: 390px; font-size: 11px; line-height: 1.42; color: #1F5C6E; }
+.disclaimer p { margin-bottom: 12px; }
 
-/* Box RATIONAL (destra) */
-.rational-box {
-  position: absolute;
-  top: 130px; right: 50px;
-  width: 360px;
-  background: #1F5C6E;
-  color: #fff;
-  padding: 26px 28px;
-  font-size: 16px;
-  line-height: 1.55;
-  min-height: 800px;
-}
-.rational-box .rational-header {
-  font-size: 18px; font-weight: 700; letter-spacing: 1.5px;
-  margin-bottom: 18px;
-}
-.rational-box p { margin-bottom: 14px; }
-.rational-box p:last-child { margin-bottom: 0; }
+/* Colonna KPI (centro) */
+.tables-col { position: absolute; top: 58px; left: 490px; width: 1010px; display: flex; flex-direction: column; gap: 10px; }
+.kpi-block { display: flex; align-items: flex-start; gap: 12px; }
+.kpi-side { width: 132px; flex: 0 0 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 26px; text-align: center; }
+.kpi-side .ic { line-height: 0; }
+.kpi-side .nm { margin-top: 6px; font-size: 15px; font-weight: 700; letter-spacing: 0.4px; color: #1F5C6E; line-height: 1.1; }
+.kpi-main { flex: 1 1 auto; min-width: 0; }
+
+table.kpi { border-collapse: collapse; width: 100%; }
+table.kpi thead th { background: #1F5C6E; color: #fff; padding: 8px 12px; font-weight: 600; font-size: 13px; text-align: center; letter-spacing: 0.3px; border: 1px solid #1F5C6E; }
+table.kpi thead th:first-child { background: #fff; border: none; width: 56px; }
+table.kpi tbody td { padding: 9px 12px; text-align: center; font-size: 21px; font-weight: 700; border: 1px solid #E5E7EB; }
+td.plat-cell { background: #fff; border: none; width: 56px; padding: 2px; }
+td.plat-cell svg { display: block; margin: 0 auto; }
+td.cur-cell  { background: #E07B47; color: #fff; }      /* Periodo Attuale = arancione */
+td.prev-cell { background: #fff;    color: #1F5C6E; }   /* Periodo Precedente = bianco */
+.delta-pos { color: #4F8C3F; }
+.delta-neg { color: #C04A3D; }
+.delta-launch { color: #2F5496; font-style: italic; font-size: 17px; }
+.delta-na { color: #9CA3AF; font-style: italic; }
+.kpi-caption { font-size: 12.5px; font-weight: 400; line-height: 1.32; color: #1F5C6E; margin-top: 5px; padding-right: 8px; }
+
+/* Box RATIONAL (destra) — paragrafo unico, niente header */
+.rational-box { position: absolute; top: 150px; right: 48px; width: 420px; min-height: 600px; background: #1F5C6E; color: #fff; padding: 36px 36px; display: flex; flex-direction: column; justify-content: center; }
+.rational-box p { font-size: 17px; line-height: 1.62; }
+
+/* Footer */
+.footer { position: absolute; bottom: 26px; left: 70px; font-size: 12px; color: #9AA7AD; }
+.footer-r { position: absolute; bottom: 26px; right: 48px; font-size: 12px; font-style: italic; color: #9AA7AD; }
+.ag-logo { position: absolute; top: 60px; right: 60px; font-family: serif; font-size: 30px; letter-spacing: 2px; color: #B7C2C7; font-weight: 600; }
 """
 
 CSS_BUDGET_TABLE = """
 @page { size: 1400px 720px; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: "Lato", "Open Sans", -apple-system, sans-serif; color: #1F5C6E; padding: 12px; }
-table.budget {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 22px;
-}
-th.hdr-budget-annuale {
-  background: #1F5C6E; color: #fff;
-  padding: 16px 24px;
-  text-align: left; font-size: 22px; font-weight: 700; letter-spacing: 1.5px;
-  border: 1px solid #1F5C6E;
-}
-th.hdr-budget-val {
-  background: #1F5C6E; color: #fff;
-  padding: 16px 24px;
-  text-align: right; font-size: 22px; font-weight: 700;
-  border: 1px solid #1F5C6E;
-}
-tr.hdr-cols th {
-  background: #E07B47; color: #fff;
-  padding: 11px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px;
-  border: 1px solid #fff;
-}
+body { font-family: "Lato", "Open Sans", "DejaVu Sans", sans-serif; color: #1F5C6E; padding: 12px; }
+table.budget { border-collapse: collapse; width: 100%; font-size: 22px; }
+th.hdr-budget-annuale { background: #1F5C6E; color: #fff; padding: 16px 24px; text-align: left; font-size: 22px; font-weight: 700; letter-spacing: 1.5px; border: 1px solid #1F5C6E; }
+th.hdr-budget-val { background: #1F5C6E; color: #fff; padding: 16px 24px; text-align: right; font-size: 22px; font-weight: 700; border: 1px solid #1F5C6E; }
+tr.hdr-cols th { background: #E07B47; color: #fff; padding: 11px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px; border: 1px solid #fff; }
 tr.hdr-cols th:first-child { text-align: left; }
 tr.hdr-cols th:nth-child(n+2) { text-align: center; }
-.budget tbody td {
-  padding: 11px 24px;
-  font-size: 18px; font-weight: 600;
-  border: 1px solid #E5E7EB;
-}
+.budget tbody td { padding: 11px 24px; font-size: 18px; font-weight: 600; border: 1px solid #E5E7EB; }
 .budget tbody td.mese { text-align: left; font-weight: 700; color: #1F5C6E; }
 .budget tbody td:nth-child(n+2) { text-align: right; }
-.budget tfoot td {
-  background: #fff;
-  padding: 13px 24px;
-  font-size: 18px; font-weight: 700;
-  color: #1F5C6E;
-  border-top: 2px solid #1F5C6E;
-}
+.budget tfoot td { background: #fff; padding: 13px 24px; font-size: 18px; font-weight: 700; color: #1F5C6E; border-top: 2px solid #1F5C6E; }
 .budget tfoot td:nth-child(n+2) { text-align: right; }
 .budget tfoot tr.speso td { border-bottom: 1px solid #E5E7EB; }
 .budget tfoot tr.rimanente td { border-top: none; }
 """
 
-# === Generazione tabelle ===
 def render_html(table_inner_html, css):
     return f"""<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>{table_inner_html}</body></html>"""
 
@@ -311,20 +230,26 @@ def delta_cell(cur, prev, override=None):
     return f'<td class="{cls}">{fmt_pct(p)}</td>'
 
 
-def kpi_meta_2row_table(ig_logo, fb_logo, field, ig_c, ig_p, fb_c, fb_p, fmt):
-    return f"""
-<table class="kpi">
+def kpi_block(icon, name, table_html, caption=None):
+    cap = f'<div class="kpi-caption">{caption}</div>' if caption else ""
+    return f"""<div class="kpi-block">
+      <div class="kpi-side"><div class="ic">{icon}</div><div class="nm">{name}</div></div>
+      <div class="kpi-main">{table_html}{cap}</div>
+    </div>"""
+
+
+def meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt):
+    return f"""<table class="kpi">
   <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
   <tbody>
-    <tr><td class="plat-cell">{ig_logo}</td><td class="cur-cell">{fmt(ig_c.get(field) or 0)}</td><td class="prev-cell">{fmt(ig_p.get(field) or 0)}</td>{delta_cell(ig_c.get(field) or 0, ig_p.get(field) or 0)}</tr>
-    <tr><td class="plat-cell">{fb_logo}</td><td class="cur-cell">{fmt(fb_c.get(field) or 0)}</td><td class="prev-cell">{fmt(fb_p.get(field) or 0)}</td>{delta_cell(fb_c.get(field) or 0, fb_p.get(field) or 0)}</tr>
+    <tr><td class="plat-cell">{LOGO_IG}</td><td class="cur-cell">{fmt(ig_c.get(field) or 0)}</td><td class="prev-cell">{fmt(ig_p.get(field) or 0)}</td>{delta_cell(ig_c.get(field) or 0, ig_p.get(field) or 0)}</tr>
+    <tr><td class="plat-cell">{LOGO_FB}</td><td class="cur-cell">{fmt(fb_c.get(field) or 0)}</td><td class="prev-cell">{fmt(fb_p.get(field) or 0)}</td>{delta_cell(fb_c.get(field) or 0, fb_p.get(field) or 0)}</tr>
   </tbody>
 </table>"""
 
 
-def kpi_meta_budget_table(sp_c, sp_p):
-    return f"""
-<table class="kpi">
+def meta_budget_table(sp_c, sp_p):
+    return f"""<table class="kpi">
   <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
   <tbody>
     <tr><td class="plat-cell"></td><td class="cur-cell">{fmt_eur(sp_c)}</td><td class="prev-cell">{fmt_eur(sp_p)}</td>{delta_cell(sp_c, sp_p)}</tr>
@@ -332,34 +257,27 @@ def kpi_meta_budget_table(sp_c, sp_p):
 </table>"""
 
 
-def kpi_tk_table(tk_logo, field, cur, prev, fmt, launched):
+def tk_table(field, cur, prev, fmt, launched):
     override = "1° mese live" if launched else None
-    return f"""
-<table class="kpi">
+    return f"""<table class="kpi">
   <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
   <tbody>
-    <tr><td class="plat-cell">{tk_logo}</td><td class="cur-cell">{fmt(cur)}</td><td class="prev-cell">{fmt(prev)}</td>{delta_cell(cur, prev, override)}</tr>
+    <tr><td class="plat-cell">{LOGO_TK}</td><td class="cur-cell">{fmt(cur)}</td><td class="prev-cell">{fmt(prev)}</td>{delta_cell(cur, prev, override)}</tr>
   </tbody>
 </table>"""
 
 
 def budget_annuale_table(v):
     budget = v["cfg"]["budget"] or 0
-    ytd_months = v["ytd_months"]
-    ytd_client = v["ytd_client"]
-    rows = ""
-    tot_meta = tot_tk = 0
+    ytd_months = v["ytd_months"]; ytd_client = v["ytd_client"]
+    rows = ""; tot_meta = tot_tk = 0
     for m in range(1, 13):
         md = ytd_client.get(str(m), {"meta":0, "tiktok":0}) if m in ytd_months else {"meta":0, "tiktok":0}
-        meta_v = md.get("meta") or 0
-        tk_v = md.get("tiktok") or 0
-        tot_meta += meta_v
-        tot_tk += tk_v
+        meta_v = md.get("meta") or 0; tk_v = md.get("tiktok") or 0
+        tot_meta += meta_v; tot_tk += tk_v
         rows += f"""<tr><td class="mese">{MONTH_IT[m].upper()}</td><td>{fmt_eur(meta_v)}</td><td>{fmt_eur(tk_v)}</td><td>{fmt_eur(meta_v + tk_v)}</td></tr>"""
-    speso = tot_meta + tot_tk
-    rimanente = budget - speso
-    return f"""
-<table class="budget">
+    speso = tot_meta + tot_tk; rimanente = budget - speso
+    return f"""<table class="budget">
   <thead>
     <tr><th class="hdr-budget-annuale" colspan="3">BUDGET ANNUALE</th><th class="hdr-budget-val">{fmt_eur(budget)}</th></tr>
     <tr class="hdr-cols"><th>MESI</th><th>ADS META</th><th>ADS TIK TOK</th><th>TOTALE</th></tr>
@@ -373,113 +291,120 @@ def budget_annuale_table(v):
 
 
 def render_table(html_inner, css, out_png, dpi=200):
-    """HTML → PDF (WeasyPrint) → PNG (pdftoppm).
-    Lavora in /tmp per evitare problemi di permessi su FUSE mount."""
     out_png.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="aghc_tables_") as td:
-        td_path = Path(td)
-        pdf_path = td_path / "page.pdf"
+        td_path = Path(td); pdf_path = td_path / "page.pdf"
         html = render_html(html_inner, css)
         HTML(string=html).write_pdf(str(pdf_path), stylesheets=[CSS(string=css)])
-        # pdftoppm → PNG (pagina singola → page-1.png)
         prefix = td_path / "page"
-        subprocess.run([
-            "pdftoppm", "-png", "-r", str(dpi),
-            str(pdf_path), str(prefix)
-        ], check=True)
+        subprocess.run(["pdftoppm", "-png", "-r", str(dpi), str(pdf_path), str(prefix)], check=True)
         generated = td_path / "page-1.png"
         if not generated.exists():
             raise RuntimeError(f"pdftoppm non ha prodotto PNG attesa: {generated}")
-        # Copia su destinazione finale (no rename, può attraversare filesystem)
         shutil.copy(generated, out_png)
 
 
-# === BUDGET_WEIGHTS for rational ===
+# === RATIONAL — paragrafo unico, TOV advisor, ~580 caratteri (replica template) ===
 BUDGET_WEIGHTS = {1:3,2:3,3:5,4:10,5:15,6:15,7:12,8:12,9:5,10:5,11:5,12:10}
 
-
 def build_rational(v, focus):
-    """Rational 3-paragrafi adatto al box laterale, TOV positivo-strategico."""
     fb_c = v["meta_cur"]["facebook"]; fb_p = v["meta_prev"]["facebook"]
     ig_c = v["meta_cur"]["instagram"]; ig_p = v["meta_prev"]["instagram"]
     spend_cur = (fb_c.get("spend") or 0) + (ig_c.get("spend") or 0)
     spend_prev = (fb_p.get("spend") or 0) + (ig_p.get("spend") or 0)
     spend_delta = pct(spend_cur, spend_prev)
-    fb_reach_cur = fb_c.get("reach") or 0
-    fb_reach_delta = pct(fb_reach_cur, fb_p.get("reach") or 0)
-    reach_meta = fb_reach_cur + (ig_c.get("reach") or 0)
-    fb_eng_cur = fb_c.get("actions_page_engagement") or 0
-    fb_eng_delta = pct(fb_eng_cur, fb_p.get("actions_page_engagement") or 0)
-    tot_eng = fb_eng_cur + (ig_c.get("actions_page_engagement") or 0)
+    fb_reach = fb_c.get("reach") or 0; ig_reach = ig_c.get("reach") or 0
+    reach_meta = fb_reach + ig_reach
+    fb_reach_delta = pct(fb_reach, fb_p.get("reach") or 0)
+    tot_eng = (fb_c.get("actions_page_engagement") or 0) + (ig_c.get("actions_page_engagement") or 0)
 
-    cn = v["client_name"]; pa = f"{MONTH_IT[v['month']]} {v['year']}"
-    month_cap = MONTH_IT[v["month"]]
+    cn = v["client_name"]
+    month_cap = MONTH_IT[v["month"]]; year = v["year"]
+    cur_w = BUDGET_WEIGHTS[v["month"]]
     next_m = (v["month"] % 12) + 1
-    next_low = MONTH_IT[next_m].lower()
-    next_w = BUDGET_WEIGHTS[next_m]
+    next_cap = MONTH_IT[next_m]; next_low = next_cap.lower(); next_w = BUDGET_WEIGHTS[next_m]
+    driver = "Facebook" if fb_reach >= ig_reach else "Instagram"
 
     if focus == "tiktok":
+        tk = v["tk_cur"] or empty_tk()
         if v["tk_launched"]:
-            tk = v["tk_cur"]
-            p1 = (f"{month_cap} inaugura una nuova fase per {cn}: la prima campagna TikTok va live e debutta "
-                  f"con {fmt_int(tk.get('impressions') or 0)} visualizzazioni e {fmt_int(tk.get('reach') or 0)} "
-                  f"utenti unici raggiunti.")
-            p2 = ("Il presidio sul pubblico più giovane si attiva nel momento giusto, anticipando le finestre "
-                  "stagionali a più alto traffico di prenotazione.")
-            p3 = (f"Da {next_low} {cn} opera su due leve complementari: Meta per la conversione, TikTok per la "
-                  f"scoperta del brand.")
-            return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
-        if v["tk_cur"] and (v["tk_cur"].get("impressions") or 0) > 0:
-            return (f"<p>In {pa} TikTok mantiene un presidio efficiente con {fmt_int(v['tk_cur'].get('impressions') or 0)} "
-                    f"impression generate, a conferma di un mix canali ben bilanciato sugli obiettivi di awareness.</p>")
-        return f"<p>TikTok in stand-by per {cn} in {pa}; la pressione resta concentrata sui canali principali.</p>"
+            s = (f"{month_cap} {year} inaugura una nuova fase per {cn}: la prima campagna TikTok va live e "
+                 f"debutta con {fmt_int(tk.get('impressions') or 0)} visualizzazioni e {fmt_int(tk.get('reach') or 0)} "
+                 f"utenti unici raggiunti, attivando il presidio sul pubblico più giovane nel momento giusto del "
+                 f"calendario. Da {next_low} {cn} lavora su due leve complementari — Meta per la conversione, "
+                 f"TikTok per la scoperta del brand — in vista delle finestre stagionali a più alto traffico di prenotazione.")
+        elif (tk.get("impressions") or 0) > 0:
+            s = (f"{month_cap} {year} conferma su TikTok un presidio efficiente per {cn}, con "
+                 f"{fmt_int(tk.get('impressions') or 0)} visualizzazioni e {fmt_int(tk.get('reach') or 0)} utenti unici "
+                 f"raggiunti: il canale amplia la copertura sul pubblico più giovane a costi competitivi, a conferma "
+                 f"di un mix ben bilanciato sugli obiettivi di awareness. La pressione prosegue strategica verso "
+                 f"{next_cap} (peso {next_w}% del piano annuo).")
+        else:
+            s = (f"{month_cap} {year} vede TikTok in stand-by per {cn}: la pressione resta concentrata sui canali "
+                 f"principali, mentre il budget dedicato resta integro e pronto a riattivarsi sulle finestre "
+                 f"stagionali a più alto ritorno verso {next_cap}.")
+        return f"<p>{s}</p>"
 
-    # META
+    # META — pausa strategica
     if spend_cur == 0 and reach_meta == 0:
-        p1 = f"{month_cap} rappresenta una pausa strategica per {cn}, coerente con il calendario annuo del piano media."
-        p2 = "Il budget residuo resta integro e pronto a concentrarsi sulle finestre stagionali a più alto ritorno."
-        p3 = f"Da {next_low} (peso {next_w}% del piano annuo) il presidio riprende {'nel cuore della stagione' if next_w >= 12 else 'in modo progressivo'}."
-        return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+        s = (f"{month_cap} {year} rappresenta una pausa strategica per {cn}, coerente con il posizionamento del "
+             f"mese all'interno del piano media annuo (peso {cur_w}%). Il budget resta integro e pronto a "
+             f"concentrarsi sulle finestre stagionali a più alto ritorno. Da {next_low} (peso {next_w}% del piano "
+             f"annuo) il presidio riprende {'nel cuore della stagione' if next_w >= 12 else 'in modo progressivo'}, "
+             f"dove concentreremo la pressione sulle finestre a più alta intenzione di prenotazione.")
+        return f"<p>{s}</p>"
 
+    # Frase 1 — apertura su budget/posizionamento
+    if spend_delta is not None and spend_delta > 8:
+        s1 = (f"{month_cap} {year} si apre con un incremento strategico del budget pubblicitario Meta "
+              f"({fmt_pct(spend_delta)}), scelta coerente con il posizionamento del mese all'interno del piano "
+              f"annuo (peso {cur_w}%).")
+    elif spend_delta is not None and spend_delta < -8:
+        s1 = (f"{month_cap} {year} è il mese dell'efficienza per {cn}: l'investimento Meta viene rimodulato "
+              f"({fmt_pct(spend_delta)}) in coerenza con il posizionamento del mese nel piano annuo (peso {cur_w}%).")
+    else:
+        s1 = (f"{month_cap} {year} conferma per {cn} un presidio Meta stabile, in linea con il posizionamento del "
+              f"mese all'interno del piano annuo (peso {cur_w}%).")
+
+    # Frase 2 — copertura / canale di traino
     if fb_reach_delta is not None and fb_reach_delta > 100:
-        mul = f"{(1 + fb_reach_delta/100):.1f}".replace('.', ',')
-        p1 = (f"{month_cap} segna un cambio di passo per {cn}: Facebook diventa il canale di traino e amplia "
-              f"la copertura di {mul} volte, raggiungendo {fmt_int(fb_reach_cur)} utenti unici.")
-    elif spend_delta is not None and spend_delta < -8 and reach_meta > 0:
-        p1 = (f"{month_cap} è il mese dell'efficienza per {cn}: la copertura Meta resta solida con "
-              f"{fmt_int(reach_meta)} utenti unici raggiunti, con un investimento ridotto del {abs(int(spend_delta))}%. "
-              f"Ogni euro speso ha lavorato meglio.")
+        s2 = (f"{driver} diventa il canale di traino e amplia la copertura fino a {fmt_int(reach_meta)} utenti unici, "
+              f"a conferma di un mix canali ben bilanciato sugli obiettivi di awareness.")
     else:
-        p1 = (f"{month_cap} mantiene il presidio di {cn} su base solida: {fmt_int(reach_meta)} utenti unici "
-              f"raggiunti su Meta, in linea con il posizionamento strategico del mese.")
+        s2 = (f"{driver} amplia la copertura raggiungendo {fmt_int(reach_meta)} utenti unici, a conferma di un mix "
+              f"canali ben bilanciato sugli obiettivi di awareness.")
 
-    if fb_eng_delta is not None and fb_eng_delta > 100 and fb_eng_cur > 5000:
-        p2 = (f"Le interazioni sui contenuti Facebook salgono a {fmt_int(fb_eng_cur)}, una scala completamente "
-              f"diversa rispetto al periodo di confronto.")
+    # Frase 3 — efficienza / interazioni
+    if spend_delta is not None and spend_delta < -8 and reach_meta > 0:
+        s3 = ("Il costo per risultato si mantiene efficiente in un contesto d'asta più selettivo, segno di una "
+              "strategia di targeting che continua a funzionare.")
     elif tot_eng > 50000:
-        p2 = (f"Il pubblico interagisce attivamente con i contenuti, con {fmt_int(tot_eng)} interazioni totali "
-              f"generate nel mese.")
+        s3 = (f"Le interazioni complessive toccano {fmt_int(tot_eng)}, segno di contenuti che continuano a generare "
+              f"conversazioni qualificate intorno al brand.")
     else:
-        p2 = (f"Il presidio del marchio resta attivo: i contenuti pubblicati continuano a generare conversazioni "
-              f"qualificate intorno a {cn}.")
+        s3 = ("Il costo per risultato resta efficiente in un contesto d'asta più selettivo, segno di un targeting "
+              "che continua a funzionare.")
 
+    # Frase 4 — prossimo mese
     if next_w >= 12:
-        p3 = (f"{MONTH_IT[next_m]} entra nel cuore della stagione ({next_w}% del budget annuo): saliamo sulla "
-              f"pressione per intercettare la domanda attiva.")
+        s4 = (f"La base costruita in {month_cap} {year} prepara {next_cap} (peso {next_w}% del piano annuo), dove "
+              f"concentreremo la pressione sulle finestre a più alta intenzione di prenotazione.")
     else:
-        p3 = (f"A {next_low} (peso {next_w}% del piano annuo) il presidio prosegue strategico, mantenendo il "
-              f"pubblico caldo in vista delle finestre più rilevanti.")
-    return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+        s4 = (f"La base costruita in {month_cap} {year} prepara {next_cap} (peso {next_w}% del piano annuo), "
+              f"mantenendo il pubblico caldo in vista delle finestre più rilevanti.")
+
+    return f"<p>{s1} {s2} {s3} {s4}</p>"
 
 
 def _periods_meta(v):
-    comp_y, comp_m = comparison_period(v["year"], v["month"], v["cfg"]["cm"])
-    return f"{MONTH_IT[v['month']]} {v['year']}", f"{MONTH_IT[comp_m]} {comp_y}"
+    cy, cm = comparison_period(v["year"], v["month"], v["cfg"]["cm"])
+    return f"{MONTH_IT[v['month']]} {v['year']}", f"{MONTH_IT[cm]} {cy}"
 
 def _periods_tk(v):
-    comp_y, comp_m = comparison_period(v["year"], v["month"], v["cfg"]["ct"])
-    return f"{MONTH_IT[v['month']]} {v['year']}", f"{MONTH_IT[comp_m]} {comp_y}"
+    cy, cm = comparison_period(v["year"], v["month"], v["cfg"]["ct"])
+    return f"{MONTH_IT[v['month']]} {v['year']}", f"{MONTH_IT[cm]} {cy}"
 
+AG_LOGO = '<div class="ag-logo">AG</div>'
 
 def meta_page_html(v):
     fb_c, fb_p = v["meta_cur"]["facebook"], v["meta_prev"]["facebook"]
@@ -487,43 +412,41 @@ def meta_page_html(v):
     sp_c = (fb_c.get("spend") or 0) + (ig_c.get("spend") or 0)
     sp_p = (fb_p.get("spend") or 0) + (ig_p.get("spend") or 0)
 
-    tables = ""
-    for field in ["reach", "impressions", "actions_page_engagement", "clicks"]:
-        tables += kpi_meta_2row_table(LOGO_IG, LOGO_FB, field, ig_c, ig_p, fb_c, fb_p, fmt_int)
-    tables += kpi_meta_budget_table(sp_c, sp_p)
+    blocks = ""
+    for field, name, icon, cap in META_METRICS:
+        blocks += kpi_block(icon, name, meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt_int), cap)
+    blocks += kpi_block(IC_BUDGET, "BUDGET", meta_budget_table(sp_c, sp_p), None)
 
     pa, pb = _periods_meta(v)
-    rational_html = build_rational(v, "meta")
     return f"""<div class="page">
-      <div class="page-header">
-        <h1 class="page-title">Meta Advertising</h1>
-        <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p>
-      </div>
-      <div class="tables-col">{tables}</div>
-      <div class="rational-box"><div class="rational-header">RATIONAL</div>{rational_html}</div>
+      {AG_LOGO}
+      <div class="page-header"><h1 class="page-title">Meta Advertising</h1>
+        <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p></div>
+      <div class="disclaimer">{DISCLAIMER_HTML}</div>
+      <div class="tables-col">{blocks}</div>
+      <div class="rational-box">{build_rational(v, "meta")}</div>
+      <div class="footer">Marketing</div>
+      <div class="footer-r">Confidential&amp;proprietary | &reg; {v['year']-1} AG Hotel Consulting</div>
     </div>"""
 
 
 def tiktok_page_html(v):
-    tk_c = v["tk_cur"] or empty_tk()
-    tk_p = v["tk_prev"] or empty_tk()
+    tk_c = v["tk_cur"] or empty_tk(); tk_p = v["tk_prev"] or empty_tk()
     launched = v["tk_launched"]
-
-    tables = ""
-    tables += kpi_tk_table(LOGO_TK, "reach",       tk_c.get("reach") or 0, tk_p.get("reach") or 0, fmt_int, launched)
-    tables += kpi_tk_table(LOGO_TK, "impressions", tk_c.get("impressions") or 0, tk_p.get("impressions") or 0, fmt_int, launched)
-    tables += kpi_tk_table(LOGO_TK, "clicks",      tk_c.get("clicks") or 0, tk_p.get("clicks") or 0, fmt_int, launched)
-    tables += kpi_tk_table(LOGO_TK, "spend",       tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched)
+    blocks = ""
+    for field, name, icon, cap in TK_METRICS:
+        blocks += kpi_block(icon, name, tk_table(field, tk_c.get(field) or 0, tk_p.get(field) or 0, fmt_int, launched), cap)
+    blocks += kpi_block(IC_BUDGET, "BUDGET", tk_table("spend", tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched), None)
 
     pa, pb = _periods_tk(v)
-    rational_html = build_rational(v, "tiktok")
     return f"""<div class="page">
-      <div class="page-header">
-        <h1 class="page-title">Tik Tok Advertising</h1>
-        <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p>
-      </div>
-      <div class="tables-col">{tables}</div>
-      <div class="rational-box"><div class="rational-header">RATIONAL</div>{rational_html}</div>
+      {AG_LOGO}
+      <div class="page-header"><h1 class="page-title">Tik Tok Advertising</h1>
+        <p class="page-subtitle">{pa}<span class="vs">vs</span>{pb}</p></div>
+      <div class="tables-col">{blocks}</div>
+      <div class="rational-box">{build_rational(v, "tiktok")}</div>
+      <div class="footer">Marketing</div>
+      <div class="footer-r">Confidential&amp;proprietary | &reg; {v['year']-1} AG Hotel Consulting</div>
     </div>"""
 
 
@@ -531,17 +454,10 @@ def generate_client_tables(client_name, data, year, month, outdir):
     v = build_view(client_name, data, year, month)
     client_dir = outdir / client_name
     client_dir.mkdir(parents=True, exist_ok=True)
-
-    # 1. Meta page (5 tabelle + rational a destra)
-    render_table(meta_page_html(v), CSS_FULL_PAGE, client_dir / "01_meta.png", dpi=150)
-
-    # 2. TikTok page (se attivo, 4 tabelle + rational)
+    render_table(meta_page_html(v), CSS_FULL_PAGE, client_dir / "01_meta.png", dpi=96)
     if v["has_tk"]:
-        render_table(tiktok_page_html(v), CSS_FULL_PAGE, client_dir / "02_tiktok.png", dpi=150)
-
-    # 3. Budget annuale
-    render_table(budget_annuale_table(v), CSS_BUDGET_TABLE, client_dir / "03_budget.png", dpi=200)
-
+        render_table(tiktok_page_html(v), CSS_FULL_PAGE, client_dir / "02_tiktok.png", dpi=96)
+    render_table(budget_annuale_table(v), CSS_BUDGET_TABLE, client_dir / "03_budget.png", dpi=120)
     n_pages = len(list(client_dir.glob("*.png")))
     print(f"✔ {client_name}: {n_pages} PNG (Meta+TikTok+Budget) in {client_dir}")
 
@@ -555,8 +471,7 @@ def main():
     p.add_argument("--output-dir", required=True)
     args = p.parse_args()
     data = json.loads(Path(args.data).read_text(encoding="utf-8"))
-    outdir = Path(args.output_dir)
-    outdir.mkdir(parents=True, exist_ok=True)
+    outdir = Path(args.output_dir); outdir.mkdir(parents=True, exist_ok=True)
     if args.client:
         if args.client not in CLIENTS:
             raise SystemExit(f"Cliente '{args.client}' non trovato.")
