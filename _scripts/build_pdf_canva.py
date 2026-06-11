@@ -58,10 +58,10 @@ def divider_page(text):
         y += line_h
     return img
 
-def image_page(path):
+def image_page(path, fit=1.0):
     canvas = Image.new("RGB", (W, H), WHITE)
     im = Image.open(path).convert("RGB")
-    scale = min(W / im.width, H / im.height)
+    scale = min(W / im.width, H / im.height) * fit
     nw, nh = int(im.width * scale), int(im.height * scale)
     im = im.resize((nw, nh), Image.LANCZOS)
     canvas.paste(im, ((W - nw) // 2, (H - nh) // 2))
@@ -74,7 +74,12 @@ page_paths = []
 idx = 0
 for client in m["clients"]:
     for pg in client["pages"]:
-        img = divider_page(pg["text"]) if pg["type"] == "divider" else image_page(pg["local_path"])
+        if pg["type"] == "divider":
+            img = divider_page(pg["text"])
+        else:
+            # tabella budget ridotta del 25% sulla pagina (su richiesta)
+            fit = 0.75 if pg.get("kind") == "budget" else 1.0
+            img = image_page(pg["local_path"], fit)
         p = os.path.join(tmpdir, f"p{idx:03d}.png")
         # slides are flat-color → quantize to 256 colors for a much smaller, still-crisp PDF
         img.convert("RGB").quantize(colors=256, method=Image.MEDIANCUT, dither=Image.NONE).save(p, "PNG", optimize=True)

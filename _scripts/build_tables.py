@@ -17,9 +17,16 @@ Uso:
   python3 build_tables.py --year 2026 --month 5 \\
     --data _data/data-2026-05.json --output-dir /tmp/all_tables/
 """
-import argparse, json, subprocess, sys, shutil, tempfile, os
+import argparse, json, subprocess, sys, shutil, tempfile, os, base64
 from pathlib import Path
 from weasyprint import HTML, CSS
+
+# Icone ufficiali del cliente (PNG trasparenti) in _scripts/icons/
+ICON_DIR = Path(__file__).resolve().parent / "icons"
+def _icon_b64(fn):
+    return base64.b64encode((ICON_DIR / fn).read_bytes()).decode()
+def icon_img(fn, css):
+    return f'<img src="data:image/png;base64,{_icon_b64(fn)}" style="{css}">'
 
 MONTH_IT = {1:"Gennaio",2:"Febbraio",3:"Marzo",4:"Aprile",5:"Maggio",6:"Giugno",
             7:"Luglio",8:"Agosto",9:"Settembre",10:"Ottobre",11:"Novembre",12:"Dicembre"}
@@ -46,10 +53,10 @@ CLIENTS = {
 }
 
 # === Loghi piattaforme (inline SVG) ===
-# IG a tinta piena (WeasyPrint non renderizza i gradienti url(#...) → il logo spariva)
-LOGO_IG = """<svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="#E1306C"/><rect x="6" y="6" width="12" height="12" rx="3.6" ry="3.6" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="16.4" cy="7.6" r="1.15" fill="#fff"/></svg>"""
-LOGO_FB = """<svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.927-1.956 1.876v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" fill="#1877F2"/></svg>"""
-LOGO_TK = """<svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.6 20.1a6.34 6.34 0 0 0 10.86-4.43V8.61a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.64-.04Z" fill="#010101"/></svg>"""
+# Loghi piattaforma dai PNG ufficiali forniti dal cliente
+LOGO_IG = icon_img("ig.png", "height:36px")
+LOGO_FB = icon_img("fb.png", "height:36px")
+LOGO_TK = icon_img("tiktok.png", "height:44px")
 
 # === Icone metrica (voci insight) — palette AGHC teal/arancio ===
 IC_REACH = """<svg viewBox="0 0 64 64" width="50" height="50" xmlns="http://www.w3.org/2000/svg"><path d="M6 26v12h9l21 11V15L15 26H6z" fill="#1F5C6E"/><path d="M44 23c5 4 5 14 0 18" fill="none" stroke="#E07B47" stroke-width="4" stroke-linecap="round"/><path d="M50 17c8 7 8 23 0 30" fill="none" stroke="#E07B47" stroke-width="4" stroke-linecap="round"/></svg>"""
@@ -66,15 +73,15 @@ CAP_CLICKS = "Include tutte le azioni di clic effettuate dagli utenti dopo aver 
 CAP_TK_CLICKS = "Numero di clic dagli annunci verso la destinazione specificata (es. sito o landing page), al netto delle interazioni puramente social."
 
 META_METRICS = [
-    ("reach",                    "ACCOUNT RAGGIUNTI", IC_REACH, CAP_REACH),
-    ("impressions",              "VISUALIZZAZIONI",   IC_VIEWS, CAP_VIEWS),
-    ("actions_page_engagement",  "INTERAZIONI",       IC_ENG,   CAP_ENG),
-    ("clicks",                   "CLICKS",            IC_CLICK, CAP_CLICKS),
+    ("reach",                    "reach.png",       CAP_REACH),
+    ("impressions",              "views.png",       CAP_VIEWS),
+    ("actions_page_engagement",  "interazioni.png", CAP_ENG),
+    ("clicks",                   "clicks.png",      CAP_CLICKS),
 ]
 TK_METRICS = [
-    ("reach",        "ACCOUNT RAGGIUNTI", IC_REACH, CAP_REACH),
-    ("impressions",  "VISUALIZZAZIONI",   IC_VIEWS, CAP_VIEWS),
-    ("clicks",       "CLICKS",            IC_CLICK, CAP_TK_CLICKS),
+    ("reach",        "reach.png",              CAP_REACH),
+    ("impressions",  "views.png",              CAP_VIEWS),
+    ("clicks",       "click_destinazione.png", CAP_TK_CLICKS),  # icona "click alla destinazione" solo su TikTok
 ]
 
 DISCLAIMER_HTML = (
@@ -165,20 +172,19 @@ body { font-family: "Lato", "Open Sans", "DejaVu Sans", sans-serif; color: #1F5C
 .page-subtitle { font-size: 24px; font-weight: 700; color: #1F5C6E; letter-spacing: 0.3px; margin: 0; }
 .page-subtitle .vs { font-size: 15px; font-weight: 400; color: #1F5C6E; text-transform: lowercase; display: block; margin: 4px 0; }
 
-/* Colonna KPI (centro): icona + nome metrica a sinistra di ogni tabella */
-.tables-col { position: absolute; top: 70px; left: 470px; width: 900px; display: flex; flex-direction: column; gap: 16px; }
-.kpi-block { display: flex; align-items: center; gap: 14px; }
-.kpi-side { width: 128px; flex: 0 0 128px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.kpi-side .ic { line-height: 0; }
-.kpi-side .nm { margin-top: 6px; font-size: 15px; font-weight: 700; letter-spacing: 0.4px; color: #1F5C6E; line-height: 1.12; }
+/* Colonna KPI (centro): icona metrica (PNG, nome incorporato) a sinistra di ogni tabella */
+.tables-col { position: absolute; top: 70px; left: 455px; width: 925px; display: flex; flex-direction: column; gap: 16px; }
+.kpi-block { display: flex; align-items: center; gap: 12px; }
+.kpi-side { width: 150px; flex: 0 0 150px; display: flex; align-items: center; justify-content: center; }
+.kpi-side img { display: block; }
 .kpi-main { flex: 1 1 auto; min-width: 0; }
 
 table.kpi { border-collapse: collapse; width: 100%; }
 table.kpi thead th { background: #1F5C6E; color: #fff; padding: 8px 12px; font-weight: 600; font-size: 13px; text-align: center; letter-spacing: 0.3px; border: 1px solid #1F5C6E; }
-table.kpi thead th:first-child { background: #fff; border: none; width: 58px; }
+table.kpi thead th:first-child { background: #fff; border: none; width: 60px; }
 table.kpi tbody td { padding: 9px 12px; text-align: center; font-size: 21px; font-weight: 700; border: 1px solid #E5E7EB; }
-td.plat-cell { background: #fff; border: none; width: 58px; padding: 3px; }
-td.plat-cell svg { display: block; margin: 0 auto; }
+td.plat-cell { background: #fff; border: none; width: 60px; padding: 3px; }
+td.plat-cell img { display: block; margin: 0 auto; }
 td.cur-cell  { background: #E07B47; color: #fff; }      /* Periodo Attuale = arancione */
 td.prev-cell { background: #fff;    color: #1F5C6E; }   /* Periodo Precedente = bianco */
 .delta-pos { color: #1AA64B; }                          /* verde evidente per i + */
@@ -227,9 +233,9 @@ def delta_cell(cur, prev, override=None):
     return f'<td class="{cls}">{fmt_pct(p)}</td>'
 
 
-def kpi_block(icon, name, table_html, caption=None):
+def kpi_block(icon_fn, table_html, caption=None):
     cap = f'<div class="kpi-caption">{caption}</div>' if caption else ""
-    side = f'<div class="kpi-side"><div class="ic">{icon}</div><div class="nm">{name}</div></div>'
+    side = f'<div class="kpi-side">{icon_img(icon_fn, "width:142px")}</div>'
     return f'<div class="kpi-block">{side}<div class="kpi-main">{table_html}{cap}</div></div>'
 
 
@@ -408,9 +414,9 @@ def meta_page_html(v):
     sp_p = (fb_p.get("spend") or 0) + (ig_p.get("spend") or 0)
 
     blocks = ""
-    for field, name, icon, cap in META_METRICS:
-        blocks += kpi_block(icon, name, meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt_int), cap)
-    blocks += kpi_block(IC_BUDGET, "BUDGET", meta_budget_table(sp_c, sp_p), None)
+    for field, icon_fn, cap in META_METRICS:
+        blocks += kpi_block(icon_fn, meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt_int), cap)
+    blocks += kpi_block("budget.png", meta_budget_table(sp_c, sp_p), None)
 
     pa, pb = _periods_meta(v)
     return f"""<div class="page">
@@ -426,9 +432,9 @@ def tiktok_page_html(v):
     tk_c = v["tk_cur"] or empty_tk(); tk_p = v["tk_prev"] or empty_tk()
     launched = v["tk_launched"]
     blocks = ""
-    for field, name, icon, cap in TK_METRICS:
-        blocks += kpi_block(icon, name, tk_table(field, tk_c.get(field) or 0, tk_p.get(field) or 0, fmt_int, launched), cap)
-    blocks += kpi_block(IC_BUDGET, "BUDGET", tk_table("spend", tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched), None)
+    for field, icon_fn, cap in TK_METRICS:
+        blocks += kpi_block(icon_fn, tk_table(field, tk_c.get(field) or 0, tk_p.get(field) or 0, fmt_int, launched), cap)
+    blocks += kpi_block("budget.png", tk_table("spend", tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched), None)
 
     pa, pb = _periods_tk(v)
     return f"""<div class="page">
