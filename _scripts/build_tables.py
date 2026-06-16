@@ -30,6 +30,30 @@ def icon_img(fn, css):
 
 MONTH_IT = {1:"Gennaio",2:"Febbraio",3:"Marzo",4:"Aprile",5:"Maggio",6:"Giugno",
             7:"Luglio",8:"Agosto",9:"Settembre",10:"Ottobre",11:"Novembre",12:"Dicembre"}
+MONTH_EN = {1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",
+            8:"August",9:"September",10:"October",11:"November",12:"December"}
+
+# === Lingua slide (it default; en per clienti internazionali, es. Villa Ermellina) ===
+ICON_DIR_EN = Path(__file__).resolve().parent / "icons_en"
+def img_tag(dir_, fn, css):
+    b64 = base64.b64encode((dir_ / fn).read_bytes()).decode()
+    return f'<img src="data:image/png;base64,{b64}" style="{css}">'
+
+LANG = "it"
+TR = {
+    "it": {"cur":"Periodo Attuale","prev":"Periodo Precedente","cmp":"Confronto","live":"1° mese live","na":"n/d",
+           "b_annual":"BUDGET ANNUALE","b_months":"MESI","b_meta":"ADS META","b_tk":"ADS TIK TOK",
+           "b_total":"TOTALE","b_spent":"BUDGET SPESO","b_remain":"BUDGET RIMANENTE",
+           "lab":{"reach":"ACCOUNT RAGGIUNTI","views":"VISUALIZZAZIONI","interactions":"INTERAZIONI",
+                  "clicks":"CLICKS","budget":"BUDGET","tk_clicks":"CLICK ALLA DESTINAZIONE"}},
+    "en": {"cur":"Current Period","prev":"Previous Period","cmp":"Comparison","live":"1st month live","na":"n/a",
+           "b_annual":"ANNUAL BUDGET","b_months":"MONTHS","b_meta":"META ADS","b_tk":"TIKTOK ADS",
+           "b_total":"TOTAL","b_spent":"BUDGET SPENT","b_remain":"REMAINING BUDGET",
+           "lab":{"reach":"ACCOUNTS REACHED","views":"IMPRESSIONS","interactions":"INTERACTIONS",
+                  "clicks":"CLICKS","budget":"BUDGET","tk_clicks":"CLICKS TO DESTINATION"}},
+}
+def t(k): return TR[LANG][k]
+def month_name(m): return MONTH_IT[m] if LANG == "it" else MONTH_EN[m]
 
 CLIENTS = {
     "Accentodì":      {"meta_id":"1312718426033158","filter":["Accentodì"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":2400},
@@ -72,17 +96,24 @@ CAP_ENG = "Include tutte le interazioni degli utenti dopo aver visto gli annunci
 CAP_CLICKS = "Include tutte le azioni di clic effettuate dagli utenti dopo aver visualizzato l'annuncio (apertura del link, clic sul pulsante call to action)."
 CAP_TK_CLICKS = "Numero di clic dagli annunci verso la destinazione specificata (es. sito o landing page), al netto delle interazioni puramente social."
 
-META_METRICS = [
-    ("reach",                    "reach.png",       CAP_REACH),
-    ("impressions",              "views.png",       CAP_VIEWS),
-    ("actions_page_engagement",  "interazioni.png", CAP_ENG),
-    ("clicks",                   "clicks.png",      CAP_CLICKS),
-]
-TK_METRICS = [
-    ("reach",        "reach.png",              CAP_REACH),
-    ("impressions",  "views.png",              CAP_VIEWS),
-    ("clicks",       "click_destinazione.png", CAP_TK_CLICKS),  # icona "click alla destinazione" solo su TikTok
-]
+# === Didascalie EN ===
+CAP_REACH_EN = "Number of unique users who saw the sponsored content at least once, indicating the audience actually reached by the campaign."
+CAP_VIEWS_EN = "Total number of ad views, including repeats per single user. It indicates the frequency and intensity of advertising exposure."
+CAP_ENG_EN = "Includes all user interactions after seeing the ads (clicks, likes, comments, shares, saves, etc.)."
+CAP_CLICKS_EN = "Includes all click actions taken by users after viewing the ad (link opening, click on the call-to-action button)."
+CAP_TK_CLICKS_EN = "Number of clicks from the ads to the specified destination (e.g. website or landing page), net of purely social interactions."
+
+CAPS = {
+    "it": {"reach":CAP_REACH,"views":CAP_VIEWS,"interactions":CAP_ENG,"clicks":CAP_CLICKS,"tk_clicks":CAP_TK_CLICKS},
+    "en": {"reach":CAP_REACH_EN,"views":CAP_VIEWS_EN,"interactions":CAP_ENG_EN,"clicks":CAP_CLICKS_EN,"tk_clicks":CAP_TK_CLICKS_EN},
+}
+ICON_FN = {
+    "it": {"reach":"reach.png","views":"views.png","interactions":"interazioni.png","clicks":"clicks.png","budget":"budget.png","tk_clicks":"click_destinazione.png"},
+    "en": {"reach":"reach.png","views":"views.png","interactions":"interactions.png","clicks":"clicks.png","budget":"budget.png","tk_clicks":"click_destination.png"},
+}
+# (campo dati, chiave metrica)
+META_METRICS = [("reach","reach"),("impressions","views"),("actions_page_engagement","interactions"),("clicks","clicks")]
+TK_METRICS = [("reach","reach"),("impressions","views"),("clicks","tk_clicks")]
 
 DISCLAIMER_HTML = (
     "<p>Le metriche riportate nel presente report relative a Copertura, Visualizzazioni, "
@@ -98,11 +129,11 @@ DISCLAIMER_HTML = (
 
 # === Formattazione IT ===
 def fmt_int(x):
-    if x is None: return "n/d"
+    if x is None: return t("na")
     return f"{int(round(x)):,}".replace(",", ".")
 
 def fmt_eur(x):
-    if x is None: return "n/d"
+    if x is None: return t("na")
     return f"{x:,.2f}€".replace(",", "X").replace(".", ",").replace("X", ".")
 
 def pct(c, p):
@@ -177,6 +208,9 @@ body { font-family: "Lato", "Open Sans", "DejaVu Sans", sans-serif; color: #1F5C
 .kpi-block { display: flex; align-items: center; gap: 10px; }
 .kpi-side { width: 174px; flex: 0 0 174px; display: flex; align-items: center; justify-content: center; }
 .kpi-side img { display: block; }
+.kpi-side-en { flex-direction: column; }
+.kpi-side-en .ic-en { line-height: 0; }
+.kpi-side-en .nm-en { margin-top: 7px; font-size: 14.5px; font-weight: 700; letter-spacing: 0.4px; color: #1F5C6E; line-height: 1.12; text-align: center; }
 .kpi-main { flex: 1 1 auto; min-width: 0; }
 
 table.kpi { border-collapse: collapse; width: 100%; }
@@ -228,20 +262,25 @@ def delta_cell(cur, prev, override=None):
     if override:
         return f'<td class="delta-launch">{override}</td>'
     p = pct(cur, prev)
-    if p is None: return '<td class="delta-na">n/d</td>'
+    if p is None: return f'<td class="delta-na">{t("na")}</td>'
     cls = "delta-pos" if p >= 0 else "delta-neg"
     return f'<td class="{cls}">{fmt_pct(p)}</td>'
 
 
-def kpi_block(icon_fn, table_html, caption=None):
+def kpi_block(metric_key, table_html, caption=None):
     cap = f'<div class="kpi-caption">{caption}</div>' if caption else ""
-    side = f'<div class="kpi-side">{icon_img(icon_fn, "width:160px")}</div>'
+    if LANG == "en":
+        glyph = img_tag(ICON_DIR_EN, ICON_FN["en"][metric_key], "height:86px")
+        side = f'<div class="kpi-side kpi-side-en"><div class="ic-en">{glyph}</div><div class="nm-en">{t("lab")[metric_key]}</div></div>'
+    else:
+        full = img_tag(ICON_DIR, ICON_FN["it"][metric_key], "width:160px")
+        side = f'<div class="kpi-side">{full}</div>'
     return f'<div class="kpi-block">{side}<div class="kpi-main">{table_html}{cap}</div></div>'
 
 
 def meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt):
     return f"""<table class="kpi">
-  <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
+  <thead><tr><th></th><th>{t("cur")}</th><th>{t("prev")}</th><th>{t("cmp")}</th></tr></thead>
   <tbody>
     <tr><td class="plat-cell">{LOGO_IG}</td><td class="cur-cell">{fmt(ig_c.get(field) or 0)}</td><td class="prev-cell">{fmt(ig_p.get(field) or 0)}</td>{delta_cell(ig_c.get(field) or 0, ig_p.get(field) or 0)}</tr>
     <tr><td class="plat-cell">{LOGO_FB}</td><td class="cur-cell">{fmt(fb_c.get(field) or 0)}</td><td class="prev-cell">{fmt(fb_p.get(field) or 0)}</td>{delta_cell(fb_c.get(field) or 0, fb_p.get(field) or 0)}</tr>
@@ -251,7 +290,7 @@ def meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt):
 
 def meta_budget_table(sp_c, sp_p):
     return f"""<table class="kpi">
-  <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
+  <thead><tr><th></th><th>{t("cur")}</th><th>{t("prev")}</th><th>{t("cmp")}</th></tr></thead>
   <tbody>
     <tr><td class="plat-cell"></td><td class="cur-cell">{fmt_eur(sp_c)}</td><td class="prev-cell">{fmt_eur(sp_p)}</td>{delta_cell(sp_c, sp_p)}</tr>
   </tbody>
@@ -259,9 +298,9 @@ def meta_budget_table(sp_c, sp_p):
 
 
 def tk_table(field, cur, prev, fmt, launched):
-    override = "1° mese live" if launched else None
+    override = t("live") if launched else None
     return f"""<table class="kpi">
-  <thead><tr><th></th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead>
+  <thead><tr><th></th><th>{t("cur")}</th><th>{t("prev")}</th><th>{t("cmp")}</th></tr></thead>
   <tbody>
     <tr><td class="plat-cell">{LOGO_TK}</td><td class="cur-cell">{fmt(cur)}</td><td class="prev-cell">{fmt(prev)}</td>{delta_cell(cur, prev, override)}</tr>
   </tbody>
@@ -276,17 +315,17 @@ def budget_annuale_table(v):
         md = ytd_client.get(str(m), {"meta":0, "tiktok":0}) if m in ytd_months else {"meta":0, "tiktok":0}
         meta_v = md.get("meta") or 0; tk_v = md.get("tiktok") or 0
         tot_meta += meta_v; tot_tk += tk_v
-        rows += f"""<tr><td class="mese">{MONTH_IT[m].upper()}</td><td>{fmt_eur(meta_v)}</td><td>{fmt_eur(tk_v)}</td><td>{fmt_eur(meta_v + tk_v)}</td></tr>"""
+        rows += f"""<tr><td class="mese">{month_name(m).upper()}</td><td>{fmt_eur(meta_v)}</td><td>{fmt_eur(tk_v)}</td><td>{fmt_eur(meta_v + tk_v)}</td></tr>"""
     speso = tot_meta + tot_tk; rimanente = budget - speso
     return f"""<table class="budget">
   <thead>
-    <tr><th class="hdr-budget-annuale" colspan="3">BUDGET ANNUALE</th><th class="hdr-budget-val">{fmt_eur(budget)}</th></tr>
-    <tr class="hdr-cols"><th>MESI</th><th>ADS META</th><th>ADS TIK TOK</th><th>TOTALE</th></tr>
+    <tr><th class="hdr-budget-annuale" colspan="3">{t("b_annual")}</th><th class="hdr-budget-val">{fmt_eur(budget)}</th></tr>
+    <tr class="hdr-cols"><th>{t("b_months")}</th><th>{t("b_meta")}</th><th>{t("b_tk")}</th><th>{t("b_total")}</th></tr>
   </thead>
   <tbody>{rows}</tbody>
   <tfoot>
-    <tr class="speso"><td>BUDGET SPESO</td><td>{fmt_eur(tot_meta)}</td><td>{fmt_eur(tot_tk)}</td><td>{fmt_eur(speso)}</td></tr>
-    <tr class="rimanente"><td>BUDGET RIMANENTE</td><td></td><td></td><td>{fmt_eur(rimanente)}</td></tr>
+    <tr class="speso"><td>{t("b_spent")}</td><td>{fmt_eur(tot_meta)}</td><td>{fmt_eur(tot_tk)}</td><td>{fmt_eur(speso)}</td></tr>
+    <tr class="rimanente"><td>{t("b_remain")}</td><td></td><td></td><td>{fmt_eur(rimanente)}</td></tr>
   </tfoot>
 </table>"""
 
@@ -309,6 +348,8 @@ def render_table(html_inner, css, out_png, dpi=200):
 BUDGET_WEIGHTS = {1:3,2:3,3:5,4:10,5:15,6:15,7:12,8:12,9:5,10:5,11:5,12:10}
 
 def build_rational(v, focus):
+    if LANG == "en":
+        return build_rational_en(v, focus)
     fb_c = v["meta_cur"]["facebook"]; fb_p = v["meta_prev"]["facebook"]
     ig_c = v["meta_cur"]["instagram"]; ig_p = v["meta_prev"]["instagram"]
     spend_cur = (fb_c.get("spend") or 0) + (ig_c.get("spend") or 0)
@@ -397,13 +438,89 @@ def build_rational(v, focus):
     return f"<p>{s1} {s2} {s3} {s4}</p>"
 
 
+def build_rational_en(v, focus):
+    fb_c = v["meta_cur"]["facebook"]; fb_p = v["meta_prev"]["facebook"]
+    ig_c = v["meta_cur"]["instagram"]; ig_p = v["meta_prev"]["instagram"]
+    spend_cur = (fb_c.get("spend") or 0) + (ig_c.get("spend") or 0)
+    spend_prev = (fb_p.get("spend") or 0) + (ig_p.get("spend") or 0)
+    spend_delta = pct(spend_cur, spend_prev)
+    fb_reach = fb_c.get("reach") or 0; ig_reach = ig_c.get("reach") or 0
+    reach_meta = fb_reach + ig_reach
+    fb_reach_delta = pct(fb_reach, fb_p.get("reach") or 0)
+    tot_eng = (fb_c.get("actions_page_engagement") or 0) + (ig_c.get("actions_page_engagement") or 0)
+    cn = v["client_name"]; mo = MONTH_EN[v["month"]]; year = v["year"]
+    cur_w = BUDGET_WEIGHTS[v["month"]]
+    next_m = (v["month"] % 12) + 1; next_mo = MONTH_EN[next_m]; next_w = BUDGET_WEIGHTS[next_m]
+    driver = "Facebook" if fb_reach >= ig_reach else "Instagram"
+
+    if focus == "tiktok":
+        tk = v["tk_cur"] or empty_tk()
+        if v["tk_launched"]:
+            s = (f"{mo} {year} marks a new phase for {cn}: the first TikTok campaign goes live and debuts with "
+                 f"{fmt_int(tk.get('impressions') or 0)} impressions and {fmt_int(tk.get('reach') or 0)} unique users "
+                 f"reached, activating presence on a younger audience at the right moment of the calendar. From {next_mo}, "
+                 f"{cn} works on two complementary levers — Meta for conversion, TikTok for brand discovery — ahead of the "
+                 f"seasonal windows with the highest booking traffic.")
+        elif (tk.get("impressions") or 0) > 0:
+            s = (f"{mo} {year} confirms an efficient TikTok presence for {cn}, with {fmt_int(tk.get('impressions') or 0)} "
+                 f"impressions and {fmt_int(tk.get('reach') or 0)} unique users reached: the channel expands coverage on a "
+                 f"younger audience at competitive costs, confirming a well-balanced mix focused on awareness goals. "
+                 f"Pressure continues strategically toward {next_mo} ({next_w}% of the annual plan).")
+        else:
+            s = (f"{mo} {year} sees TikTok on standby for {cn}: pressure stays focused on the main channels, while the "
+                 f"dedicated budget remains intact and ready to reactivate on the higher-return seasonal windows toward {next_mo}.")
+        return f"<p>{s}</p>"
+
+    if spend_cur == 0 and reach_meta == 0:
+        s = (f"{mo} {year} represents a strategic pause for {cn}, consistent with the month's position within the annual "
+             f"media plan ({cur_w}%). The budget stays intact and ready to focus on the higher-return seasonal windows. "
+             f"From {next_mo} ({next_w}% of the annual plan) presence resumes "
+             f"{'at the heart of the season' if next_w >= 12 else 'gradually'}, where we will concentrate pressure on the "
+             f"windows with the highest booking intent.")
+        return f"<p>{s}</p>"
+
+    if spend_delta is not None and spend_delta > 8:
+        s1 = (f"{mo} {year} opens with a strategic increase in the Meta ad budget ({fmt_pct(spend_delta)}), a choice "
+              f"consistent with the month's position within the annual plan ({cur_w}%).")
+    elif spend_delta is not None and spend_delta < -8:
+        s1 = (f"{mo} {year} is the month of efficiency for {cn}: Meta investment is recalibrated ({fmt_pct(spend_delta)}) "
+              f"in line with the month's position in the annual plan ({cur_w}%).")
+    else:
+        s1 = (f"{mo} {year} confirms a stable Meta presence for {cn}, in line with the month's position within the annual "
+              f"plan ({cur_w}%).")
+
+    if fb_reach_delta is not None and fb_reach_delta > 100:
+        s2 = (f"{driver} becomes the driving channel and expands coverage to {fmt_int(reach_meta)} unique users, "
+              f"confirming a well-balanced channel mix focused on awareness goals.")
+    else:
+        s2 = (f"{driver} expands coverage reaching {fmt_int(reach_meta)} unique users, confirming a well-balanced channel "
+              f"mix focused on awareness goals.")
+
+    if spend_delta is not None and spend_delta < -8 and reach_meta > 0:
+        s3 = ("Cost per result stays efficient in a more selective auction context, a sign of a targeting strategy that "
+              "keeps working.")
+    elif tot_eng > 50000:
+        s3 = (f"Total interactions reach {fmt_int(tot_eng)}, a sign of content that keeps generating qualified "
+              f"conversations around the brand.")
+    else:
+        s3 = "Cost per result remains efficient in a more selective auction context, a sign of targeting that keeps working."
+
+    if next_w >= 12:
+        s4 = (f"The base built in {mo} {year} sets up {next_mo} ({next_w}% of the annual plan), where we will concentrate "
+              f"pressure on the windows with the highest booking intent.")
+    else:
+        s4 = (f"The base built in {mo} {year} sets up {next_mo} ({next_w}% of the annual plan), keeping the audience warm "
+              f"ahead of the most relevant windows.")
+    return f"<p>{s1} {s2} {s3} {s4}</p>"
+
+
 def _periods_meta(v):
     cy, cm = comparison_period(v["year"], v["month"], v["cfg"]["cm"])
-    return f"{MONTH_IT[v['month']]} {v['year']}", f"{MONTH_IT[cm]} {cy}"
+    return f"{month_name(v['month'])} {v['year']}", f"{month_name(cm)} {cy}"
 
 def _periods_tk(v):
     cy, cm = comparison_period(v["year"], v["month"], v["cfg"]["ct"])
-    return f"{MONTH_IT[v['month']]} {v['year']}", f"{MONTH_IT[cm]} {cy}"
+    return f"{month_name(v['month'])} {v['year']}", f"{month_name(cm)} {cy}"
 
 AG_LOGO = '<div class="ag-logo">AG</div>'
 
@@ -414,9 +531,9 @@ def meta_page_html(v):
     sp_p = (fb_p.get("spend") or 0) + (ig_p.get("spend") or 0)
 
     blocks = ""
-    for field, icon_fn, cap in META_METRICS:
-        blocks += kpi_block(icon_fn, meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt_int), cap)
-    blocks += kpi_block("budget.png", meta_budget_table(sp_c, sp_p), None)
+    for field, mkey in META_METRICS:
+        blocks += kpi_block(mkey, meta_2row_table(field, ig_c, ig_p, fb_c, fb_p, fmt_int), CAPS[LANG][mkey])
+    blocks += kpi_block("budget", meta_budget_table(sp_c, sp_p), None)
 
     pa, pb = _periods_meta(v)
     return f"""<div class="page">
@@ -431,9 +548,9 @@ def tiktok_page_html(v):
     tk_c = v["tk_cur"] or empty_tk(); tk_p = v["tk_prev"] or empty_tk()
     launched = v["tk_launched"]
     blocks = ""
-    for field, icon_fn, cap in TK_METRICS:
-        blocks += kpi_block(icon_fn, tk_table(field, tk_c.get(field) or 0, tk_p.get(field) or 0, fmt_int, launched), cap)
-    blocks += kpi_block("budget.png", tk_table("spend", tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched), None)
+    for field, mkey in TK_METRICS:
+        blocks += kpi_block(mkey, tk_table(field, tk_c.get(field) or 0, tk_p.get(field) or 0, fmt_int, launched), CAPS[LANG][mkey])
+    blocks += kpi_block("budget", tk_table("spend", tk_c.get("spend") or 0, tk_p.get("spend") or 0, fmt_eur, launched), None)
 
     pa, pb = _periods_tk(v)
     return f"""<div class="page">
@@ -444,7 +561,8 @@ def tiktok_page_html(v):
     </div>"""
 
 
-def generate_client_tables(client_name, data, year, month, outdir):
+def generate_client_tables(client_name, data, year, month, outdir, lang="it"):
+    global LANG; LANG = lang
     v = build_view(client_name, data, year, month)
     client_dir = outdir / client_name
     client_dir.mkdir(parents=True, exist_ok=True)
@@ -463,16 +581,17 @@ def main():
     p.add_argument("--client", help="Cliente singolo. Omettere per generare tutti i 18.")
     p.add_argument("--data", required=True)
     p.add_argument("--output-dir", required=True)
+    p.add_argument("--lang", default="it", choices=["it", "en"], help="Lingua slide (default it)")
     args = p.parse_args()
     data = json.loads(Path(args.data).read_text(encoding="utf-8"))
     outdir = Path(args.output_dir); outdir.mkdir(parents=True, exist_ok=True)
     if args.client:
         if args.client not in CLIENTS:
             raise SystemExit(f"Cliente '{args.client}' non trovato.")
-        generate_client_tables(args.client, data, args.year, args.month, outdir)
+        generate_client_tables(args.client, data, args.year, args.month, outdir, args.lang)
     else:
         for cn in CLIENTS:
-            generate_client_tables(cn, data, args.year, args.month, outdir)
+            generate_client_tables(cn, data, args.year, args.month, outdir, args.lang)
 
 
 if __name__ == "__main__":
