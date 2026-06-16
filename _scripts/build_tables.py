@@ -71,7 +71,7 @@ CLIENTS = {
     "Mare":           {"meta_id":"1432341844596179","filter":None,"excl":[],"tk_id":"7498679494010667009","cm":"MoM","ct":"MoM","budget":15000},
     "Montemagno":     {"meta_id":"752450855779035","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":0},
     "Terrazza Flavia":{"meta_id":"821188209852436","filter":["Terrazza"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":7500},
-    "Villa Ermellina":{"meta_id":"30233607946222961","filter":None,"excl":[],"tk_id":"7612666695502118929","cm":"MoM","ct":"MoM","budget":16400},
+    "Villa Ermellina":{"meta_id":"30233607946222961","filter":None,"excl":[],"tk_id":"7612666695502118929","cm":"MoM","ct":"MoM","budget":16400,"lang":"en"},  # report SEMPRE in inglese
     "Villa Giada":    {"meta_id":"1849759899186169","filter":None,"excl":[],"tk_id":"7626418949391351815","cm":"MoM","ct":"MoM","budget":21600},
     "Villa Miliani":  {"meta_id":"1353024533007038","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":6600},
 }
@@ -562,7 +562,8 @@ def tiktok_page_html(v):
 
 
 def generate_client_tables(client_name, data, year, month, outdir, lang="it"):
-    global LANG; LANG = lang
+    # lingua per-cliente dall'anagrafica (es. Villa Ermellina = en), altrimenti il default --lang
+    global LANG; LANG = CLIENTS[client_name].get("lang", lang)
     v = build_view(client_name, data, year, month)
     client_dir = outdir / client_name
     client_dir.mkdir(parents=True, exist_ok=True)
