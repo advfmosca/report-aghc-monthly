@@ -1,0 +1,550 @@
+{
+  "period_label": "Giugno 2026",
+  "period_slug": "giugno-2026",
+  "year": 2026,
+  "month": 6,
+  "design_title": "Report AGHC – Giugno 2026",
+  "design_dimensions": {
+    "width": 1920,
+    "height": 1080,
+    "preset": "Presentation_16_9"
+  },
+  "divider_style": {
+    "background_color": "#FFFFFF",
+    "text_color": "#000000",
+    "font_weight": "bold",
+    "text_align": "center",
+    "font_size_pt": 56,
+    "note": "Minimal: testo nero centrato su sfondo bianco"
+  },
+  "base_url": "https://advfmosca.github.io/report-aghc-monthly",
+  "assets_root": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026",
+  "total_clients": 18,
+  "total_pages": 78,
+  "mirrored_pngs": 42,
+  "missing_pngs": [],
+  "clients": [
+    {
+      "nome": "Accentodì",
+      "slug": "accentodi",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — ACCENTODÌ — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/accentodi/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/accentodi/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/accentodi/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/accentodi/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — ACCENTODÌ — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Adèsso",
+      "slug": "adesso",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — ADÈSSO — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/adesso/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/adesso/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/adesso/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/adesso/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — ADÈSSO — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Altafiumara",
+      "slug": "altafiumara",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — ALTAFIUMARA — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/altafiumara/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/altafiumara/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/altafiumara/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/altafiumara/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — ALTAFIUMARA — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Castello",
+      "slug": "castello",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — CASTELLO — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/castello/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/castello/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/castello/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/castello/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — CASTELLO — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Della Piana",
+      "slug": "della-piana",
+      "tiktok_active": true,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — DELLA PIANA — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/della-piana/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/della-piana/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/della-piana/02_tiktok.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/della-piana/02_tiktok.png",
+          "kind": "tiktok"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/della-piana/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/della-piana/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — DELLA PIANA — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Hannah",
+      "slug": "hannah",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — HANNAH — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/hannah/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/hannah/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/hannah/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/hannah/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — HANNAH — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Hannah Terraces",
+      "slug": "hannah-terraces",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — HANNAH TERRACES — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/hannah-terraces/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/hannah-terraces/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/hannah-terraces/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/hannah-terraces/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — HANNAH TERRACES — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Hemanaire",
+      "slug": "hemanaire",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — HEMANAIRE — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/hemanaire/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/hemanaire/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/hemanaire/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/hemanaire/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — HEMANAIRE — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Livata",
+      "slug": "livata",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — LIVATA — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/livata/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/livata/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/livata/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/livata/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — LIVATA — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Lunetta",
+      "slug": "lunetta",
+      "tiktok_active": true,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — LUNETTA — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/lunetta/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/lunetta/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/lunetta/02_tiktok.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/lunetta/02_tiktok.png",
+          "kind": "tiktok"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/lunetta/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/lunetta/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — LUNETTA — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Magari Estates",
+      "slug": "magari-estates",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — MAGARI ESTATES — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/magari-estates/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/magari-estates/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/magari-estates/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/magari-estates/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — MAGARI ESTATES — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Marcella Royal",
+      "slug": "marcella-royal",
+      "tiktok_active": true,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — MARCELLA ROYAL — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/marcella-royal/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/marcella-royal/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/marcella-royal/02_tiktok.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/marcella-royal/02_tiktok.png",
+          "kind": "tiktok"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/marcella-royal/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/marcella-royal/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — MARCELLA ROYAL — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Mare",
+      "slug": "mare",
+      "tiktok_active": true,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — MARE — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/mare/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/mare/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/mare/02_tiktok.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/mare/02_tiktok.png",
+          "kind": "tiktok"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/mare/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/mare/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — MARE — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Montemagno",
+      "slug": "montemagno",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — MONTEMAGNO — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/montemagno/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/montemagno/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/montemagno/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/montemagno/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — MONTEMAGNO — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Terrazza Flavia",
+      "slug": "terrazza-flavia",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — TERRAZZA FLAVIA — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/terrazza-flavia/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/terrazza-flavia/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/terrazza-flavia/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/terrazza-flavia/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — TERRAZZA FLAVIA — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Villa Ermellina",
+      "slug": "villa-ermellina",
+      "tiktok_active": true,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — VILLA ERMELLINA — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-ermellina/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-ermellina/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-ermellina/02_tiktok.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-ermellina/02_tiktok.png",
+          "kind": "tiktok"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-ermellina/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-ermellina/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — VILLA ERMELLINA — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Villa Giada",
+      "slug": "villa-giada",
+      "tiktok_active": true,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — VILLA GIADA — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-giada/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-giada/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-giada/02_tiktok.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-giada/02_tiktok.png",
+          "kind": "tiktok"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-giada/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-giada/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — VILLA GIADA — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Villa Miliani",
+      "slug": "villa-miliani",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — VILLA MILIANI — GIUGNO 2026"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-miliani/01_meta.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-miliani/01_meta.png",
+          "kind": "meta"
+        },
+        {
+          "type": "image",
+          "url": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026/villa-miliani/03_budget.png",
+          "local_path": "/tmp/aghc_work/report-aghc-monthly/assets/giugno-2026/villa-miliani/03_budget.png",
+          "kind": "budget"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — VILLA MILIANI — GIUGNO 2026"
+        }
+      ]
+    }
+  ]
+}

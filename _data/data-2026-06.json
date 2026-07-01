@@ -1,0 +1,1506 @@
+{
+  "target_period": "2026-06",
+  "meta_by_account": {
+    "current": {
+      "1201395876543423": {
+        "facebook": {
+          "reach": 596174,
+          "impressions": 787153,
+          "actions_page_engagement": 467979,
+          "clicks": 6810,
+          "spend": 657.6882
+        },
+        "instagram": {
+          "reach": 60412,
+          "impressions": 70328,
+          "actions_page_engagement": 43495,
+          "clicks": 215,
+          "spend": 65.4518
+        }
+      },
+      "911357333863123": {
+        "facebook": {
+          "reach": 347030,
+          "impressions": 503134,
+          "actions_page_engagement": 232820,
+          "clicks": 3483,
+          "spend": 482.7
+        },
+        "instagram": {
+          "reach": 109296,
+          "impressions": 123309,
+          "actions_page_engagement": 53358,
+          "clicks": 164,
+          "spend": 117.76
+        }
+      },
+      "821188209852436": {
+        "facebook": {
+          "reach": 149150,
+          "impressions": 228551,
+          "actions_page_engagement": 110030,
+          "clicks": 3618,
+          "spend": 458.1456
+        },
+        "instagram": {
+          "reach": 141689,
+          "impressions": 229009,
+          "actions_page_engagement": 31775,
+          "clicks": 427,
+          "spend": 353.8344
+        }
+      },
+      "1489903155429629": {
+        "facebook": {
+          "reach": 196566,
+          "impressions": 233657,
+          "actions_page_engagement": 10693,
+          "clicks": 2866,
+          "spend": 426.0944
+        },
+        "instagram": {
+          "reach": 18821,
+          "impressions": 27674,
+          "actions_page_engagement": 2609,
+          "clicks": 29,
+          "spend": 172.0056
+        }
+      },
+      "1432341844596179": {
+        "facebook": {
+          "reach": 151332,
+          "impressions": 231359,
+          "actions_page_engagement": 92785,
+          "clicks": 2286,
+          "spend": 323.42
+        },
+        "instagram": {
+          "reach": 23531,
+          "impressions": 28251,
+          "actions_page_engagement": 14120,
+          "clicks": 98,
+          "spend": 44.55
+        }
+      },
+      "1312718426033158": {
+        "facebook": {
+          "reach": 246948,
+          "impressions": 398464,
+          "actions_page_engagement": 218773,
+          "clicks": 10736,
+          "spend": 350.8698
+        },
+        "instagram": {
+          "reach": 3877,
+          "impressions": 5215,
+          "actions_page_engagement": 3073,
+          "clicks": 15,
+          "spend": 6.7802
+        }
+      },
+      "1353024533007038": {
+        "facebook": {
+          "reach": 345413,
+          "impressions": 548199,
+          "actions_page_engagement": 273510,
+          "clicks": 10825,
+          "spend": 680.29
+        },
+        "instagram": {
+          "reach": 21193,
+          "impressions": 27033,
+          "actions_page_engagement": 15101,
+          "clicks": 105,
+          "spend": 41.71
+        }
+      },
+      "1528485957725509": {
+        "facebook": {
+          "reach": 439883,
+          "impressions": 784162,
+          "actions_page_engagement": 438731,
+          "clicks": 8613,
+          "spend": 886.5672
+        },
+        "instagram": {
+          "reach": 34032,
+          "impressions": 56279,
+          "actions_page_engagement": 13790,
+          "clicks": 85,
+          "spend": 143.2128
+        }
+      },
+      "1372615496521110": {
+        "facebook": {
+          "reach": 244467,
+          "impressions": 344927,
+          "actions_page_engagement": 176033,
+          "clicks": 5900,
+          "spend": 379.0672
+        },
+        "instagram": {
+          "reach": 123919,
+          "impressions": 157203,
+          "actions_page_engagement": 74183,
+          "clicks": 123,
+          "spend": 119.6128
+        }
+      },
+      "30233607946222961": {
+        "facebook": {
+          "reach": 1156208,
+          "impressions": 1716813,
+          "actions_page_engagement": 45997,
+          "clicks": 3727,
+          "spend": 296.49
+        },
+        "instagram": {
+          "reach": 566404,
+          "impressions": 895211,
+          "actions_page_engagement": 12555,
+          "clicks": 349,
+          "spend": 152.35
+        }
+      },
+      "687349689221880": {
+        "facebook": {
+          "reach": 211023,
+          "impressions": 354723,
+          "actions_page_engagement": 87054,
+          "clicks": 25336,
+          "spend": 816.2869
+        },
+        "instagram": {
+          "reach": 14276,
+          "impressions": 18761,
+          "actions_page_engagement": 1664,
+          "clicks": 305,
+          "spend": 54.5231
+        }
+      },
+      "217115315497718": {
+        "facebook": {
+          "reach": 205654,
+          "impressions": 332247,
+          "actions_page_engagement": 4337,
+          "clicks": 509,
+          "spend": 196.8056
+        },
+        "instagram": {
+          "reach": 116724,
+          "impressions": 252285,
+          "actions_page_engagement": 1540,
+          "clicks": 67,
+          "spend": 149.6242
+        }
+      },
+      "752450855779035": {
+        "facebook": {
+          "reach": 191022,
+          "impressions": 257721,
+          "actions_page_engagement": 120521,
+          "clicks": 4388,
+          "spend": 926.7978
+        },
+        "instagram": {
+          "reach": 38474,
+          "impressions": 47766,
+          "actions_page_engagement": 11953,
+          "clicks": 305,
+          "spend": 265.5622
+        }
+      },
+      "1849759899186169": {
+        "facebook": {
+          "reach": 183591,
+          "impressions": 293374,
+          "actions_page_engagement": 30390,
+          "clicks": 8045,
+          "spend": 713.8591
+        },
+        "instagram": {
+          "reach": 57252,
+          "impressions": 92719,
+          "actions_page_engagement": 13108,
+          "clicks": 130,
+          "spend": 407.5909
+        }
+      }
+    },
+    "prev_yoy": {
+      "911357333863123": {
+        "facebook": {
+          "reach": 118338,
+          "impressions": 260537,
+          "actions_page_engagement": 28122,
+          "clicks": 13473,
+          "spend": 247.7682
+        },
+        "instagram": {
+          "reach": 82232,
+          "impressions": 211875,
+          "actions_page_engagement": 48583,
+          "clicks": 649,
+          "spend": 220.3618
+        }
+      },
+      "1432341844596179": {
+        "facebook": {
+          "reach": 81727,
+          "impressions": 157724,
+          "actions_page_engagement": 27381,
+          "clicks": 7511,
+          "spend": 230.9096
+        },
+        "instagram": {
+          "reach": 9796,
+          "impressions": 13630,
+          "actions_page_engagement": 2648,
+          "clicks": 46,
+          "spend": 30.2704
+        }
+      },
+      "821188209852436": {
+        "facebook": {
+          "reach": 233281,
+          "impressions": 610051,
+          "actions_page_engagement": 122785,
+          "clicks": 15852,
+          "spend": 907.486
+        },
+        "instagram": {
+          "reach": 377705,
+          "impressions": 1008869,
+          "actions_page_engagement": 310387,
+          "clicks": 1059,
+          "spend": 900.404
+        }
+      },
+      "1528485957725509": {
+        "facebook": {
+          "reach": 76048,
+          "impressions": 271605,
+          "actions_page_engagement": 11079,
+          "clicks": 15787,
+          "spend": 442.2129
+        },
+        "instagram": {
+          "reach": 228401,
+          "impressions": 527060,
+          "actions_page_engagement": 111552,
+          "clicks": 421,
+          "spend": 498.1471
+        }
+      },
+      "1312718426033158": {
+        "facebook": {
+          "reach": 94682,
+          "impressions": 324350,
+          "actions_page_engagement": 44834,
+          "clicks": 4481,
+          "spend": 449.4413
+        },
+        "instagram": {
+          "reach": 192180,
+          "impressions": 408062,
+          "actions_page_engagement": 123661,
+          "clicks": 608,
+          "spend": 526.3287
+        }
+      },
+      "1372615496521110": {
+        "facebook": {
+          "reach": 194069,
+          "impressions": 338764,
+          "actions_page_engagement": 40517,
+          "clicks": 471,
+          "spend": 59.3378
+        },
+        "instagram": {
+          "reach": 173971,
+          "impressions": 320008,
+          "actions_page_engagement": 15448,
+          "clicks": 353,
+          "spend": 77.6602
+        }
+      },
+      "687349689221880": {
+        "facebook": {
+          "reach": 187812,
+          "impressions": 410585,
+          "actions_page_engagement": 210069,
+          "clicks": 16397,
+          "spend": 681.1515
+        },
+        "instagram": {
+          "reach": 291127,
+          "impressions": 720338,
+          "actions_page_engagement": 202005,
+          "clicks": 1215,
+          "spend": 832.6785
+        }
+      },
+      "1201395876543423": {
+        "facebook": {
+          "reach": 223633,
+          "impressions": 728348,
+          "actions_page_engagement": 18874,
+          "clicks": 15023,
+          "spend": 315.005
+        },
+        "instagram": {
+          "reach": 9281,
+          "impressions": 14469,
+          "actions_page_engagement": 329,
+          "clicks": 242,
+          "spend": 34.745
+        }
+      },
+      "752450855779035": {
+        "instagram": {
+          "reach": 9581,
+          "impressions": 17305,
+          "actions_page_engagement": 1377,
+          "clicks": 1122,
+          "spend": 59.69
+        },
+        "facebook": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        }
+      }
+    },
+    "prev_mom": {
+      "1432341844596179": {
+        "facebook": {
+          "reach": 294016,
+          "impressions": 407870,
+          "actions_page_engagement": 201655,
+          "clicks": 2616,
+          "spend": 357.4907
+        },
+        "instagram": {
+          "reach": 26699,
+          "impressions": 29015,
+          "actions_page_engagement": 16868,
+          "clicks": 51,
+          "spend": 28.5293
+        }
+      },
+      "217115315497718": {
+        "facebook": {
+          "reach": 8431,
+          "impressions": 10647,
+          "actions_page_engagement": 610,
+          "clicks": 393,
+          "spend": 26.89
+        },
+        "instagram": {
+          "reach": 5589,
+          "impressions": 6674,
+          "actions_page_engagement": 417,
+          "clicks": 257,
+          "spend": 25.69
+        }
+      },
+      "1528485957725509": {
+        "facebook": {
+          "reach": 448903,
+          "impressions": 827800,
+          "actions_page_engagement": 502747,
+          "clicks": 12716,
+          "spend": 1075.4098
+        },
+        "instagram": {
+          "reach": 4204,
+          "impressions": 5562,
+          "actions_page_engagement": 3489,
+          "clicks": 12,
+          "spend": 7.8002
+        }
+      },
+      "911357333863123": {
+        "facebook": {
+          "reach": 255044,
+          "impressions": 357685,
+          "actions_page_engagement": 155464,
+          "clicks": 1985,
+          "spend": 424.7196
+        },
+        "instagram": {
+          "reach": 69899,
+          "impressions": 80181,
+          "actions_page_engagement": 40783,
+          "clicks": 105,
+          "spend": 100.9004
+        }
+      },
+      "30233607946222961": {
+        "facebook": {
+          "reach": 771717,
+          "impressions": 1035334,
+          "actions_page_engagement": 48820,
+          "clicks": 1725,
+          "spend": 167.5764
+        },
+        "instagram": {
+          "reach": 878324,
+          "impressions": 1600190,
+          "actions_page_engagement": 45585,
+          "clicks": 851,
+          "spend": 258.8036
+        }
+      },
+      "687349689221880": {
+        "facebook": {
+          "reach": 225398,
+          "impressions": 381192,
+          "actions_page_engagement": 96028,
+          "clicks": 34594,
+          "spend": 846.4271
+        },
+        "instagram": {
+          "reach": 17335,
+          "impressions": 24772,
+          "actions_page_engagement": 3436,
+          "clicks": 294,
+          "spend": 90.6229
+        }
+      },
+      "821188209852436": {
+        "facebook": {
+          "reach": 210530,
+          "impressions": 403566,
+          "actions_page_engagement": 156340,
+          "clicks": 7928,
+          "spend": 593.5404
+        },
+        "instagram": {
+          "reach": 215265,
+          "impressions": 421738,
+          "actions_page_engagement": 65250,
+          "clicks": 1001,
+          "spend": 647.1396
+        }
+      },
+      "1312718426033158": {
+        "facebook": {
+          "reach": 244951,
+          "impressions": 422231,
+          "actions_page_engagement": 227377,
+          "clicks": 8895,
+          "spend": 367.0803
+        },
+        "instagram": {
+          "reach": 2707,
+          "impressions": 3414,
+          "actions_page_engagement": 1778,
+          "clicks": 20,
+          "spend": 5.5697
+        }
+      },
+      "1201395876543423": {
+        "facebook": {
+          "reach": 909562,
+          "impressions": 1425823,
+          "actions_page_engagement": 876905,
+          "clicks": 11854,
+          "spend": 1154.789
+        },
+        "instagram": {
+          "reach": 26937,
+          "impressions": 34782,
+          "actions_page_engagement": 22109,
+          "clicks": 93,
+          "spend": 28.321
+        }
+      },
+      "1372615496521110": {
+        "facebook": {
+          "reach": 498848,
+          "impressions": 931520,
+          "actions_page_engagement": 540739,
+          "clicks": 5858,
+          "spend": 445.8017
+        },
+        "instagram": {
+          "reach": 155726,
+          "impressions": 240896,
+          "actions_page_engagement": 132893,
+          "clicks": 309,
+          "spend": 108.2383
+        }
+      },
+      "1489903155429629": {
+        "facebook": {
+          "reach": 93188,
+          "impressions": 131728,
+          "actions_page_engagement": 13723,
+          "clicks": 4626,
+          "spend": 410.9767
+        },
+        "instagram": {
+          "reach": 36108,
+          "impressions": 50873,
+          "actions_page_engagement": 4291,
+          "clicks": 68,
+          "spend": 207.0433
+        }
+      },
+      "1353024533007038": {
+        "facebook": {
+          "reach": 379102,
+          "impressions": 701105,
+          "actions_page_engagement": 270626,
+          "clicks": 14381,
+          "spend": 810.629
+        },
+        "instagram": {
+          "reach": 21193,
+          "impressions": 28879,
+          "actions_page_engagement": 13861,
+          "clicks": 136,
+          "spend": 42.191
+        }
+      },
+      "752450855779035": {
+        "facebook": {
+          "reach": 78825,
+          "impressions": 124848,
+          "actions_page_engagement": 7034,
+          "clicks": 6248,
+          "spend": 368.0082
+        },
+        "instagram": {
+          "reach": 24257,
+          "impressions": 41855,
+          "actions_page_engagement": 4583,
+          "clicks": 440,
+          "spend": 253.2719
+        }
+      },
+      "1849759899186169": {
+        "facebook": {
+          "reach": 125375,
+          "impressions": 267942,
+          "actions_page_engagement": 54476,
+          "clicks": 9523,
+          "spend": 730.0553
+        },
+        "instagram": {
+          "reach": 114519,
+          "impressions": 233497,
+          "actions_page_engagement": 26486,
+          "clicks": 129,
+          "spend": 810.9447
+        }
+      }
+    }
+  },
+  "meta_filtered": {
+    "Accentodì": {
+      "current": {
+        "facebook": {
+          "reach": 152635,
+          "impressions": 231622,
+          "actions_page_engagement": 125522,
+          "clicks": 7126,
+          "spend": 201.71
+        },
+        "instagram": {
+          "reach": 3907,
+          "impressions": 5215,
+          "actions_page_engagement": 3073,
+          "clicks": 15,
+          "spend": 6.78
+        }
+      },
+      "prev_yoy": {
+        "facebook": {
+          "reach": 56237,
+          "impressions": 230876,
+          "actions_page_engagement": 22473,
+          "clicks": 2576,
+          "spend": 293.0095
+        },
+        "instagram": {
+          "reach": 108256,
+          "impressions": 236622,
+          "actions_page_engagement": 51348,
+          "clicks": 370,
+          "spend": 384.3805
+        }
+      },
+      "prev_mom": {
+        "facebook": {
+          "reach": 138459,
+          "impressions": 242191,
+          "actions_page_engagement": 136013,
+          "clicks": 6540,
+          "spend": 211.89
+        },
+        "instagram": {
+          "reach": 2711,
+          "impressions": 3414,
+          "actions_page_engagement": 1778,
+          "clicks": 20,
+          "spend": 5.57
+        }
+      }
+    },
+    "Adèsso": {
+      "current": {
+        "facebook": {
+          "reach": 107256,
+          "impressions": 166842,
+          "actions_page_engagement": 93251,
+          "clicks": 3610,
+          "spend": 149.16
+        },
+        "instagram": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        }
+      },
+      "prev_yoy": {
+        "facebook": {
+          "reach": 38840,
+          "impressions": 93442,
+          "actions_page_engagement": 22361,
+          "clicks": 1905,
+          "spend": 156.3958
+        },
+        "instagram": {
+          "reach": 95286,
+          "impressions": 171472,
+          "actions_page_engagement": 72313,
+          "clicks": 238,
+          "spend": 141.9842
+        }
+      },
+      "prev_mom": {
+        "facebook": {
+          "reach": 122142,
+          "impressions": 180040,
+          "actions_page_engagement": 91364,
+          "clicks": 2355,
+          "spend": 155.19
+        },
+        "instagram": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        }
+      }
+    },
+    "Hannah": {
+      "current": {
+        "facebook": {
+          "reach": 425387,
+          "impressions": 754191,
+          "actions_page_engagement": 431738,
+          "clicks": 7234,
+          "spend": 813.6697
+        },
+        "instagram": {
+          "reach": 6082,
+          "impressions": 7733,
+          "actions_page_engagement": 5109,
+          "clicks": 13,
+          "spend": 11.1103
+        }
+      },
+      "prev_yoy": {
+        "facebook": {
+          "reach": 75269,
+          "impressions": 271622,
+          "actions_page_engagement": 11079,
+          "clicks": 15787,
+          "spend": 442.2403
+        },
+        "instagram": {
+          "reach": 227978,
+          "impressions": 527043,
+          "actions_page_engagement": 111552,
+          "clicks": 421,
+          "spend": 498.1197
+        }
+      },
+      "prev_mom": {
+        "facebook": {
+          "reach": 391579,
+          "impressions": 728264,
+          "actions_page_engagement": 450875,
+          "clicks": 11667,
+          "spend": 926.4098
+        },
+        "instagram": {
+          "reach": 3142,
+          "impressions": 4364,
+          "actions_page_engagement": 2835,
+          "clicks": 10,
+          "spend": 5.7402
+        }
+      }
+    },
+    "Hannah Terraces": {
+      "current": {
+        "facebook": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        },
+        "instagram": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        }
+      },
+      "prev_yoy": {
+        "facebook": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        },
+        "instagram": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        }
+      },
+      "prev_mom": {
+        "facebook": {
+          "reach": 71877,
+          "impressions": 99536,
+          "actions_page_engagement": 51872,
+          "clicks": 1049,
+          "spend": 149
+        },
+        "instagram": {
+          "reach": 1091,
+          "impressions": 1198,
+          "actions_page_engagement": 654,
+          "clicks": 2,
+          "spend": 2.06
+        }
+      }
+    },
+    "Marcella Royal": {
+      "current": {
+        "facebook": {
+          "reach": 98140,
+          "impressions": 146017,
+          "actions_page_engagement": 86483,
+          "clicks": 1727,
+          "spend": 349.51
+        },
+        "instagram": {
+          "reach": 1029,
+          "impressions": 1143,
+          "actions_page_engagement": 492,
+          "clicks": 2,
+          "spend": 2.28
+        }
+      },
+      "prev_yoy": {
+        "facebook": {
+          "reach": 133825,
+          "impressions": 288624,
+          "actions_page_engagement": 116112,
+          "clicks": 4150,
+          "spend": 380.5767
+        },
+        "instagram": {
+          "reach": 158827,
+          "impressions": 460745,
+          "actions_page_engagement": 166266,
+          "clicks": 376,
+          "spend": 390.6533
+        }
+      },
+      "prev_mom": {
+        "facebook": {
+          "reach": 152556,
+          "impressions": 289435,
+          "actions_page_engagement": 153165,
+          "clicks": 2779,
+          "spend": 459.3752
+        },
+        "instagram": {
+          "reach": 81528,
+          "impressions": 122089,
+          "actions_page_engagement": 53836,
+          "clicks": 345,
+          "spend": 162.2348
+        }
+      }
+    },
+    "Terrazza Flavia": {
+      "current": {
+        "facebook": {
+          "reach": 53527,
+          "impressions": 82533,
+          "actions_page_engagement": 23547,
+          "clicks": 1891,
+          "spend": 108.6324
+        },
+        "instagram": {
+          "reach": 140853,
+          "impressions": 227867,
+          "actions_page_engagement": 31283,
+          "clicks": 425,
+          "spend": 351.5576
+        }
+      },
+      "prev_yoy": {
+        "facebook": {
+          "reach": 100227,
+          "impressions": 321441,
+          "actions_page_engagement": 6673,
+          "clicks": 11702,
+          "spend": 527.0076
+        },
+        "instagram": {
+          "reach": 233340,
+          "impressions": 548110,
+          "actions_page_engagement": 144121,
+          "clicks": 683,
+          "spend": 509.6524
+        }
+      },
+      "prev_mom": {
+        "facebook": {
+          "reach": 59155,
+          "impressions": 114132,
+          "actions_page_engagement": 3175,
+          "clicks": 5149,
+          "spend": 134.16
+        },
+        "instagram": {
+          "reach": 128674,
+          "impressions": 299648,
+          "actions_page_engagement": 11414,
+          "clicks": 656,
+          "spend": 484.91
+        }
+      }
+    }
+  },
+  "tiktok": {
+    "current": {
+      "7612666695502118929": {
+        "clicks": 0,
+        "engagements": 10443,
+        "impressions": 4586134,
+        "reach": 848475,
+        "spend": 600.8
+      },
+      "7499093699838607377": {
+        "clicks": 1214,
+        "engagements": 2838,
+        "impressions": 730028,
+        "reach": 447350,
+        "spend": 105.03
+      },
+      "7626418949391351815": {
+        "clicks": 0,
+        "engagements": 8615,
+        "impressions": 2829659,
+        "reach": 659014,
+        "spend": 600.07
+      },
+      "7498679494010667009": {
+        "clicks": 2214,
+        "engagements": 4616,
+        "impressions": 1982803,
+        "reach": 610342,
+        "spend": 600.04
+      },
+      "7498330316248203280": {
+        "clicks": 3954,
+        "engagements": 9058,
+        "impressions": 3116869,
+        "reach": 1169809,
+        "spend": 900.07
+      },
+      "7504967007843319824": {
+        "clicks": 2151,
+        "engagements": 4359,
+        "impressions": 1946646,
+        "reach": 535987,
+        "spend": 600.04
+      }
+    },
+    "prev_mom": {
+      "7498679494010667009": {
+        "clicks": 2081,
+        "engagements": 4173,
+        "impressions": 1947794,
+        "reach": 568310,
+        "spend": 619.93
+      },
+      "7626418949391351815": {
+        "clicks": 0,
+        "engagements": 2677,
+        "impressions": 968327,
+        "reach": 255441,
+        "spend": 260.02
+      },
+      "7498330316248203280": {
+        "clicks": 3331,
+        "engagements": 7364,
+        "impressions": 3238252,
+        "reach": 1194060,
+        "spend": 929.86
+      },
+      "7504967007843319824": {
+        "clicks": 2031,
+        "engagements": 4012,
+        "impressions": 1929476,
+        "reach": 524393,
+        "spend": 619.92
+      },
+      "7612666695502118929": {
+        "clicks": 0,
+        "engagements": 9025,
+        "impressions": 4174843,
+        "reach": 855480,
+        "spend": 532.93
+      },
+      "7499093699838607377": {
+        "clicks": 4650,
+        "engagements": 11167,
+        "impressions": 2789932,
+        "reach": 930092,
+        "spend": 503.5
+      }
+    },
+    "prev_yoy": {
+      "7498679494010667009": {
+        "clicks": 480,
+        "engagements": 872,
+        "impressions": 784457,
+        "reach": 283067,
+        "spend": 260.13
+      },
+      "7499093699838607377": {
+        "clicks": 2379,
+        "engagements": 3584,
+        "impressions": 1479197,
+        "reach": 376892,
+        "spend": 1119.38
+      },
+      "7504967007843319824": {
+        "clicks": 1124,
+        "engagements": 2052,
+        "impressions": 1942078,
+        "reach": 468387,
+        "spend": 600.15
+      },
+      "7498330316248203280": {
+        "clicks": 1186,
+        "engagements": 1644,
+        "impressions": 1748693,
+        "reach": 524070,
+        "spend": 600.1
+      }
+    }
+  },
+  "ytd_spend": {
+    "months": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "by_client": {
+      "Accentodì": {
+        "1": {
+          "meta": 216.46,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 195.9,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 218.49,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 208.32,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 217.46,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 208.49,
+          "tiktok": 0
+        }
+      },
+      "Adèsso": {
+        "1": {
+          "meta": 240.53,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 279.9,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 186.42,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 148.75,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 155.19,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 149.16,
+          "tiktok": 0
+        }
+      },
+      "Altafiumara": {
+        "1": {
+          "meta": 426.24,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 192.84,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 350.94,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 829.53,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 1183.11,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 723.14,
+          "tiktok": 0
+        }
+      },
+      "Castello": {
+        "1": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 931.12,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 686.78,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 618.02,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 598.1,
+          "tiktok": 0
+        }
+      },
+      "Della Piana": {
+        "1": {
+          "meta": 181.68,
+          "tiktok": 0.0
+        },
+        "2": {
+          "meta": 279.92,
+          "tiktok": 0.0
+        },
+        "3": {
+          "meta": 310.23,
+          "tiktok": 0.0
+        },
+        "4": {
+          "meta": 97.43,
+          "tiktok": 480.08
+        },
+        "5": {
+          "meta": 525.62,
+          "tiktok": 619.92
+        },
+        "6": {
+          "meta": 600.46,
+          "tiktok": 600.04
+        }
+      },
+      "Hannah": {
+        "1": {
+          "meta": 309.93,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 361.67,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 404.14,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 743.07,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 932.15,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 824.78,
+          "tiktok": 0
+        }
+      },
+      "Hannah Terraces": {
+        "1": {
+          "meta": 207.19,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 223.76,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 248.72,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 493.19,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 151.06,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 0,
+          "tiktok": 0
+        }
+      },
+      "Hemanaire": {
+        "1": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 483.97,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 2100.6,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 126.58,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 353.2,
+          "tiktok": 0
+        }
+      },
+      "Livata": {
+        "1": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 0.0,
+          "tiktok": 0
+        }
+      },
+      "Lunetta": {
+        "1": {
+          "meta": 278.92,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 250.64,
+          "tiktok": 0.0
+        },
+        "3": {
+          "meta": 1042.55,
+          "tiktok": 0.0
+        },
+        "4": {
+          "meta": 761.18,
+          "tiktok": 690.19
+        },
+        "5": {
+          "meta": 937.05,
+          "tiktok": 929.86
+        },
+        "6": {
+          "meta": 870.81,
+          "tiktok": 900.07
+        }
+      },
+      "Magari Estates": {
+        "1": {
+          "meta": 470.44,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 362.75,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 449.43,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 574.53,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 554.04,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 498.68,
+          "tiktok": 0
+        }
+      },
+      "Marcella Royal": {
+        "1": {
+          "meta": 208.24,
+          "tiktok": 0.0
+        },
+        "2": {
+          "meta": 0,
+          "tiktok": 0.0
+        },
+        "3": {
+          "meta": 310.64,
+          "tiktok": 0.0
+        },
+        "4": {
+          "meta": 530.09,
+          "tiktok": 161.37
+        },
+        "5": {
+          "meta": 621.61,
+          "tiktok": 503.5
+        },
+        "6": {
+          "meta": 351.79,
+          "tiktok": 105.03
+        }
+      },
+      "Mare": {
+        "1": {
+          "meta": 680.58,
+          "tiktok": 619.89
+        },
+        "2": {
+          "meta": 615.71,
+          "tiktok": 560
+        },
+        "3": {
+          "meta": 683.29,
+          "tiktok": 620.12
+        },
+        "4": {
+          "meta": 612.88,
+          "tiktok": 599.96
+        },
+        "5": {
+          "meta": 386.02,
+          "tiktok": 619.93
+        },
+        "6": {
+          "meta": 367.97,
+          "tiktok": 600.04
+        }
+      },
+      "Montemagno": {
+        "1": {
+          "meta": 121.5,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 114.96,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 230.01,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 166.5,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 621.52,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 1192.38,
+          "tiktok": 0
+        }
+      },
+      "Terrazza Flavia": {
+        "1": {
+          "meta": 212.79,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 0,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 496.28,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 568.65,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 619.07,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 460.19,
+          "tiktok": 0
+        }
+      },
+      "Villa Ermellina": {
+        "1": {
+          "meta": 708.67,
+          "tiktok": 0.0
+        },
+        "2": {
+          "meta": 825.46,
+          "tiktok": 0.0
+        },
+        "3": {
+          "meta": 1148.28,
+          "tiktok": 0.0
+        },
+        "4": {
+          "meta": 653.12,
+          "tiktok": 410.47
+        },
+        "5": {
+          "meta": 426.38,
+          "tiktok": 532.93
+        },
+        "6": {
+          "meta": 448.84,
+          "tiktok": 600.8
+        }
+      },
+      "Villa Giada": {
+        "1": {
+          "meta": 0.0,
+          "tiktok": 0.0
+        },
+        "2": {
+          "meta": 0.0,
+          "tiktok": 0.0
+        },
+        "3": {
+          "meta": 568.84,
+          "tiktok": 0.0
+        },
+        "4": {
+          "meta": 1275.78,
+          "tiktok": 0.0
+        },
+        "5": {
+          "meta": 1541,
+          "tiktok": 260.02
+        },
+        "6": {
+          "meta": 1121.45,
+          "tiktok": 600.07
+        }
+      },
+      "Villa Miliani": {
+        "1": {
+          "meta": 860.18,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 699.83,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 891.93,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 883.89,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 852.83,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 722.01,
+          "tiktok": 0
+        }
+      }
+    }
+  },
+  "reach_estimated_clients": []
+}
