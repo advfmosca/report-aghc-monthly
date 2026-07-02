@@ -169,6 +169,12 @@ def build_view(client_name, data, year, month):
         for plat in ("facebook","instagram"):
             if not d.get(plat): d[plat] = empty_meta()
 
+    # Meta "primo mese live": spesa corrente >0 ma periodo di confronto a zero (nessuno storico)
+    _mcs = sum((meta_cur.get(p, {}).get("spend") or 0) for p in ("facebook", "instagram"))
+    _mps = sum((meta_prev.get(p, {}).get("spend") or 0) for p in ("facebook", "instagram"))
+    _mpi = sum((meta_prev.get(p, {}).get("impressions") or 0) for p in ("facebook", "instagram"))
+    meta_launched = (_mcs > 0) and (_mps == 0) and (_mpi == 0)
+
     has_tk = bool(cfg["tk_id"])
     tk_cur = tk_prev = None; tk_launched = False
     if has_tk:
@@ -184,7 +190,7 @@ def build_view(client_name, data, year, month):
 
     return {
         "client_name": client_name, "cfg": cfg, "year": year, "month": month,
-        "has_tk": has_tk, "tk_launched": tk_launched,
+        "has_tk": has_tk, "tk_launched": tk_launched, "meta_launched": meta_launched,
         "meta_cur": meta_cur, "meta_prev": meta_prev,
         "tk_cur": tk_cur, "tk_prev": tk_prev,
         "ytd_months": ytd_months, "ytd_client": ytd_client,
@@ -388,6 +394,18 @@ def build_rational(v, focus):
                  f"stagionali a più alto ritorno verso {next_cap}.")
         return f"<p>{s}</p>"
 
+    # META — primo mese live (debutto ads)
+    if v.get("meta_launched"):
+        impr_meta = (fb_c.get("impressions") or 0) + (ig_c.get("impressions") or 0)
+        s = (f"{month_cap} {year} segna il debutto pubblicitario di {cn}: la prima campagna Meta va live e apre il "
+             f"presidio con {fmt_int(reach_meta)} utenti unici raggiunti e {fmt_int(impr_meta)} visualizzazioni, "
+             f"ponendo le fondamenta della brand awareness sul territorio. {driver} guida la copertura in questa fase "
+             f"di lancio, a conferma di un mix ben calibrato sugli obiettivi di notorietà. L'investimento del mese "
+             f"({fmt_eur(spend_cur)}) costruisce il primo bacino di pubblico qualificato da riattivare nelle finestre "
+             f"stagionali a più alta intenzione di prenotazione. Da {next_low} (peso {next_w}% del piano annuo) "
+             f"consolidiamo la pressione per trasformare la scoperta del brand in prenotazioni.")
+        return f"<p>{s}</p>"
+
     # META — pausa strategica
     if spend_cur == 0 and reach_meta == 0:
         s = (f"{month_cap} {year} rappresenta una pausa strategica per {cn}, coerente con il posizionamento del "
@@ -470,6 +488,16 @@ def build_rational_en(v, focus):
         else:
             s = (f"{mo} {year} sees TikTok on standby for {cn}: pressure stays focused on the main channels, while the "
                  f"dedicated budget remains intact and ready to reactivate on the higher-return seasonal windows toward {next_mo}.")
+        return f"<p>{s}</p>"
+
+    if v.get("meta_launched"):
+        impr_meta = (fb_c.get("impressions") or 0) + (ig_c.get("impressions") or 0)
+        s = (f"{mo} {year} marks the advertising debut of {cn}: the first Meta campaign goes live, opening presence with "
+             f"{fmt_int(reach_meta)} unique users reached and {fmt_int(impr_meta)} impressions, laying the foundations of "
+             f"brand awareness. {driver} leads coverage in this launch phase, confirming a well-balanced mix focused on "
+             f"awareness goals. This month's investment ({fmt_eur(spend_cur)}) builds the first pool of qualified audience "
+             f"to reactivate in the higher-intent seasonal booking windows. From {next_mo} ({next_w}% of the annual plan) "
+             f"we consolidate pressure to turn brand discovery into bookings.")
         return f"<p>{s}</p>"
 
     if spend_cur == 0 and reach_meta == 0:

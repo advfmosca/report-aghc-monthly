@@ -668,6 +668,18 @@ function buildRational(cd){
     return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
   }
 
+  // === Caso speciale: primo mese live (debutto ads Meta) ===
+  const imprCurMeta = (metaCur.facebook.impressions || 0) + (metaCur.instagram.impressions || 0);
+  const imprPrevMeta = (metaPrev.facebook.impressions || 0) + (metaPrev.instagram.impressions || 0);
+  const metaLaunched = spendCur > 0 && spendPrev === 0 && imprPrevMeta === 0;
+  if (metaLaunched) {
+    const driverM = fbReachCur >= igReachCur ? "Facebook" : "Instagram";
+    const p1 = `${monthCap} segna il debutto pubblicitario di ${client.nome}: la prima campagna Meta va live e apre il presidio con ${fmtInt(reachCurMeta)} utenti unici raggiunti e ${fmtInt(imprCurMeta)} visualizzazioni, ponendo le fondamenta della brand awareness sul territorio.`;
+    const p2 = `${driverM} guida la copertura in questa fase di lancio, a conferma di un mix ben calibrato sugli obiettivi di notorietà. L'investimento del mese (${fmtEur(spendCur)}) costruisce il primo bacino di pubblico qualificato da riattivare nelle finestre stagionali a più alta intenzione di prenotazione.`;
+    const p3 = `Da ${nextMonthLow} (peso ${nextWeight}% del piano annuo) consolidiamo la pressione per trasformare la scoperta del brand in prenotazioni.`;
+    return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
+  }
+
   // === Paragrafo 1: cos'è successo (lead con la storia più forte) ===
   let p1, p1Kind;
   if (tkLaunched && tkCur && (tkCur.impressions || 0) > 0) {
