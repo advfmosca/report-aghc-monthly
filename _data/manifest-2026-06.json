@@ -19,10 +19,13 @@
   },
   "base_url": "https://advfmosca.github.io/report-aghc-monthly",
   "assets_root": "https://advfmosca.github.io/report-aghc-monthly/assets/giugno-2026",
-  "total_clients": 18,
-  "total_pages": 78,
+  "total_clients": 19,
+  "total_pages": 80,
   "mirrored_pngs": 42,
-  "missing_pngs": [],
+  "missing_pngs": [
+    "Puntebianche Resort/01_meta.png",
+    "Puntebianche Resort/03_budget.png"
+  ],
   "clients": [
     {
       "nome": "Accentodì",
@@ -423,6 +426,21 @@
         {
           "type": "divider",
           "text": "FINE REPORT — MONTEMAGNO — GIUGNO 2026"
+        }
+      ]
+    },
+    {
+      "nome": "Puntebianche Resort",
+      "slug": "puntebianche-resort",
+      "tiktok_active": false,
+      "pages": [
+        {
+          "type": "divider",
+          "text": "INIZIO REPORT — PUNTEBIANCHE RESORT — GIUGNO 2026"
+        },
+        {
+          "type": "divider",
+          "text": "FINE REPORT — PUNTEBIANCHE RESORT — GIUGNO 2026"
         }
       ]
     },

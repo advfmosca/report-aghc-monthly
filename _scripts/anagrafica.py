@@ -179,6 +179,17 @@ CLIENTS = [
         "note": "Aggiunto 25/04/2026 — budget annuo da definire (TBD).",
     },
     {
+        "nome": "Puntebianche Resort",
+        "meta_account_id": "1528485957725509",  # Hannah Hotels Collection (condiviso)
+        "meta_filter": ("contains", "Puntebianche"),
+        "meta_filter_extra": [],
+        "tiktok_account_id": None,
+        "confronto_meta": "MoM",
+        "confronto_tiktok": None,
+        "budget_annuo": 0,  # TBD — placeholder. Aggiornare quando definito.
+        "note": "Aggiunto 02/07/2026 — campagne 'Puntebianche - AON' su account condiviso Hannah Hotels Collection (1528485957725509). Le ads NON rientrano in Hannah (filtro 'Hannah'). Budget annuo TBD.",
+    },
+    {
         "nome": "Terrazza Flavia",
         "meta_account_id": "821188209852436",  # MARCELLA ROYAL (condiviso)
         "meta_filter": ("contains_ci", "Terrazza"),

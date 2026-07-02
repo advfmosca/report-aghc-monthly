@@ -900,6 +900,56 @@
           "spend": 484.91
         }
       }
+    },
+    "Puntebianche Resort": {
+      "current": {
+        "facebook": {
+          "reach": 19348,
+          "impressions": 29972,
+          "actions_page_engagement": 6997,
+          "clicks": 1379,
+          "spend": 72.9
+        },
+        "instagram": {
+          "reach": 28836,
+          "impressions": 48547,
+          "actions_page_engagement": 8681,
+          "clicks": 72,
+          "spend": 132.1
+        }
+      },
+      "prev_yoy": {
+        "facebook": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        },
+        "instagram": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        }
+      },
+      "prev_mom": {
+        "facebook": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        },
+        "instagram": {
+          "reach": 0,
+          "impressions": 0,
+          "actions_page_engagement": 0,
+          "clicks": 0,
+          "spend": 0
+        }
+      }
     }
   },
   "tiktok": {
@@ -1497,6 +1547,32 @@
         },
         "6": {
           "meta": 722.01,
+          "tiktok": 0
+        }
+      },
+      "Puntebianche Resort": {
+        "1": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "2": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "3": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "4": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "5": {
+          "meta": 0.0,
+          "tiktok": 0
+        },
+        "6": {
+          "meta": 205.0,
           "tiktok": 0
         }
       }
