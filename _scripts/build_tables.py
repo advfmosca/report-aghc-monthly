@@ -70,6 +70,7 @@ CLIENTS = {
     "Marcella Royal": {"meta_id":"821188209852436","filter":["Marcella"],"excl":[],"tk_id":"7499093699838607377","cm":"YoY","ct":"MoM","budget":14400},
     "Mare":           {"meta_id":"1432341844596179","filter":None,"excl":[],"tk_id":"7498679494010667009","cm":"MoM","ct":"MoM","budget":15000},
     "Montemagno":     {"meta_id":"752450855779035","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":0},
+    "Puntebianche Resort":{"meta_id":"1528485957725509","filter":["Puntebianche"],"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":0},
     "Terrazza Flavia":{"meta_id":"821188209852436","filter":["Terrazza"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":7500},
     "Villa Ermellina":{"meta_id":"30233607946222961","filter":None,"excl":[],"tk_id":"7612666695502118929","cm":"MoM","ct":"MoM","budget":16400,"lang":"en"},  # report SEMPRE in inglese
     "Villa Giada":    {"meta_id":"1849759899186169","filter":None,"excl":[],"tk_id":"7626418949391351815","cm":"MoM","ct":"MoM","budget":21600},
