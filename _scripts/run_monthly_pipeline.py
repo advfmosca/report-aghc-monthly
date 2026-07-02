@@ -103,6 +103,10 @@ def main():
     print(label(step, f"Stima reach YoY su {raw_path.name}…"))
     run(["python3", str(scripts / "estimate_reach.py"), "--data", str(raw_path)])
 
+    # 1b. Backfill YTD override permanente (idempotente) — valori spend mesi chiusi
+    #     che Windsor smette di restituire (data retention). Config: _data/ytd_overrides.json
+    run(["python3", str(scripts / "apply_ytd_overrides.py"), "--data", str(raw_path)])
+
     # 2. (Opzionale) xlsx
     if args.with_xlsx:
         xlsx_path = period_dir / f"Report AGHC - KPI {period_label}.xlsx"

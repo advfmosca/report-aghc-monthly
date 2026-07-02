@@ -1,0 +1,9 @@
+{
+  "_note": "Backfill permanente per valori YTD di spend che Windsor.ai smette di restituire per mesi chiusi (data retention). Applicato ogni mese dal pipeline dopo estimate_reach. Semantica: se il valore corrente del canale per quel mese e' 0/mancante, viene impostato al valore qui indicato; se Windsor restituisce un valore reale >0 quello vince.",
+  "overrides": {
+    "Castello": {
+      "1": { "meta": 420.91 },
+      "2": { "meta": 192.84 }
+    }
+  }
+}
