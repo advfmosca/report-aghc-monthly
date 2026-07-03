@@ -21,8 +21,6 @@ MONTH_IT = {1:"gennaio",2:"febbraio",3:"marzo",4:"aprile",5:"maggio",6:"giugno",
 ROOT = Path(__file__).resolve().parent.parent
 
 CLIENTS = [
-    {"nome":"Accentodì","meta_id":"1312718426033158","filter":["Accentodì"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":2400,"note":"Cadenza TRIMESTRALE (incluso per consultazione)"},
-    {"nome":"Adèsso","meta_id":"1312718426033158","filter":["Adèsso","MICE"],"excl":[],"tk_id":None,"cm":"YoY","ct":None,"budget":2400,"note":"Cadenza TRIMESTRALE (incluso per consultazione)"},
     {"nome":"Altafiumara","meta_id":"1201395876543423","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":23000,"note":""},
     {"nome":"Castello","meta_id":"1489903155429629","filter":None,"excl":[],"tk_id":None,"cm":"MoM","ct":None,"budget":14400,"note":""},
     {"nome":"Della Piana","meta_id":"911357333863123","filter":None,"excl":[],"tk_id":"7504967007843319824","cm":"YoY","ct":"MoM","budget":14000,"note":"Split confronto: Meta YoY, TikTok MoM"},

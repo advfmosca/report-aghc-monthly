@@ -18,7 +18,7 @@ PLATFORMS = ("facebook", "instagram")
 
 # Set di account/clienti per cui il confronto Meta è YoY (replica anagrafica)
 YOY_ACCOUNTS = {"911357333863123", "687349689221880"}  # Della Piana, Lunetta
-YOY_FILTERED = {"Accentodì", "Adèsso", "Hannah", "Marcella Royal", "Terrazza Flavia"}
+YOY_FILTERED = {"Hannah", "Marcella Royal", "Terrazza Flavia"}
 
 
 def ratio_or_none(d, plat):

@@ -25,28 +25,6 @@ TIKTOK_SHARE = 0.20
 
 CLIENTS = [
     {
-        "nome": "Accentodì",
-        "meta_account_id": "1312718426033158",  # Adèsso Hotel (condiviso)
-        "meta_filter": ("contains", "Accentodì"),
-        "meta_filter_extra": [],
-        "tiktok_account_id": None,
-        "confronto_meta": "YoY",
-        "confronto_tiktok": None,
-        "budget_annuo": 2400,
-        "note": "Cadenza TRIMESTRALE (report incluso comunque per consultazione)",
-    },
-    {
-        "nome": "Adèsso",
-        "meta_account_id": "1312718426033158",  # Adèsso Hotel (condiviso)
-        "meta_filter": ("contains", "Adèsso"),
-        "meta_filter_extra": ["MICE"],  # 2025: campagna MICE senza prefisso
-        "tiktok_account_id": None,
-        "confronto_meta": "YoY",
-        "confronto_tiktok": None,
-        "budget_annuo": 2400,
-        "note": "Cadenza TRIMESTRALE (report incluso comunque per consultazione)",
-    },
-    {
         "nome": "Altafiumara",
         "meta_account_id": "1201395876543423",
         "meta_filter": None,
