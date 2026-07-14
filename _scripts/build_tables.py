@@ -425,24 +425,43 @@ def build_rational(v, focus):
         s1 = (f"{month_cap} {year} conferma per {cn} un presidio Meta stabile, in linea con il posizionamento del "
               f"mese all'interno del piano annuo (peso {cur_w}%).")
 
-    # Frase 2 — copertura / canale di traino
-    if fb_reach_delta is not None and fb_reach_delta > 100:
-        s2 = (f"{driver} diventa il canale di traino e amplia la copertura fino a {fmt_int(reach_meta)} utenti unici, "
-              f"a conferma di un mix canali ben bilanciato sugli obiettivi di awareness.")
+    # Frase 2 — canali DISTINTI (regola 14/07/2026: mai attribuire a un canale i KPI aggregati IG+FB)
+    ig_reach_delta = pct(ig_reach, ig_p.get("reach") or 0)
+    fb_eng_delta = pct(fb_c.get("actions_page_engagement") or 0, fb_p.get("actions_page_engagement") or 0)
+    ig_eng_delta = pct(ig_c.get("actions_page_engagement") or 0, ig_p.get("actions_page_engagement") or 0)
+    if driver == "Facebook":
+        other = "Instagram"
+        drv_reach_d, drv_eng_d, oth_reach_d, oth_eng_d = fb_reach_delta, fb_eng_delta, ig_reach_delta, ig_eng_delta
     else:
-        s2 = (f"{driver} amplia la copertura raggiungendo {fmt_int(reach_meta)} utenti unici, a conferma di un mix "
-              f"canali ben bilanciato sugli obiettivi di awareness.")
+        other = "Facebook"
+        drv_reach_d, drv_eng_d, oth_reach_d, oth_eng_d = ig_reach_delta, ig_eng_delta, fb_reach_delta, fb_eng_delta
 
-    # Frase 3 — efficienza / interazioni
-    if spend_delta is not None and spend_delta < -8 and reach_meta > 0:
-        s3 = ("Il costo per risultato si mantiene efficiente in un contesto d'asta più selettivo, segno di una "
-              "strategia di targeting che continua a funzionare.")
-    elif tot_eng > 50000:
-        s3 = (f"Le interazioni complessive toccano {fmt_int(tot_eng)}, segno di contenuti che continuano a generare "
-              f"conversazioni qualificate intorno al brand.")
+    def _kpi_ch(reach_d, eng_d):
+        parts = []
+        if reach_d is not None and reach_d > 0: parts.append(f"account raggiunti a {fmt_pct(reach_d)}")
+        if eng_d is not None and eng_d > 0: parts.append(f"interazioni a {fmt_pct(eng_d)}")
+        return " e ".join(parts)
+
+    drv_kpi = _kpi_ch(drv_reach_d, drv_eng_d)
+    oth_kpi = _kpi_ch(oth_reach_d, oth_eng_d)
+    if drv_reach_d is not None and drv_reach_d > 100:
+        s2a = f"{driver} si conferma il canale di traino" + (f", con {drv_kpi}" if drv_kpi else "")
     else:
-        s3 = ("Il costo per risultato resta efficiente in un contesto d'asta più selettivo, segno di un targeting "
-              "che continua a funzionare.")
+        s2a = f"{driver} guida la copertura del mese" + (f" con {drv_kpi}" if drv_kpi else "")
+    s2b = (f", mentre {other} consolida il presidio con {oth_kpi}." if oth_kpi
+           else f", mentre {other} completa il presidio sul pubblico Meta.")
+    s2 = s2a + s2b
+
+    # Frase 3 — KPI aggregati IG+FB SEMPRE etichettati "Meta" (mai "Facebook" generico)
+    if tot_eng > 0:
+        s3 = (f"A livello Meta complessivo, la campagna raggiunge {fmt_int(reach_meta)} utenti unici e genera "
+              f"{fmt_int(tot_eng)} interazioni, a conferma di un mix canali ben bilanciato sugli obiettivi di "
+              f"awareness e di contenuti che continuano a generare conversazioni qualificate intorno al brand.")
+    else:
+        s3 = (f"A livello Meta complessivo, la campagna raggiunge {fmt_int(reach_meta)} utenti unici, a conferma "
+              f"di un mix canali ben bilanciato sugli obiettivi di awareness.")
+    if spend_delta is not None and spend_delta < -8 and reach_meta > 0:
+        s3 += " Il costo per risultato si mantiene efficiente in un contesto d'asta più selettivo."
 
     # Frase 4 — prossimo mese
     if next_w >= 12:
@@ -516,21 +535,43 @@ def build_rational_en(v, focus):
         s1 = (f"{mo} {year} confirms a stable Meta presence for {cn}, in line with the month's position within the annual "
               f"plan ({cur_w}%).")
 
-    if fb_reach_delta is not None and fb_reach_delta > 100:
-        s2 = (f"{driver} becomes the driving channel and expands coverage to {fmt_int(reach_meta)} unique users, "
-              f"confirming a well-balanced channel mix focused on awareness goals.")
+    # Sentence 2 — DISTINCT channels (rule 2026-07-14: never attribute aggregated IG+FB KPIs to a single channel)
+    ig_reach_delta = pct(ig_reach, ig_p.get("reach") or 0)
+    fb_eng_delta = pct(fb_c.get("actions_page_engagement") or 0, fb_p.get("actions_page_engagement") or 0)
+    ig_eng_delta = pct(ig_c.get("actions_page_engagement") or 0, ig_p.get("actions_page_engagement") or 0)
+    if driver == "Facebook":
+        other = "Instagram"
+        drv_reach_d, drv_eng_d, oth_reach_d, oth_eng_d = fb_reach_delta, fb_eng_delta, ig_reach_delta, ig_eng_delta
     else:
-        s2 = (f"{driver} expands coverage reaching {fmt_int(reach_meta)} unique users, confirming a well-balanced channel "
-              f"mix focused on awareness goals.")
+        other = "Facebook"
+        drv_reach_d, drv_eng_d, oth_reach_d, oth_eng_d = ig_reach_delta, ig_eng_delta, fb_reach_delta, fb_eng_delta
 
-    if spend_delta is not None and spend_delta < -8 and reach_meta > 0:
-        s3 = ("Cost per result stays efficient in a more selective auction context, a sign of a targeting strategy that "
-              "keeps working.")
-    elif tot_eng > 50000:
-        s3 = (f"Total interactions reach {fmt_int(tot_eng)}, a sign of content that keeps generating qualified "
-              f"conversations around the brand.")
+    def _kpi_ch(reach_d, eng_d):
+        parts = []
+        if reach_d is not None and reach_d > 0: parts.append(f"accounts reached at {fmt_pct(reach_d)}")
+        if eng_d is not None and eng_d > 0: parts.append(f"interactions at {fmt_pct(eng_d)}")
+        return " and ".join(parts)
+
+    drv_kpi = _kpi_ch(drv_reach_d, drv_eng_d)
+    oth_kpi = _kpi_ch(oth_reach_d, oth_eng_d)
+    if drv_reach_d is not None and drv_reach_d > 100:
+        s2a = f"{driver} confirms itself as the driving channel" + (f", with {drv_kpi}" if drv_kpi else "")
     else:
-        s3 = "Cost per result remains efficient in a more selective auction context, a sign of targeting that keeps working."
+        s2a = f"{driver} leads the month's coverage" + (f" with {drv_kpi}" if drv_kpi else "")
+    s2b = (f", while {other} consolidates its presence with {oth_kpi}." if oth_kpi
+           else f", while {other} completes the presence on the Meta audience.")
+    s2 = s2a + s2b
+
+    # Sentence 3 — aggregated IG+FB KPIs ALWAYS labeled "Meta" (never generic "Facebook")
+    if tot_eng > 0:
+        s3 = (f"At the overall Meta level, the campaign reaches {fmt_int(reach_meta)} unique users and generates "
+              f"{fmt_int(tot_eng)} interactions, confirming a well-balanced channel mix focused on awareness goals "
+              f"and content that keeps generating qualified conversations around the brand.")
+    else:
+        s3 = (f"At the overall Meta level, the campaign reaches {fmt_int(reach_meta)} unique users, confirming a "
+              f"well-balanced channel mix focused on awareness goals.")
+    if spend_delta is not None and spend_delta < -8 and reach_meta > 0:
+        s3 += " Cost per result stays efficient in a more selective auction context."
 
     if next_w >= 12:
         s4 = (f"The base built in {mo} {year} sets up {next_mo} ({next_w}% of the annual plan), where we will concentrate "
