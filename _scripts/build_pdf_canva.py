@@ -5,8 +5,8 @@ import json, os
 from PIL import Image, ImageDraw, ImageFont
 
 REPO = "/tmp/aghc_work/report-aghc-monthly"
-MANIFEST = f"{REPO}/_data/manifest-2026-05.json"
-OUT = f"{REPO}/assets/maggio-2026/Report-AGHC-Maggio-2026.pdf"
+MANIFEST = f"{REPO}/_data/manifest-2026-07.json"
+OUT = f"{REPO}/assets/luglio-2026/Report-AGHC-Luglio-2026.pdf"
 
 W, H = 1280, 720
 WHITE = (255, 255, 255)
